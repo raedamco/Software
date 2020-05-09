@@ -14,6 +14,7 @@ var data_level2 = "money"; // second level in database to grab from takes place 
 console.log("I was in revenue 05/08/2020");
  function getData() {
    var i =0;
+     console.log("made it in getData in rev");
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
             database.collection(organization).doc(data_level).collection(data_level2).orderBy("Time","desc").limit(data_amount).get().then(function(querySnapshot) {
@@ -29,7 +30,7 @@ console.log("I was in revenue 05/08/2020");
                    console.log(occupancyTime[i]);
                    */
                    moneyReadTime.push(temp2);
-                  moneyyTime.push(temp2.getTime());
+                  moneyTime.push(temp2.getTime());
                   if(i >= (data_amount-1))
                   {
                     temp.render();
@@ -51,6 +52,7 @@ console.log("I was in revenue 05/08/2020");
 
 var temp;
  async function generatemoneyData(moneyData){
+console.log("made it in generatemoneyData");
   var options = {
       chart: {
           height: 400,
@@ -63,7 +65,7 @@ var temp;
           curve: 'smooth',
       },
       series: [{
-          name: 'Occupied',
+          name: 'Revenue',
           data: await moneyData,
       }],
       xaxis: {

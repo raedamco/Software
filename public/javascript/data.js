@@ -7,9 +7,9 @@ var data_amount = 10; // the latest x amount of points
 var occupancyTime =[]; // time stamp
 var occupanceReadTime = []; // human readable timestamp
 var graph_type = "area"; // line, area, or scatter
-var organization = "PSUData"; // specific data set for grabbing
-var parking_structure ="Parking Structure 1"; // structure for data set
-var floor = "Floor 2"; // floor for data set
+var organization = "PSUData"; // "PSU";// specific data set for grabbing
+var parking_structure ="Parking Structure 1"; //"Revenue";// structure for data set
+var floor = "Floor 2"; //"money"; // floor for data set
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
  function getData() {
    var i =0;
