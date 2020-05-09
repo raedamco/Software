@@ -1,6 +1,10 @@
 {
   "hosting": {
     "public": "public",
+<<<<<<< HEAD
+=======
+    "cleanUrls": true,
+>>>>>>> 84911bb04762e8fe83e1dc5764da291cca53df35
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -14,3 +18,7 @@
     ]
   }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 84911bb04762e8fe83e1dc5764da291cca53df35
