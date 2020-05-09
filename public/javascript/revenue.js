@@ -1,6 +1,9 @@
 /* eslint-disable */
 
 // turn into class structure long term so you can just call methods(functions) on these setting long term
+//  !!!!!!!!!!!!!!!! 
+// Need to use classes so revenue and data can be used at the same time on same page
+// !!!!!!!!!!!!!!!!!!!!!
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 var moneyData = []; // amount occupied array
 var data_amount = 5; // the latest x amount of points
@@ -12,7 +15,7 @@ var data_level ="Revenue"; // first level after oragnization (takes place of par
 var data_level2 = "money"; // second level in database to grab from takes place of floor
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 console.log("I was in revenue 05/08/2020");
- function getData() {
+ function getRev() {
    var i =0;
      console.log("made it in getData in rev");
     firebase.auth().onAuthStateChanged(function(user) {
