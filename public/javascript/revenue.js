@@ -18,41 +18,44 @@ class revenue_graph
         this.organization = "PSU"; // specific data set for grabbing
         this.data_level ="Revenue"; // first level after oragnization (takes place of park-structure)
         this.data_level2 = "money"; // second level in database to grab from takes place of floor
-        
+        this.temp = null;
             console.log("ORG:"+ this.organization);
             console.log("data_level: " + this.data_level);
             console.log("data_level2: " + this.data_level2);
     }
     
-   getRev() 
+   async getRev(test) 
     {
         var i =0;
-        console.log("made it in getData in rev");
-        console.log("ORG:"+ this.organization);
-            console.log("data_level: " + this.data_level);
-            console.log("data_level2: " + this.data_level2);
+//        console.log("made it in getData in rev");
+//        console.log("ORG:"+ this.organization);
+//            console.log("data_level: " + this.data_level);
+//            console.log("data_level2: " + this.data_level2);
+             //var test = this;
+             // console.log("Test var: " + test.data_amount);
         firebase.auth().onAuthStateChanged(function(user) {
     // var scope issue with vars after this ^^^^^^ 
+           
         if(user) {
-            console.log("made it in user if");
-            
-         database.collection(this.organization).doc(this.data_level).collection(this.data_level2).orderBy("Time","desc").limit(this.data_amount).get().then(function(querySnapshot) {
+            //console.log("made it in user if");
+             console.log("Test var: " + test.data_amount);
+         database.collection(test.organization).doc(test.data_level).collection(test.data_level2).orderBy("Time","desc").limit(test.data_amount).get().then(function(querySnapshot) {
                 querySnapshot.forEach(function(doc)
                 {
                    console.log(doc.data()["amount"]);
-                    this.moneyData.push(doc.data()["amount"]);
+                    test.moneyData.push(doc.data()["amount"]);
                    var temp2 =  doc.data()["time"].toDate();
                    // Testing output below
                 
                    console.log(temp2.getTime());
                    console.log(temp2);
-                   console.log(occupancyTime[i]);
+                   console.log(test.moneyTime[i]);
                 
-                   this.moneyReadTime.push(temp2);
-                  this.moneyTime.push(temp2.getTime());
-                  if(i >= (this.data_amount-1))
+                   test.moneyReadTime.push(temp2);
+                  test.moneyTime.push(temp2.getTime());
+                  if(i >= (test.data_amount-1))
                   {
-                    temp.render();
+                    await test.temp.render(); /// got to figure out temp scope/ order we need to render
                   }
                     //location.reload();
                     //  console.log(doc.data()["Time"].toDate());
@@ -66,15 +69,16 @@ class revenue_graph
             signOut();
         }
     });
-    generatemoneyData(self);
+    generatemoneyData(test);
 }
 
 
 }
 
-// async function 
+// async function  
+// add function below into class above and modify vars to fit
 async function generatemoneyData(myChart){
-     var temp;
+//     var temp;
 console.log("made it in generatemoneyData");
   var options = {
       chart: {
@@ -117,7 +121,7 @@ console.log("made it in generatemoneyData");
       },
   }
     var chart = new ApexCharts(document.querySelector("#chartprediction"),await options);
-    temp = chart;
+    test.temp = chart;
     //chart.render();
 
 
@@ -132,5 +136,5 @@ async function test_graph()
 {
     var myChart = new revenue_graph;
     console.log("TEST MYCHART:" + myChart.organization)
-    await myChart.getRev();
+    await myChart.getRev(myChart);
 }
