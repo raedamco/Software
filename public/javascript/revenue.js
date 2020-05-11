@@ -5,36 +5,52 @@
 // Need to use classes so revenue and data can be used at the same time on same page
 // !!!!!!!!!!!!!!!!!!!!!
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-var moneyData = []; // amount occupied array
-var data_amount = 5; // the latest x amount of points
-var moneyTime =[]; // time stamp
-var moneyReadTime = []; // human readable timestamp
-var graph_type = "area"; // line, area, or scatter
-var organization = "PSU"; // specific data set for grabbing
-var data_level ="Revenue"; // first level after oragnization (takes place of park-structure)
-var data_level2 = "money"; // second level in database to grab from takes place of floor
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-console.log("I was in revenue 05/08/2020");
- function getRev() {
-   var i =0;
-     console.log("made it in getData in rev");
-    firebase.auth().onAuthStateChanged(function(user) {
+
+class revenue_graph
+{
+    constructor()
+    {
+        this.moneyData = []; // amount occupied array
+        this.data_amount = 5; // the latest x amount of points
+        this.moneyTime =[]; // time stamp
+        this.moneyReadTime = []; // human readable timestamp
+        this.graph_type = "area"; // line, area, or scatter
+        this.organization = "PSU"; // specific data set for grabbing
+        this.data_level ="Revenue"; // first level after oragnization (takes place of park-structure)
+        this.data_level2 = "money"; // second level in database to grab from takes place of floor
+        
+            console.log("ORG:"+ this.organization);
+            console.log("data_level: " + this.data_level);
+            console.log("data_level2: " + this.data_level2);
+    }
+    
+   getRev() 
+    {
+        var i =0;
+        console.log("made it in getData in rev");
+        console.log("ORG:"+ this.organization);
+            console.log("data_level: " + this.data_level);
+            console.log("data_level2: " + this.data_level2);
+        firebase.auth().onAuthStateChanged(function(user) {
+    // var scope issue with vars after this ^^^^^^ 
         if(user) {
-            database.collection(organization).doc(data_level).collection(data_level2).orderBy("Time","desc").limit(data_amount).get().then(function(querySnapshot) {
+            console.log("made it in user if");
+            
+         database.collection(this.organization).doc(this.data_level).collection(this.data_level2).orderBy("Time","desc").limit(this.data_amount).get().then(function(querySnapshot) {
                 querySnapshot.forEach(function(doc)
                 {
                    console.log(doc.data()["amount"]);
-                    moneyData.push(doc.data()["amount"]);
+                    this.moneyData.push(doc.data()["amount"]);
                    var temp2 =  doc.data()["time"].toDate();
                    // Testing output below
-                   /*
+                
                    console.log(temp2.getTime());
                    console.log(temp2);
                    console.log(occupancyTime[i]);
-                   */
-                   moneyReadTime.push(temp2);
-                  moneyTime.push(temp2.getTime());
-                  if(i >= (data_amount-1))
+                
+                   this.moneyReadTime.push(temp2);
+                  this.moneyTime.push(temp2.getTime());
+                  if(i >= (this.data_amount-1))
                   {
                     temp.render();
                   }
@@ -50,16 +66,20 @@ console.log("I was in revenue 05/08/2020");
             signOut();
         }
     });
-    generatemoneyData(moneyData);
+    generatemoneyData(self);
 }
 
-var temp;
- async function generatemoneyData(moneyData){
+
+}
+
+// async function 
+async function generatemoneyData(myChart){
+     var temp;
 console.log("made it in generatemoneyData");
   var options = {
       chart: {
           height: 400,
-          type: graph_type,
+          type: myChart.graph_type,
       },
       dataLabels: {
           enabled: false
@@ -69,11 +89,12 @@ console.log("made it in generatemoneyData");
       },
       series: [{
           name: 'Revenue',
-          data: await moneyData,
+          data:  await myChart.moneyData,
+          //await
       }],
       xaxis: {
           type: 'datetime',
-          categories: moneyTime,
+          categories: myChart.moneyTime,
       },
       /*
       yaxis: {
@@ -107,3 +128,9 @@ console.log("made it in generatemoneyData");
 //console.log("occupancyTime", occupancyTime);
 //console.log("occupancy read time",occupanceReadTime)
 //console.log(options.series);
+async function test_graph()
+{
+    var myChart = new revenue_graph;
+    console.log("TEST MYCHART:" + myChart.organization)
+    await myChart.getRev();
+}

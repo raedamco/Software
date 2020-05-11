@@ -33,7 +33,8 @@
     <script src="javascript/core.js"></script>
     <script src="javascript/htmlElements.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
+    
+  
     <!-- Favicon START -->
         <link rel="apple-touch-icon" sizes="57x57" href="favicons.ico/apple-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="favicons.ico/apple-icon-60x60.png">
@@ -88,11 +89,19 @@
     </script>
     <!-- Global site tag (gtag.js) END - Google Analytics -->
 
+        
+      <!-- Charts -->
+
+    <script src="javascript/revenue.js"></script>    
+        
     <!-- User Authentication. Verify User should be able to access data START-->
     <script>
         window.onload = function(){
             authverification();
-            getData();
+            test_graph();
+//            revChart = new revenue_graph;
+//            revChart.getRev();
+            //getData();
             // getRev();
             //generateAverageOccupancuData();
         }
@@ -188,14 +197,9 @@
 	<!-- Main -->
 	<script src="js/main.js"></script>
 
-    <!-- Charts -->
-<<<<<<< HEAD
-   <!-- <script src="javascript/revenue.js"></script> -->
-     <script src="javascript/data.js"></script>
-	<!-- </body> -->
-=======
-    <script src="javascript/data.js"></script>
 
-	</body>
->>>>>>> 84911bb04762e8fe83e1dc5764da291cca53df35
+  
+
+	
+
 </html>
