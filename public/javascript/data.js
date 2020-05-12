@@ -2,24 +2,31 @@
 
 // turn into class structure long term so you can just call methods(functions) on these setting long term
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-var occupancyData = []; // amount occupied array
-var data_amount = 10; // the latest x amount of points
-var occupancyTime =[]; // time stamp
-var occupanceReadTime = []; // human readable timestamp
-var graph_type = "area"; // line, area, or scatter
-var organization = "PSUData"; // "PSU";// specific data set for grabbing
-var parking_structure ="Parking Structure 1"; //"Revenue";// structure for data set
-var floor = "Floor 2"; //"money"; // floor for data set
+class average_chart
+{
+    constructor()
+    {
+        this.occupancyData = []; // amount occupied array
+        this.data_amount = 5; // the latest x amount of points
+        this.occupancyTime =[]; // time stamp
+        this.occupanceReadTime = []; // human readable timestamp
+        this.graph_type = "area"; // line, area, or scatter
+        this.organization = "PSUData"; // "PSU";// specific data set for grabbing
+        this.parking_structure ="Parking Structure 1"; //"Revenue";// structure for data set
+        this.floor = "Floor 2"; //"money"; // floor for data set
+        this.temp = null;
+    }
+    
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
- function getData() {
+   async getData(test) {
    var i =0;
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
-            database.collection(organization).doc(parking_structure).collection(floor).orderBy("Time","desc").limit(data_amount).get().then(function(querySnapshot) {
-                querySnapshot.forEach(function(doc)
+            database.collection(test.organization).doc(test.parking_structure).collection(test.floor).orderBy("Time","desc").limit(test.data_amount).get().then(async function(querySnapshot) {
+                querySnapshot.forEach(async function(doc)
                 {
                    console.log(doc.data()["Average"]);
-                    occupancyData.push(doc.data()["Average"]);
+                    test.occupancyData.push(doc.data()["Average"]);
                    var temp2 =  doc.data()["Time"].toDate();
                    // Testing output below
                    /*
@@ -27,11 +34,11 @@ var floor = "Floor 2"; //"money"; // floor for data set
                    console.log(temp2);
                    console.log(occupancyTime[i]);
                    */
-                   occupanceReadTime.push(temp2);
-                  occupancyTime.push(temp2.getTime());
-                  if(i >= (data_amount-1))
+                   test.occupanceReadTime.push(temp2);
+                  test.occupancyTime.push(temp2.getTime());
+                  if(i >= (test.data_amount-1))
                   {
-                    temp.render();
+                    await test.temp.render();
                   }
                     //location.reload();
                     //  console.log(doc.data()["Time"].toDate());
@@ -45,15 +52,15 @@ var floor = "Floor 2"; //"money"; // floor for data set
             signOut();
         }
     });
-    generateAverageOccupancuData(occupancyData);
+    generateAverageOccupancuData(test);
 }
 
-var temp;
- async function generateAverageOccupancuData(occupancyData){
+}
+ async function generateAverageOccupancuData(averageChart){
   var options = {
       chart: {
-          height: 400,
-          type: graph_type,
+          height: 600,
+          type: averageChart.graph_type,
       },
       dataLabels: {
           enabled: false
@@ -63,11 +70,11 @@ var temp;
       },
       series: [{
           name: 'Occupied',
-          data: await occupancyData,
+          data: await averageChart.occupancyData,
       }],
       xaxis: {
           type: 'datetime',
-          categories: occupancyTime,
+          categories: averageChart.occupancyTime,
       },
       /*
       yaxis: {
@@ -89,15 +96,15 @@ var temp;
           }
       },
   }
-    var chart = new ApexCharts(document.querySelector("#chartprediction"),await options);
-    temp = chart;
+    var chart = new ApexCharts(document.querySelector("#average_chart"),await options);
+    averageChart.temp = chart;
     //chart.render();
 
 
 }
-// Testing outputs below
-
-//console.log("Occupancy data",occupancyData);
-//console.log("occupancyTime", occupancyTime);
-//console.log("occupancy read time",occupanceReadTime)
-//console.log(options.series);
+async function average_graph()
+{
+    var averageChart = new average_chart;
+    console.log("TEST Average chart:" + average_chart.organization);
+    await averageChart.getData(averageChart);
+}

@@ -19,26 +19,15 @@ class revenue_graph
         this.data_level ="Revenue"; // first level after oragnization (takes place of park-structure)
         this.data_level2 = "money"; // second level in database to grab from takes place of floor
         this.temp = null;
-            console.log("ORG:"+ this.organization);
-            console.log("data_level: " + this.data_level);
-            console.log("data_level2: " + this.data_level2);
+           
     }
     
    async getRev(test) 
     {
-        var i =0;
-//        console.log("made it in getData in rev");
-//        console.log("ORG:"+ this.organization);
-//            console.log("data_level: " + this.data_level);
-//            console.log("data_level2: " + this.data_level2);
-             //var test = this;
-             // console.log("Test var: " + test.data_amount);
+        var i = 0;
         firebase.auth().onAuthStateChanged(function(user) {
-    // var scope issue with vars after this ^^^^^^ 
-           
         if(user) {
-            //console.log("made it in user if");
-             console.log("Test var: " + test.data_amount);
+             
          database.collection(test.organization).doc(test.data_level).collection(test.data_level2).orderBy("Time","desc").limit(test.data_amount).get().then(async function(querySnapshot) {
                 querySnapshot.forEach(async function(doc)
                 {
@@ -120,7 +109,7 @@ console.log("made it in generatemoneyData");
           }
       },
   }
-    var chart = new ApexCharts(document.querySelector("#chartprediction"),await options);
+    var chart = new ApexCharts(document.querySelector("#money_chart"),await options);
     myChart.temp = chart;
     //chart.render();
 
@@ -128,12 +117,8 @@ console.log("made it in generatemoneyData");
                  
 
 }
-// Testing outputs below
 
-//console.log("Occupancy data",occupancyData);
-//console.log("occupancyTime", occupancyTime);
-//console.log("occupancy read time",occupanceReadTime)
-//console.log(options.series);
+
 async function test_graph()
 {
     var myChart = new revenue_graph;

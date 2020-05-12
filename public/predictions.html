@@ -92,16 +92,18 @@
         
       <!-- Charts -->
 
-    <script src="javascript/revenue.js"></script>    
+    <script src="javascript/revenue.js"></script>   
+    <script src="javascript/data.js"></script>
         
     <!-- User Authentication. Verify User should be able to access data START-->
     <script>
         window.onload = function(){
             authverification();
             test_graph();
+            average_graph();
 //            revChart = new revenue_graph;
 //            revChart.getRev();
-            //getData();
+           // getData();
             // getRev();
             //generateAverageOccupancuData();
         }
@@ -145,9 +147,12 @@
         <div class="tp-services" style="padding-top: 280px">
 			<div class="container">
 				<!-- Generate Charts & Data START -->
-                <div id="chartprediction">
-                  <div id="chartprediction"></div>
+                <div id="money_chart">
                 </div>
+                <div id="average_chart">
+                    
+                </div>
+                
 <!--
 
                 <div id="chartprediction">
