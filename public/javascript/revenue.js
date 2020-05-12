@@ -39,8 +39,8 @@ class revenue_graph
         if(user) {
             //console.log("made it in user if");
              console.log("Test var: " + test.data_amount);
-         database.collection(test.organization).doc(test.data_level).collection(test.data_level2).orderBy("Time","desc").limit(test.data_amount).get().then(function(querySnapshot) {
-                querySnapshot.forEach(function(doc)
+         database.collection(test.organization).doc(test.data_level).collection(test.data_level2).orderBy("Time","desc").limit(test.data_amount).get().then(async function(querySnapshot) {
+                querySnapshot.forEach(async function(doc)
                 {
                    console.log(doc.data()["amount"]);
                     test.moneyData.push(doc.data()["amount"]);
@@ -121,9 +121,11 @@ console.log("made it in generatemoneyData");
       },
   }
     var chart = new ApexCharts(document.querySelector("#chartprediction"),await options);
-    test.temp = chart;
+    myChart.temp = chart;
     //chart.render();
 
+//    await myChart.temp.render(); /// got to figure out temp scope/ order we need to render
+                 
 
 }
 // Testing outputs below
