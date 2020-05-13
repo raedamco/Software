@@ -109,7 +109,7 @@ console.log("made it in generatemoneyData");
           }
       },
   }
-    var chart = new ApexCharts(document.querySelector("#money_chart"),await options);
+    var chart = new ApexCharts(document.querySelector("#money_chart"),await options); // make sure to change this line for different charts/div classes
     myChart.temp = chart;
     //chart.render();
 

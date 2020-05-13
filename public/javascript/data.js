@@ -96,7 +96,7 @@ class average_chart
           }
       },
   }
-    var chart = new ApexCharts(document.querySelector("#average_chart"),await options);
+    var chart = new ApexCharts(document.querySelector("#average_chart"),await options);// make sure to change this line for different charts/div classes
     averageChart.temp = chart;
     //chart.render();
 

@@ -2,7 +2,7 @@
 var State = "Structure"; //First page
 
 // RETRIEVE DATA FROM DATABASE START //
-function getData() {
+async function getData() {
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
             var title = document.getElementById("structureTitle");
@@ -23,22 +23,27 @@ function getData() {
     });
 }
 
-function getStructures(CUID){
+ async function getStructures(CUID){
     createTable("structureTable");
     console.log("was here")
-    database.collection("PSU").get().then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
+    database.collection("PSU").get().then( async function(querySnapshot) {
+        querySnapshot.forEach( async function(doc) {
             var id = doc.id;
-            var capacity = doc.data()["Capacity"]["Capacity"];
-            var available = doc.data()["Capacity"]["Available"];
-            var floors = doc.data()["Capacity"]["Floors"];
-            var location = doc.data()["Capacity"]["Location"];
+            if (await doc.data()  != undefined){
             
+                    var capacity = await doc.data()["Capacity"]["Capacity"];
+                    console.log("capacity test: " + capacity);
+                    var available = doc.data()["Capacity"]["Available"];
+                    console.log("available test: " + available);
+                    var floors = doc.data()["Capacity"]["Floors"];
+                    var location = doc.data()["Capacity"]["Location"];
+              
             var structureClass = new structure(id, capacity, available, floors, location);
 		    structureClass.createRow();
             Structures.set(id, structureClass);
             Structures.get(id).update(available);
-        });
+            
+                }});
     }).catch(function(error) {
         alert("Error getting documents: " + error);
     });
