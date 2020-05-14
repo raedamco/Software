@@ -1,16 +1,27 @@
-/* eslint-disable */
+//
+//  floorClass.js
+//  Theory Parking
+//
+//  Created on 5/13/2020. Modified on 5/13/2020.
+//  Copyright © 2020 Theory Parking. All rights reserved.
+//
+// This file holds code for the Floor objects
 
-var Floors = new Map(); 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+var Floors = new Map(); // Map of floor objects 
 
-class floor{
-	constructor(structure, id, capacity, available){
+class floor // floor object class
+{
+    constructor(structure, id, capacity, available)
+    {
 		this.id = id;
 		this.capacity = capacity;
         this.available = available; 
         this.structure = structure;
 	}
     
-    createRow(){
+    createRow() // creates HTML row for floor
+    {
         var table = document.getElementById("floorTable");
         var tr = document.createElement('tr');
         var td = document.createElement('td');
@@ -22,7 +33,8 @@ class floor{
         tr.appendChild(td);
         table.appendChild(tr);
         
-        onRowClick("floorTable", function(row){
+        onRowClick("floorTable", function(row)
+        {
             State = "Spot";
             var rowid = row.getElementsByTagName("td")[0].id;
             var title = document.getElementById("title");
@@ -33,22 +45,27 @@ class floor{
         });
     }
     
-	update(available){
+	update(available)// updates availibility
+    {
 		this.available = available;
         var ratio = (this.available/this.capacity);
         
-		if (ratio < 0.25){
+		if (ratio < 0.25)
+        {
 			document.getElementById(this.id).style.color = "red";
-		}else if (ratio <= 0.50){
+		}else if (ratio <= 0.50)
+        {
 			document.getElementById(this.id).style.color = "#ebdb34";
-		}else{
+		}else
+        {
 			document.getElementById(this.id).style.color = "green";
 		}
             document.getElementById(this.id).innerHTML = this.id + "<br>" + " Spots Free: " + this.available + "/" + this.capacity;
 	}    
 }
 
-function createMap(StructureID, FloorID) {
+function createMap(StructureID, FloorID)// creates map of spots for specfic floor  
+{
     var map = document.createElement("div");
     setAttributes(map, {"class": "map", "id": "map"});
     document.getElementById("main").appendChild(map);

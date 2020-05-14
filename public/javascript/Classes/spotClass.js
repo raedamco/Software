@@ -1,26 +1,32 @@
-/* eslint-disable */
+//
+//  spotClass.js
+//  Theory Parking
+//
+//  Created on 5/13/2020. Modified on 5/13/2020.
+//  Copyright © 2020 Theory Parking. All rights reserved.
+//
+// This file holds code for Spot Objects
 
-var Spots = new Map();
-var logs =  new Map(); // Rowid, descriptioin
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var Spots = new Map(); // map of spot objects
+var logs =  new Map(); // map of logs for spots object (Rowid, description)
 ////////////////////////////////////
-function test_resize()
+function test_resize()// call function to resize all spot objects on page
 {
-   // console.log(Spots)
     Spots.forEach(spot_resize)
 }
-function spot_resize(value) {
-    //console.log(`map.get('${key}') = ${value}`);
-    //console.log(value)
+function spot_resize(value) 
+{
     value.on_resize();
 }
 //////////////////////////////////////////////
-class spot {
-    constructor(id, occupied, occupant, x, y, rotation, type){
+class spot 
+{
+    constructor(id, occupied, occupant, x, y, rotation, type)
+    {
         this.ID = id;
         this.Occupied = occupied;
-//        this.X = x;
-//        this.Y = y;
-   
         this.Rotation = rotation;
         this.Occupant = occupant;
         this.Type = type;
@@ -31,25 +37,21 @@ class spot {
         /// need to add min page sizes and address coming from database long term along with mapping y-axis
 	}
       
-    createSpots(){
-        //var scalor = 6; // 5.2 works @ 1440 so window width 5.2/1440*window_width
+    createSpots()
+    {
         this.htmlSpot = document.createElement("div");
         var htmlSpot = this.htmlSpot;
-
         setAttributes(htmlSpot, {"class": "parking-spot", "id": this.ID}, this.ID);
         htmlSpot.innerHTML = this.ID;
-
-         htmlSpot.style.top = this.Y;
+        htmlSpot.style.top = this.Y;
         htmlSpot.style.left = (this.X-1)*(this.x_ratio * document.getElementById('map').clientWidth) + "px";
-         htmlSpot.style.width = "4.8%";
-         htmlSpot.style.height = "18%";
-        console.log(this.X);
-        
-
+        htmlSpot.style.width = "4.8%";
+        htmlSpot.style.height = "18%";
         this.element = document.getElementById("map").appendChild(htmlSpot);
         htmlSpot.style.transform = 'rotate('+this.Rotation+'deg)';
-
-        htmlSpot.onclick= function() {
+        
+        htmlSpot.onclick= function() 
+        {
             createpopupview(this.id, this.occupant);
         }
     }
@@ -60,7 +62,8 @@ class spot {
          this.htmlSpot.style.left = (this.X-1)*(this.x_ratio * document.getElementById('map').clientWidth) + "px";
     }
 ////////////////////////////////////////////
-	update(occupied){
+	update(occupied)// updates spot occupancy
+    {
 		if(occupied == true){
 			this.element.style.backgroundColor = "red";
 		}else if(occupied == false){
@@ -70,7 +73,8 @@ class spot {
 
 }
 
-function createpopupview(spotID, OccupantID){
+function createpopupview(spotID, OccupantID)
+{
     Swal.fire({
         title: 'Settings for spot ' + spotID,
         input: 'select',
@@ -83,7 +87,8 @@ function createpopupview(spotID, OccupantID){
         showCancelButton: true,
         inputValidator: (value) => {
             return new Promise((resolve) => {
-                if (value === "Permit" || value === "Hourly") {
+                if (value === "Permit" || value === "Hourly") 
+                {
                     updateSpotData("Parking Structure 1", "Floor 1", spotID, value);
                     Swal.fire({
                       title: "Success",
@@ -91,7 +96,8 @@ function createpopupview(spotID, OccupantID){
                       icon: "success",
                       confirmButtonText: "Close"
                     })
-                }else{
+                }else
+                {
                     resolve('Please update a setting to continue')
                 }
             })
@@ -99,11 +105,13 @@ function createpopupview(spotID, OccupantID){
     })
 }
 
-function showSensorLog(SpotID){
+function showSensorLog(SpotID)
+{
     var w = window.open("log.html#" + SpotID);
 }
 
-function dataLogRows(tableID, description, time, occupied, id) {
+function dataLogRows(tableID, description, time, occupied, id) 
+{
     var table = document.getElementById(tableID);
     var tr = document.createElement('tr');
     var td = document.createElement('td');
@@ -111,9 +119,11 @@ function dataLogRows(tableID, description, time, occupied, id) {
     
     var rowText = document.createTextNode(time);
 
-    if (occupied == false){
+    if (occupied == false)
+    {
         td.style.color = "green";
-    }else{
+    }else
+    {
        td.style.color = "red";
     }
 
@@ -124,7 +134,8 @@ function dataLogRows(tableID, description, time, occupied, id) {
     var rowid = tr.getElementsByTagName("td")[0].id;
     logs.set(rowid, description);
     
-    onRowClick(tableID, async function(row){
+    onRowClick(tableID, async function(row)
+    {
         var rowid = row.getElementsByTagName("td")[0].id;
         
         //await console.log("DATA ID", loggedData.I); 
@@ -147,18 +158,22 @@ var loggedData = {
     description: [],
 }
 
-function loadData() {
+function loadData() 
+{
     var currentURL = (document.URL); // returns http://myplace.com/abcd
     var SpotID = currentURL.split("#")[1];
 
     console.log(SpotID);
-    window.onload = function() {
+    window.onload = function() 
+    {
         document.getElementById("title").innerHTML = "Data log for spot " + SpotID;
         createTable("logsTable");
     }
 
-    database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").orderBy("Time", "desc").get().then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
+    database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").orderBy("Time", "desc").get().then(function(querySnapshot) 
+    {
+        querySnapshot.forEach(function(doc) 
+        {
             let ID = doc.id;
             let time = doc.data().Time.toDate();
             let distance = doc.data()["Distance (in)"];
@@ -170,10 +185,12 @@ function loadData() {
             loggedData.distance.push(distance);
             loggedData.occupied.push(occupied);
             
-            if (occupied == false){
+            if (occupied == false)
+            {
                 loggedData.occupant.push("Occupant: None");
                 occupant = "Occupant: None";
-            }else{
+            }else
+            {
                 loggedData.occupant.push("Occupant: " + occupant);
                 occupant = "Occupant: Coming Soon!";
             }
@@ -182,30 +199,31 @@ function loadData() {
             let description = "Occupied: " + occupied + "<br>" + "Distance: " + (Math.round(distance*10))/10 + " in" + "<br>" + occupant;
             loggedData.description.push(description);
             
-            if (loggedData.length <= 0) {
+            if (loggedData.length <= 0) 
+            {
                 dataLogRows("logsTable", "", "No current data for " + SpotID, "", ID);
-            }else{
+            }else
+            {
                 dataLogRows("logsTable", description, time, occupied, ID);
             }
 
         });
-
-//        for (var i = 0; i < loggedData.ID.length; ++i) {
-//            dataLogRows("logsTable", "Occupied: " + loggedData.occupied[i] + "<br>" + loggedData.distance[i] + "<br>" + loggedData.occupant[i], loggedData.time[i], loggedData.occupied[i]);
-//        }
     });
 }
 
 
-function updateSpotData(StructureID, FloorID, SpotID, Value){
+function updateSpotData(StructureID, FloorID, SpotID, Value)
+{
     // Send updated settings then dimiss popup or alert enforcmenet about issue
     let Permit,
         Hourly
 
-    if (Value == "Permit"){
+    if (Value == "Permit")
+    {
         Permit = true;
         Hourly = false;
-    }else if (Value == "Hourly"){
+    }else if (Value == "Hourly")
+    {
         Hourly = true
         Permit = false;
     }
