@@ -109,13 +109,57 @@ function showSensorLog(SpotID)
 {
     var w = window.open("log.html#" + SpotID);
 }
-
-function dataLogRows(tableID, description, time_start,time_end, occupied, id) 
+////////////////////////check here 6/2/2020
+class log{
+        constructor(time_start,time_end,occupied,htmlDoc,time_end_text,id)
+        {
+            // in html rowText - start rowText2 = end row text3 = occupancy
+            this.time_start= time_start;
+            this.time_end = time_end;
+            this.occupied = occupied;
+            this.htmlDoc = htmlDoc;
+            this.time_end_text = time_end_text;
+            this.id = id;
+        }
+        
+        compare(new_occ)
+        {
+            if(new_occ == this.occupied)
+                {
+                    return true;
+                }
+            else
+            {
+                return false;
+            }
+        }
+        update(time_end)
+        {
+            this.time_end = time_end;
+            this.time_end_text = document.createTextNode("END: "+ time_end)
+            htmlDoc.appendChild(this.time_end_text);
+        }
+    ///// proabably here 
+          database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").doc(this.id).onSnapshot(function(snapshot)
+    {   
+        snapshot.docChanges().forEach(function(change)
+        {
+            if(change === "modified")
+                {
+                    this.update(change.doc.data().Time.End);
+                }
+        });
+              
+    });
+        
+        var current_log; 
+function dataLogRows(tableID, description, time_start,time_end, occupied, id,SpotID) 
 {
     var table = document.getElementById(tableID);
     var tr = document.createElement('tr');
     var td = document.createElement('td');
     td.id = id;
+   
     var br = document.createElement("BR");
     var br2 = document.createElement("BR");
     if(occupied == true)
@@ -138,7 +182,7 @@ function dataLogRows(tableID, description, time_start,time_end, occupied, id)
     {
        td.style.color = "red";
     }
-
+      current_log = new log(time_start,time_end,occupied,td,rowText2,id);
     td.appendChild(rowText);
     td.appendChild(br);
      td.appendChild(rowText2);
@@ -219,16 +263,32 @@ function loadData()
             
             if (loggedData.length <= 0) 
             {
-                dataLogRows("logsTable", "", "No current data for " + SpotID, "", ID);
+                dataLogRows("logsTable", "", "No current data for " + SpotID, "", ID,SpotID);
             }else
             {
-                dataLogRows("logsTable", description, time_start,time_end, occupied, ID);
+                dataLogRows("logsTable", description, time_start,time_end, occupied, ID,SpotID);
             }
 
         });
     });
+    ////  probably downn here also 6/2/2020
+    // if occupied = current occupied
+                // then update current log
+                // else then make new log
+    // below is if new doc was added which would mean state changed
+    database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").onSnapshot(function(snapshot)
+    {   
+        snapshot.docChanges().forEach(function(change)
+        {
+            if(change.type === "added") // new log added
+            {
+                
+                 dataLogRows("logsTable", change.doc.data().Occupant, change.doc.data().Time.Begin,change.doc.data().Time.End, change.doc.data().occupied, change.doc.data().id, SpotID);
+            }
+        });
+    
+    });
 }
-
 
 function updateSpotData(StructureID, FloorID, SpotID, Value)
 {

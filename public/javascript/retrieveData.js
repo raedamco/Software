@@ -130,7 +130,7 @@ function getSpots(StructureID, FloorID) {
     }).catch(function(error) {
         alert("Error getting documents: " + error);
     });
-    
+    // listen for change below
     database.collection("PSU").doc(StructureID).collection(FloorID).onSnapshot(function(snapshot) {
         snapshot.docChanges().forEach(function(change) {
             if (State != "Spot"){
