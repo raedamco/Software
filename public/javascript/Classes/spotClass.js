@@ -110,14 +110,26 @@ function showSensorLog(SpotID)
     var w = window.open("log.html#" + SpotID);
 }
 
-function dataLogRows(tableID, description, time, occupied, id) 
+function dataLogRows(tableID, description, time_start,time_end, occupied, id) 
 {
     var table = document.getElementById(tableID);
     var tr = document.createElement('tr');
     var td = document.createElement('td');
     td.id = id;
+    var br = document.createElement("BR");
+    var br2 = document.createElement("BR");
+    if(occupied == true)
+        {
+            var rowText = document.createTextNode("Start: "+time_start);
+            var rowText2 = document.createTextNode("END: "+ time_end);
+            var rowText3 = document.createTextNode("Occuppied");
+        }else
+        {
+              var rowText = document.createTextNode("Start: "+time_start);
+            var rowText2 = document.createTextNode("END: "+ time_end);
+            var rowText3 = document.createTextNode("Unoccuppied");   
+        }
     
-    var rowText = document.createTextNode(time);
 
     if (occupied == false)
     {
@@ -128,6 +140,10 @@ function dataLogRows(tableID, description, time, occupied, id)
     }
 
     td.appendChild(rowText);
+    td.appendChild(br);
+     td.appendChild(rowText2);
+        td.appendChild(br2);
+     td.appendChild(rowText3);
     tr.appendChild(td);
     table.appendChild(tr);
     
@@ -162,7 +178,7 @@ function loadData()
 {
     var currentURL = (document.URL); // returns http://myplace.com/abcd
     var SpotID = currentURL.split("#")[1];
-
+    console.log("WAS HERE 6/1/2020");
     console.log(SpotID);
     window.onload = function() 
     {
@@ -170,41 +186,43 @@ function loadData()
         createTable("logsTable");
     }
 
-    database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").orderBy("Time", "desc").get().then(function(querySnapshot) 
+    database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").orderBy("Time.End", "desc").get().then(function(querySnapshot) 
     {
         querySnapshot.forEach(function(doc) 
         {
             let ID = doc.id;
-            let time = doc.data().Time.toDate();
-            let distance = doc.data()["Distance (in)"];
+            let time_start = doc.data().Time.Begin.toDate().toLocaleString() ;
+            let time_end = doc.data().Time.End.toDate().toLocaleString();//.toDate();
+            //time.toDate();
+         
             let occupied = doc.data().Occupied;
             var occupant;
 
             loggedData.ID.push(ID);
-            loggedData.time.push(time);
-            loggedData.distance.push(distance);
+            //loggedData.time.push(time);
+          
             loggedData.occupied.push(occupied);
             
             if (occupied == false)
             {
-                loggedData.occupant.push("Occupant: None");
-                occupant = "Occupant: None";
+               // loggedData.occupant.push("Occupant: None");
+                 occupant = "Occupant: None";
             }else
             {
-                loggedData.occupant.push("Occupant: " + occupant);
+                //loggedData.occupant.push("Occupant: " + occupant);
                 occupant = "Occupant: Coming Soon!";
             }
             
 
-            let description = "Occupied: " + occupied + "<br>" + "Distance: " + (Math.round(distance*10))/10 + " in" + "<br>" + occupant;
-            loggedData.description.push(description);
+           let description =   occupant;
+            //loggedData.description.push(description);
             
             if (loggedData.length <= 0) 
             {
                 dataLogRows("logsTable", "", "No current data for " + SpotID, "", ID);
             }else
             {
-                dataLogRows("logsTable", description, time, occupied, ID);
+                dataLogRows("logsTable", description, time_start,time_end, occupied, ID);
             }
 
         });
