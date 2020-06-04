@@ -164,9 +164,15 @@ function dataLogRows(tableID, description, time_start,time_end, occupied, id,Spo
         else
         {
              console.log("in datalog rows for " + time_start)
+            /*
             var tr = table.insertRow(0);
             var td = tr.insertCell(0);
             td.id = id;
+            */
+             var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            current_log.htmlDoc.insertBefore(td);
+            // might need to chang to include tr contuine here 6/4/2020
         }    
     }
     else
