@@ -122,9 +122,9 @@ class log{
             this.id = id;
         }
         
-        compare(new_occ)
+        is_after(new_time)
         {
-            if(new_occ == this.occupied)
+            if(new_time > this.time_end)
                 {
                     return true;
                 }
@@ -145,28 +145,36 @@ class log{
             this.htmlDoc.appendChild(this.log_text[1]);
             this.htmlDoc.appendChild(this.log_text[4]);
         }
-    ///// proabably here 
-          /*database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").doc(this.id).onSnapshot(function(snapshot)
-    {   
-        snapshot.docChanges().forEach(function(change)
-        {
-            if(change === "modified")
-                {
-                    this.update(change.doc.data().Time.End);
-                }
-        });
-            
-    });  */
+    
 }
         
         var current_log; 
 function dataLogRows(tableID, description, time_start,time_end, occupied, id,SpotID) 
 {
     var table = document.getElementById(tableID);
-    var tr = document.createElement('tr');
-    var td = document.createElement('td');
-    td.id = id;
-   
+    if(current_log!= null)
+    {
+        if(current_log.time_end > time_start)
+        {
+           
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            td.id = id;
+        }
+        else
+        {
+             console.log("in datalog rows for " + time_start)
+            var tr = table.insertRow(0);
+            var td = tr.insertCell(0);
+            td.id = id;
+        }    
+    }
+    else
+    {
+        var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            td.id = id;
+    } 
     var br = document.createElement("BR");
     var br2 = document.createElement("BR");
     if(occupied == true)
@@ -238,7 +246,7 @@ function loadData()
 {
     var currentURL = (document.URL); // returns http://myplace.com/abcd
     var SpotID = currentURL.split("#")[1];
-    console.log("WAS HERE 6/1/2020");
+   
     console.log(SpotID);
     window.onload = function() 
     {
@@ -299,6 +307,19 @@ function loadData()
                  current_log.update(change.doc.data().Time.End.toDate().toLocaleString());
                 // dataLogRows("logsTable", change.doc.data().Occupant, change.doc.data().Time.Begin,change.doc.data().Time.End, change.doc.data().occupied, change.doc.data().id, SpotID);
             }
+            if(change.type === "added")
+                {
+                   if(current_log != null)
+                   {
+                        if(current_log.is_after(change.doc.data().Time.Begin.toDate().toLocaleString()))
+                        {
+                            console.log("in the change added for" + change.doc.data().Time.Begin.toDate().toLocaleString())
+                            time_start = change.doc.data().Time.Begin.toDate().toLocaleString();
+                            time_end = change.doc.data().Time.End.toDate().toLocaleString();
+                            dataLogRows("logsTable", change.doc.data().Occupant, time_start,time_end,change.doc.data().occupied, change.doc.data().id, SpotID);
+                        }
+                   }
+                }
         });
     
     });
