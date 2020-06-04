@@ -111,14 +111,14 @@ function showSensorLog(SpotID)
 }
 ////////////////////////check here 6/2/2020
 class log{
-        constructor(time_start,time_end,occupied,htmlDoc,time_end_text,id)
+        constructor(time_start,time_end,occupied,htmlDoc,log_text,id)
         {
             // in html rowText - start rowText2 = end row text3 = occupancy
             this.time_start= time_start;
             this.time_end = time_end;
             this.occupied = occupied;
             this.htmlDoc = htmlDoc;
-            this.time_end_text = time_end_text;
+            this.log_text = log_text; // var text_info = [br,br2,rowText,rowText2,rowText3];
             this.id = id;
         }
         
@@ -135,12 +135,18 @@ class log{
         }
         update(time_end)
         {
+            this.htmlDoc.removeChild(this.log_text[3]);
+            this.htmlDoc.removeChild(this.log_text[4]);
+            this.htmlDoc.removeChild(this.log_text[1]);
             this.time_end = time_end;
-            this.time_end_text = document.createTextNode("END: "+ time_end)
-            htmlDoc.appendChild(this.time_end_text);
+            this.time_end_text = document.createTextNode("END: "+ time_end);
+            this.log_text[3] = this.time_end_text;
+            this.htmlDoc.appendChild(this.time_end_text);
+            this.htmlDoc.appendChild(this.log_text[1]);
+            this.htmlDoc.appendChild(this.log_text[4]);
         }
     ///// proabably here 
-          database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").doc(this.id).onSnapshot(function(snapshot)
+          /*database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").doc(this.id).onSnapshot(function(snapshot)
     {   
         snapshot.docChanges().forEach(function(change)
         {
@@ -149,8 +155,9 @@ class log{
                     this.update(change.doc.data().Time.End);
                 }
         });
-              
-    });
+            
+    });  */
+}
         
         var current_log; 
 function dataLogRows(tableID, description, time_start,time_end, occupied, id,SpotID) 
@@ -174,7 +181,7 @@ function dataLogRows(tableID, description, time_start,time_end, occupied, id,Spo
             var rowText3 = document.createTextNode("Unoccuppied");   
         }
     
-
+    var text_info = [br,br2,rowText,rowText2,rowText3];
     if (occupied == false)
     {
         td.style.color = "green";
@@ -182,7 +189,16 @@ function dataLogRows(tableID, description, time_start,time_end, occupied, id,Spo
     {
        td.style.color = "red";
     }
-      current_log = new log(time_start,time_end,occupied,td,rowText2,id);
+    if(current_log == null)
+    {
+        current_log = new log(time_start,time_end,occupied,td,text_info,id);
+    }
+    else if(current_log.time_end < time_end)
+        {
+            current_log = new log(time_start,time_end,occupied,td,text_info,id);
+        }
+    
+      
     td.appendChild(rowText);
     td.appendChild(br);
      td.appendChild(rowText2);
@@ -271,19 +287,17 @@ function loadData()
 
         });
     });
-    ////  probably downn here also 6/2/2020
-    // if occupied = current occupied
-                // then update current log
-                // else then make new log
-    // below is if new doc was added which would mean state changed
+    /// below checks for the most recent log being modified if it is it call an update function 
+    /// below checks for the most recent log being modified if it is it call an update function 
     database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").onSnapshot(function(snapshot)
     {   
         snapshot.docChanges().forEach(function(change)
         {
-            if(change.type === "added") // new log added
+            if(change.type === "modified") // new log added
             {
-                
-                 dataLogRows("logsTable", change.doc.data().Occupant, change.doc.data().Time.Begin,change.doc.data().Time.End, change.doc.data().occupied, change.doc.data().id, SpotID);
+                 console.log(change.doc.data().Time.Begin.toDate().toLocaleString());
+                 current_log.update(change.doc.data().Time.End.toDate().toLocaleString());
+                // dataLogRows("logsTable", change.doc.data().Occupant, change.doc.data().Time.Begin,change.doc.data().Time.End, change.doc.data().occupied, change.doc.data().id, SpotID);
             }
         });
     
