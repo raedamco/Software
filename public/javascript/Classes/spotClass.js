@@ -152,35 +152,9 @@ class log{
 function dataLogRows(tableID, description, time_start,time_end, occupied, id,SpotID) 
 {
     var table = document.getElementById(tableID);
-    if(current_log!= null)
-    {
-        if(current_log.time_end > time_start)
-        {
-           
-            var tr = document.createElement('tr');
-            var td = document.createElement('td');
-            td.id = id;
-        }
-        else
-        {
-             console.log("in datalog rows for " + time_start)
-            /*
-            var tr = table.insertRow(0);
-            var td = tr.insertCell(0);
-            td.id = id;
-            */
-             var tr = document.createElement('tr');
-            var td = document.createElement('td');
-            current_log.htmlDoc.insertBefore(td);
-            // might need to chang to include tr contuine here 6/4/2020
-        }    
-    }
-    else
-    {
-        var tr = document.createElement('tr');
-            var td = document.createElement('td');
-            td.id = id;
-    } 
+     var tr = document.createElement('tr');
+    var td = document.createElement('td');
+     td.id = id;
     var br = document.createElement("BR");
     var br2 = document.createElement("BR");
     if(occupied == true)
@@ -212,14 +186,50 @@ function dataLogRows(tableID, description, time_start,time_end, occupied, id,Spo
             current_log = new log(time_start,time_end,occupied,td,text_info,id);
         }
     
-      
+      if(current_log!= null)
+    {
+        if(current_log.time_end > time_start)
+        {
+           
+            td.appendChild(rowText);
+            td.appendChild(br);
+            td.appendChild(rowText2);
+            td.appendChild(br2);
+            td.appendChild(rowText3);
+            tr.appendChild(td);
+            table.appendChild(tr);
+        }
+        else
+        {
+             console.log("in datalog rows for " + time_start)
+           td.appendChild(rowText);
+            td.appendChild(br);
+            td.appendChild(rowText2);
+            td.appendChild(br2);
+            td.appendChild(rowText3);
+            tr.appendChild(td);
+            //table.appendChild(tr);
+           table.insertBefore(tr,table.childNodes[0]);
+        
+        }    
+    }
+    else
+    {
+        td.appendChild(rowText);
+        td.appendChild(br);
+        td.appendChild(rowText2);
+        td.appendChild(br2);
+        td.appendChild(rowText3);
+        tr.appendChild(td);
+        table.appendChild(tr);
+    } 
     td.appendChild(rowText);
     td.appendChild(br);
      td.appendChild(rowText2);
         td.appendChild(br2);
      td.appendChild(rowText3);
     tr.appendChild(td);
-    table.appendChild(tr);
+    //table.appendChild(tr);
     
     var rowid = tr.getElementsByTagName("td")[0].id;
     logs.set(rowid, description);
