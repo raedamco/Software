@@ -29,6 +29,7 @@ class average_chart // average occupancy graph for floor
    async getData(test) 
    {
        // test.temp = chart 
+       console.log("6/19/20 8:33");
         var i =0;
         firebase.auth().onAuthStateChanged(function(user) 
         {
@@ -54,6 +55,8 @@ class average_chart // average occupancy graph for floor
                 {
                     alert("Error getting documents: " + error);
                 });
+                
+                     
             }else
             {
                 signOut();
@@ -61,20 +64,11 @@ class average_chart // average occupancy graph for floor
         });
        
         generateAverageOccupancuData(test);
+       
+                //console.log(test.organization + " - " + test.parking_structure + " - " + test.floor );
+                      
    }
-   database.collection(this.test.organization).doc(this.test.parking_structure).collection(this.test.floor).onSnapshot(function(snapshot)
-    {   
-        snapshot.docChanges().forEach(function(change)
-        {
-            if(change.type === "added")
-                {
-                   
-                    this.test.temp.destroy();
-                    this.getData(this.test);
-                }
-        });
-    
-    });
+   
 }
  async function generateAverageOccupancuData(averageChart)
 {
@@ -133,6 +127,36 @@ class average_chart // average occupancy graph for floor
 async function average_graph()
 {
     var averageChart = new average_chart;
-    console.log("TEST Average chart:" + average_chart.organization);
+    console.log("TEST Average chart:" + await average_chart.organization);
     await averageChart.getData(averageChart);
+    // check all of this 6/19/2020
+    var unsubscribe = database.collection(averageChart.organization).doc(averageChart.parking_structure).collection(averageChart.floor).orderBy("Time","desc").limit(averageChart.data_amount).onSnapshot(async function(snapshot)
+                {  
+                  //  console.log("was here ")  
+                    snapshot.docChanges().forEach(async function(change)
+                    {   
+                      //  console.log("was here 1")
+                        if(change.type === "added")
+                        {
+                          //  console.log("was here 2")
+                            averageChart.temp.destroy();
+                            console.log("added log: " + change.doc.data()["Time"].toDate());
+                            averageChart.occupancyTime[averageChart.data_amount-1] = change.doc.data()["Time"].toDate();
+                            averageChart.occupancyData[averageChart.data_amount-1] = change.doc.data()["Average"];
+                            generateAverageOccupancuData(averageChart);
+                            await averageChart.temp.render();
+                           // unsubscribe();
+                            //average_graph();
+                        }
+                         /*if(change.type ===  "modified")
+                        {
+                            console.log("was here 3")
+                            averageChart.temp.destroy();
+                            average_graph();
+                           
+                        }
+                        */
+                    });
+    
+                });
 }
