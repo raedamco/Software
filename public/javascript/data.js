@@ -28,6 +28,7 @@ class average_chart // average occupancy graph for floor
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
    async getData(test) 
    {
+       // test.temp = chart 
         var i =0;
         firebase.auth().onAuthStateChanged(function(user) 
         {
@@ -58,9 +59,22 @@ class average_chart // average occupancy graph for floor
                 signOut();
             }
         });
+       
         generateAverageOccupancuData(test);
    }
-
+   database.collection(this.test.organization).doc(this.test.parking_structure).collection(this.test.floor).onSnapshot(function(snapshot)
+    {   
+        snapshot.docChanges().forEach(function(change)
+        {
+            if(change.type === "added")
+                {
+                   
+                    this.test.temp.destroy();
+                    this.getData(this.test);
+                }
+        });
+    
+    });
 }
  async function generateAverageOccupancuData(averageChart)
 {
