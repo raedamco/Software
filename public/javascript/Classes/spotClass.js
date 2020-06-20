@@ -2,7 +2,7 @@
 //  spotClass.js
 //  Theory Parking
 //
-//  Created on 5/13/2020. Modified on 5/13/2020.
+//  Created on 5/13/2020. Modified on 6/19/2020.
 //  Copyright © 2020 Theory Parking. All rights reserved.
 //
 // This file holds code for Spot Objects
