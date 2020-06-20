@@ -9,6 +9,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
 var Spots = new Map(); // map of spot objects
 var logs =  new Map(); // map of logs for spots object (Rowid, description)
 ////////////////////////////////////
@@ -39,6 +41,7 @@ class spot
       
     createSpots()
     {
+       
         this.htmlSpot = document.createElement("div");
         var htmlSpot = this.htmlSpot;
         setAttributes(htmlSpot, {"class": "parking-spot", "id": this.ID}, this.ID);
@@ -332,7 +335,8 @@ function loadData()
                             console.log("in the change added for" + change.doc.data().Time.Begin.toDate().toLocaleString())
                             time_start = change.doc.data().Time.Begin.toDate().toLocaleString();
                             time_end = change.doc.data().Time.End.toDate().toLocaleString();
-                            dataLogRows("logsTable", change.doc.data().Occupant, time_start,time_end,change.doc.data().occupied, change.doc.data().id, SpotID);
+                            console.log("pre datalogrow call value: " + change.doc.data().Occupied);
+                            dataLogRows("logsTable", change.doc.data().Occupant, time_start,time_end,change.doc.data().Occupied, change.doc.data().id, SpotID);
                         }
                    }
                 }
