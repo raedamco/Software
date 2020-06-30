@@ -1,8 +1,8 @@
 //
 //  data.js
-//  Theory Parking
+//  Raedam 
 //
-//  Created on 5/13/2020. Modified on 5/13/2020.
+//  Created on 5/13/2020. Modified on 6/30/2020 by Austin Mckee.
 //  Copyright © 2020 Theory Parking. All rights reserved.
 //
 // This file holds code for the Average Occupancy Graph
@@ -10,26 +10,36 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 class average_chart // average occupancy graph for floor
 {
-    constructor()
+   constructor()
     {
+        
+        this.data_amount = 5; // the latest x amount of points  
+        /// long term look into dynamically changing ^^^ based off zoom/graph scope : week/month/3 months/etc 
+        
+        /****************************************************************/
         this.occupancyData = []; // amount occupied array
-        this.data_amount = 5; // the latest x amount of points
         this.occupancyTime =[]; // time stamp
         this.occupanceReadTime = []; // human readable timestamp
+        /// long term have above values ^^^  update(on live update/ added value) instead of replacing objects 
+        
         this.graph_type = "area"; // line, area, or scatter
+        
         /*********************************************************/
         this.organization = "PSUData"; // specific data set for grabbing
         this.parking_structure ="Parking Structure 1"; // structure for data set
         this.floor = "Floor 2";  // floor for data set
-        /* should modify above code to make above lines customizable*/
+        /// should modify above code to have values as inputs so it can be used for any organization
+        
         this.temp = null;
     }
     
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    // gets data from database for charts and stores in class
    async getData(test) 
    {
        // test.temp = chart 
-       console.log("6/19/20 8:33");
+       
         var i =0;
         firebase.auth().onAuthStateChanged(function(user) 
         {
@@ -65,11 +75,11 @@ class average_chart // average occupancy graph for floor
        
         generateAverageOccupancuData(test);
        
-                //console.log(test.organization + " - " + test.parking_structure + " - " + test.floor );
                       
    }
    
 }
+ // creates chart 
  async function generateAverageOccupancuData(averageChart)
 {
     var options = 
@@ -95,7 +105,7 @@ class average_chart // average occupancy graph for floor
         xaxis: 
         {
           type: 'datetime',
-          categories: averageChart.occupancyTime,
+          categories: await averageChart.occupancyTime,
         },
       /*
       yaxis: {
@@ -124,39 +134,26 @@ class average_chart // average occupancy graph for floor
     var chart = new ApexCharts(document.querySelector("#average_chart"),await options);// make sure to change this line for different charts/div classes
     averageChart.temp = chart;
 }
+
+// base function called by webpage that creates class object and calls function and monitors for changes 
 async function average_graph()
 {
+    /// this function should have parameters long term that makes it easy to call for any organization
+    
+    
     var averageChart = new average_chart;
-    console.log("TEST Average chart:" + await average_chart.organization);
     await averageChart.getData(averageChart);
-    // check all of this 6/19/2020
     var unsubscribe = database.collection(averageChart.organization).doc(averageChart.parking_structure).collection(averageChart.floor).orderBy("Time","desc").limit(averageChart.data_amount).onSnapshot(async function(snapshot)
                 {  
-                  //  console.log("was here ")  
                     snapshot.docChanges().forEach(async function(change)
                     {   
-                      //  console.log("was here 1")
                         if(change.type === "added")
                         {
-                          //  console.log("was here 2")
-                            averageChart.temp.destroy();
-                            console.log("added log: " + change.doc.data()["Time"].toDate());
-                            averageChart.occupancyTime[averageChart.data_amount-1] = change.doc.data()["Time"].toDate();
-                            averageChart.occupancyData[averageChart.data_amount-1] = change.doc.data()["Average"];
-                            generateAverageOccupancuData(averageChart);
-                            await averageChart.temp.render();
-                           // unsubscribe();
-                            //average_graph();
+                          averageChart.temp.destroy();
+                          averageChart = new average_chart;
+                          await averageChart.getData(averageChart);
+                          ///   might try updating object instead of replacing object long term but this way works for now
                         }
-                         /*if(change.type ===  "modified")
-                        {
-                            console.log("was here 3")
-                            averageChart.temp.destroy();
-                            average_graph();
-                           
-                        }
-                        */
                     });
-    
                 });
 }
