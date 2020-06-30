@@ -1,9 +1,9 @@
 //
 //  structureClass.js
-//  Theory Parking
+//  Raedam 
 //
-//  Created on 5/13/2020. Modified on 5/13/2020.
-//  Copyright © 2020 Theory Parking. All rights reserved.
+//  Created on 5/13/2020. Modified on 6/30/2020 by Austin Mckee.
+//  Copyright © 2020 Raedam . All rights reserved.
 //
 // This file holds code for Structure objects
 
@@ -21,7 +21,7 @@ class structure
 		this.floors = floors;
 	}
     
-    createRow()
+    createRow() // creates html row
     {
         var table = document.getElementById("structureTable");
         var tr = document.createElement('tr');
@@ -47,7 +47,7 @@ class structure
         });
     }
     
-    update(available)
+    update(available) // updates data in row
     {
 		this.available = available;
         var ratio = (this.available/this.capacity);

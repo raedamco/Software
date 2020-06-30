@@ -1,9 +1,9 @@
 //
 //  spotClass.js
-//  Theory Parking
+//  Raedam
 //
 //  Created on 5/13/2020. Modified on 6/19/2020.
-//  Copyright © 2020 Theory Parking. All rights reserved.
+//  Copyright © 2020 Raedam. All rights reserved.
 //
 // This file holds code for Spot Objects
 
@@ -39,7 +39,7 @@ class spot
         /// need to add min page sizes and address coming from database long term along with mapping y-axis
 	}
       
-    createSpots()
+    createSpots() // creates html spots
     {
        
         this.htmlSpot = document.createElement("div");
@@ -76,7 +76,7 @@ class spot
 
 }
 
-function createpopupview(spotID, OccupantID)
+function createpopupview(spotID, OccupantID) // creates spot pop up
 {
     Swal.fire({
         title: 'Settings for spot ' + spotID,
@@ -112,9 +112,11 @@ function showSensorLog(SpotID)
 {
     var w = window.open("log.html#" + SpotID);
 }
-////////////////////////check here 6/2/2020
+
+// spot log class
 class log{
-        constructor(time_start,time_end,occupied,htmlDoc,log_text,id)
+    /// should make seperate file for logs
+    constructor(time_start,time_end,occupied,htmlDoc,log_text,id)
         {
             // in html rowText - start rowText2 = end row text3 = occupancy
             this.time_start= time_start;
@@ -125,7 +127,7 @@ class log{
             this.id = id;
         }
         
-        is_after(new_time)
+        is_after(new_time) // checks time order
         {
             if(new_time > this.time_end)
                 {
@@ -136,7 +138,7 @@ class log{
                 return false;
             }
         }
-        update(time_end)
+        update(time_end) // helps update log on new value
         {
             this.htmlDoc.removeChild(this.log_text[3]);
             this.htmlDoc.removeChild(this.log_text[4]);
@@ -152,7 +154,7 @@ class log{
 }
         
         var current_log; 
-function dataLogRows(tableID, description, time_start,time_end, occupied, id,SpotID) 
+function dataLogRows(tableID, description, time_start,time_end, occupied, id,SpotID) // creates log rows
 {
     var table = document.getElementById(tableID);
      var tr = document.createElement('tr');
@@ -261,7 +263,7 @@ var loggedData = {
     description: [],
 }
 
-function loadData() 
+function loadData() // initializes logs 
 {
     var currentURL = (document.URL); // returns http://myplace.com/abcd
     var SpotID = currentURL.split("#")[1];
@@ -314,8 +316,8 @@ function loadData()
 
         });
     });
-    /// below checks for the most recent log being modified if it is it call an update function 
-    /// below checks for the most recent log being modified if it is it call an update function 
+    
+    // below checks for the most recent log being modified if it is it call an update function 
     database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").onSnapshot(function(snapshot)
     {   
         snapshot.docChanges().forEach(function(change)

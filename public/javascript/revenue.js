@@ -1,11 +1,11 @@
 //
 //  revenue.js
-//  Theory Parking
+//  Raedam 
 //
-//  Created on 5/13/2020. Modified on 5/13/2020.
-//  Copyright © 2020 Theory Parking. All rights reserved.
+//  Created on 5/13/2020. Modified on 6/30/2020 by Austin Mckee.
+//  Copyright © 2020 Raedam. All rights reserved.
 //
-// This file holds code for the Revenue Overtime Graph
+// This file holds code for the Revenue Occupancy Graph
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,16 +13,21 @@ class revenue_graph // for revenue vs time graph
 {
     constructor()
     {
+         this.data_amount = 5; // the latest x amount of points  
+        /// long term look into dynamically changing ^^^ based off zoom/graph scope : week/month/3 months/etc 
+        
+        /****************************************************************/
         this.moneyData = []; // amount of revenue array
-        this.data_amount = 5; // the latest x amount of points
         this.moneyTime =[]; // time stamp
         this.moneyReadTime = []; // human readable timestamp
+        /// long term have above values ^^^  update(on live update/ added value) instead of replacing objects 
+        
         this.graph_type = "area"; // line, area, or scatter
         /*********************************************************/
         this.organization = "PSU"; // specific data set for grabbing
         this.data_level ="Revenue"; // first level after oragnization (takes place of park-structure)
         this.data_level2 = "money"; // second level in database to grab from takes place of floor
-        /* should modify above code to make above lines customizable*/
+        /// should modify above code to have values as inputs so it can be used for any organization
         this.temp = null;
            
     }
@@ -66,8 +71,7 @@ class revenue_graph // for revenue vs time graph
 
 }
 
-// async function  
-// add function below into class above and modify vars to fit
+// creates chart
 async function generatemoneyData(myChart)
 {
     var options = 
@@ -124,7 +128,7 @@ async function generatemoneyData(myChart)
     myChart.temp = chart;                  
 }
 
-
+// base function called by webpage that creates class object
 async function test_graph()
 {
     var myChart = new revenue_graph;

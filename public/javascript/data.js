@@ -3,7 +3,7 @@
 //  Raedam 
 //
 //  Created on 5/13/2020. Modified on 6/30/2020 by Austin Mckee.
-//  Copyright © 2020 Theory Parking. All rights reserved.
+//  Copyright © 2020 Raedam. All rights reserved.
 //
 // This file holds code for the Average Occupancy Graph
 

@@ -1,11 +1,11 @@
 //
 //  floorClass.js
-//  Theory Parking
+//  Raedam 
 //
-//  Created on 5/13/2020. Modified on 5/13/2020.
-//  Copyright © 2020 Theory Parking. All rights reserved.
+//  Created on 5/13/2020. Modified on 6/30/2020 by Austin Mckee.
+//  Copyright © 2020 Raedam. All rights reserved.
 //
-// This file holds code for the Floor objects
+// This file holds floor class data/functions
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 var Floors = new Map(); // Map of floor objects 

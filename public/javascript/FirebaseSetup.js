@@ -1,4 +1,13 @@
 /*eslint-disable */
+/// FOR OMAR PLEASE FILL IN HEADER AND COMMENT FILE SIMILAR TO HOW DATA.JS IS DONE
+//
+//  Account.js
+//  Raedam 
+//
+//  Created on FILL IN. Modified on FILL IN by FILL IN.
+//  Copyright © 2020 Raedam. All rights reserved.
+//
+// DESCRIPTION OF FILE
 var firebaseConfig = {
     apiKey: "AIzaSyCKghNDOPOufY-8SYVGW4xpOeZC3fDVZko",
     authDomain: "theory-parking.firebaseapp.com",

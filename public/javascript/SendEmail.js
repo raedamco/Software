@@ -1,21 +1,12 @@
-/////// fux comments and make work for form
-/////// firebase config order go over with Omar tonight
- 
-
-/* eslint no-console: 0 */
-//Contact_form = {
-//    'Email': "test@test.com", 
-//    'First_name': "Test",
-//    'Last_name':"test",
-//    'Subject': "bruh",
-//    'Inquiry': "tests"
-//}
-//formToDatabase();
-
-//window.onbeforeunload = function(event)
-//    {
-//        return confirm("Confirm refresh");
-//    };
+/// FOR OMAR PLEASE FILL IN HEADER AND COMMENT FILE SIMILAR TO HOW DATA.JS IS DONE
+//
+//  Account.js
+//  Raedam 
+//
+//  Created on FILL IN. Modified on FILL IN by FILL IN.
+//  Copyright © 2020 Raedam. All rights reserved.
+//
+// DESCRIPTION OF FILE
 function formToDatabase(){
    //window.alert(Contact_form.Subject.value);
   

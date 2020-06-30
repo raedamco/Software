@@ -1,7 +1,18 @@
 /*eslint-disable */
+//
+//  retrieveData.js
+//  Raedam 
+//
+//  Created on 5/13/2020. Modified on 6/30/2020 by Austin Mckee.
+//  Copyright © 2020 Raedam. All rights reserved.
+//
+// This file holds code for the dashboard initialization. This file starts creating objects of the structure classes and is called by html file
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 var State = "Structure"; //First page
 
 // RETRIEVE DATA FROM DATABASE START //
+// essentially logs into database
 async function getData() {
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
@@ -22,10 +33,10 @@ async function getData() {
         }
     });
 }
-
+ // starts grabbing structure from database and creates structure class objects. Also adds struture objects in map.
  async function getStructures(CUID){
     createTable("structureTable");
-    console.log("was here")
+     /// longterm have organization("PSU") as input for scaling
     database.collection("PSU").get().then( async function(querySnapshot) {
         querySnapshot.forEach( async function(doc) {
             var id = doc.id;
@@ -47,7 +58,7 @@ async function getData() {
     }).catch(function(error) {
         alert("Error getting documents: " + error);
     });
-    
+     /// longterm have organization("PSU") as input for scaling
     database.collection("PSU").onSnapshot(function(snapshot) {
         snapshot.docChanges().forEach(function(change) {
             if (State != "Structure"){
@@ -63,10 +74,10 @@ async function getData() {
         });
     });
 }
-
+// starts grabbing floor from database and creates floor class objects. Also adds floor objects in map.
 function getFloors(StructureID) { 
     var floorArray = [];
-
+     /// longterm have organization("PSU") as input for scaling
     database.collection("PSU").doc(StructureID).get().then(function(doc) {
         var id = doc.data()["Floors"];
         floorArray.push(id);
@@ -84,7 +95,7 @@ function getFloors(StructureID) {
     }).catch(function(error) {
         alert("Error getting documents: " + error);
     });
-    
+     /// longterm have organization("PSU") as input for scaling
     database.collection("PSU").onSnapshot(function(snapshot) {
         snapshot.docChanges().forEach(function(change) {
             if (State != "Floor"){
@@ -103,9 +114,9 @@ function getFloors(StructureID) {
     });
 }
 
-
+// starts grabbing spotsfrom database and creates spot class objects. Also adds spot objects in map.
 function getSpots(StructureID, FloorID) {
-   
+    /// longterm have organization("PSU") as input for scaling
     database.collection("PSU").doc(StructureID).collection(FloorID).get().then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
         var id = doc.id;
@@ -124,13 +135,13 @@ function getSpots(StructureID, FloorID) {
          window.addEventListener("resize", function()
     {
              test_resize();
-       // Spots.forEach(spot_resize())
     });
 ///////////////////////////////////////////
     }).catch(function(error) {
         alert("Error getting documents: " + error);
     });
     // listen for change below
+     /// longterm have organization("PSU") as input for scaling
     database.collection("PSU").doc(StructureID).collection(FloorID).onSnapshot(function(snapshot) {
         snapshot.docChanges().forEach(function(change) {
             if (State != "Spot"){
@@ -148,7 +159,7 @@ function getSpots(StructureID, FloorID) {
     });
 }
 
-
+// redirects to object in row's onRowClick function (if it's a structure the sturcuture's/ if it's a floor that floor's) 
 function onRowClick(tableId, callback) {
     var table = document.getElementById(tableId);
     var rows = table.getElementsByTagName("tr");
@@ -162,7 +173,7 @@ function onRowClick(tableId, callback) {
     }
 };
 
-
+// creates HTML table
 function createTable(tableID) {   
     var container = document.getElementById("container");
     var table = document.createElement('table');
