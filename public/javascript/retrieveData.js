@@ -127,7 +127,7 @@ function getSpots(StructureID, FloorID) {
         var rotation = doc.data()["Layout"]["rotation"];
         if(id == 1 || id == "1")
             {
-                  var test = doc.data()["test"];
+                  var test =doc.data()["Layout"]["x"];
                  console.log("the thing :"+ test);
                     var type = doc.data()["Type"];
                 console.log("type was put in 1")
