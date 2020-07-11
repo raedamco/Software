@@ -32,11 +32,14 @@ class spot
         this.Rotation = rotation;
         this.Occupant = occupant;
         this.Type = type;
+       // if(this.Type != undefined)
+            console.log("7/10/2020" + x);
         this.x_ratio = 1/20; // ratio based on map size will need to map out floors manually 
         this.y_ratio = 1/25;  // will need to be passed in long term. Ratios control height/width 
         this.X = id; // used for placing on map
         this.Y = 0;  // same as above
         /// need to add min page sizes and address coming from database long term along with mapping y-axis
+       // console.log("7/10/2020 spot id"+ this.ID)
 	}
       
     createSpots() // creates html spots
@@ -92,7 +95,7 @@ function createpopupview(spotID, OccupantID) // creates spot pop up
             return new Promise((resolve) => {
                 if (value === "Permit" || value === "Hourly") 
                 {
-                    updateSpotData("Parking Structure 1", "Floor 1", spotID, value);
+                    updateSpotData("Parking Structure 1", "Floor 2", spotID, value);
                     Swal.fire({
                       title: "Success",
                       text: "Spot " + spotID + " has been updated to " + value,

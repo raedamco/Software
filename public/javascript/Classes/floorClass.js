@@ -28,7 +28,7 @@ class floor // floor object class
         td.id = this.id;
         var rowText = document.createTextNode(this.id);
         var structure = this.structure;
-        
+         console.log("7/10/2020 " +td.id)
         td.appendChild(rowText);
         tr.appendChild(td);
         table.appendChild(tr);
