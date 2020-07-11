@@ -129,8 +129,8 @@ function getSpots(StructureID, FloorID) {
             {
                   var test =doc.data()["Layout"]["x"];
                  console.log("the thing :"+ test);
-                    var type = doc.data()["Type"];
-                console.log("type was put in 1")
+                    var type = doc.data()["Spot Type"];
+                console.log("type was put in 1", type)
             }
     
         var spotClass = new spot(id, occupied, occupant, x, y, rotation,type);
