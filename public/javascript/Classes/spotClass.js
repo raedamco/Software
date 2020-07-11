@@ -2,7 +2,7 @@
 //  spotClass.js
 //  Raedam
 //
-//  Created on 5/13/2020. Modified on 6/19/2020.
+//  Created on 5/13/2020. Modified on 7/10/2020.
 //  Copyright © 2020 Raedam. All rights reserved.
 //
 // This file holds code for Spot Objects
@@ -33,7 +33,7 @@ class spot
         this.Occupant = occupant;
         this.Type = type;
        // if(this.Type != undefined)
-            console.log("7/10/2020" + x);
+            console.log("7/10/2020 type: " + this.Type);
         this.x_ratio = 1/20; // ratio based on map size will need to map out floors manually 
         this.y_ratio = 1/25;  // will need to be passed in long term. Ratios control height/width 
         this.X = id; // used for placing on map
@@ -78,19 +78,67 @@ class spot
 	}
 
 }
-
+// this function update 7/10/2020 for spot type updates
 function createpopupview(spotID, OccupantID) // creates spot pop up
 {
+      var the_spot = Spots.get(spotID);
+     // console.log("test: " + the_spot.Occupied);
+      if(the_spot.Type.EV)
+          {
+                var ev = '<input type= "checkbox" id="EV" name="EV" value="true" checked>'+
+            '<label for="EV"> EV</label><br>'
+          }
+      else{
+            var ev = '<input type= "checkbox" id="EV" name="EV" value="true" >'+
+            '<label for="EV"> EV</label><br>'
+      }
+    if(the_spot.Type.Hourly)
+        {
+            var hourly = '<input type= "checkbox" id="hourly" name="hourly" value="true" checked >'+
+            '<label for="hourly"> Hourly</label><br>'
+        }
+        else
+        {
+             var hourly = '<input type= "checkbox" id="hourly" name="hourly" value="true" >'+
+            '<label for="hourly"> Hourly</label><br>'    
+        }
+      if(the_spot.Type.Permit)
+        {
+            var permit = '<input type= "checkbox" id="permit" name="permit" value="true" checked>'+
+            '<label for="permit"> Permit</label><br>'
+        }
+        else
+        {
+             var permit = '<input type= "checkbox" id="permit" name="permit" value="true" >'+
+            '<label for="permit"> Permit</label><br>'
+        }
+        if(the_spot.Type.ADA)
+        {
+            var ADA = '<input type= "checkbox" id="ADA" name="ADA" value="true" checked>'+
+            '<label for="ADA"> ADA</label><br>'
+        }
+        else
+        {
+             var ADA = '<input type= "checkbox" id="ADA" name="ADA" value="true" >'+
+            '<label for="ADA"> ADA</label><br>'
+        }
+    
     Swal.fire({
+      
         title: 'Settings for spot ' + spotID,
-        input: 'select',
+        text: 'Spot Type(s) ',
+        /*if(the_spot.type.EV){
+            html:''
+        },*/
+        html:
+            hourly +
+            permit+
+            ADA+
+            ev,
+        
         footer: '<button onclick="showSensorLog(' + spotID +')">Sensor Log</button>',
-        inputOptions: {
-            Permit: 'Permit',
-            Hourly: 'Hourly',
-        },
-        inputPlaceholder: 'Spot Type',
         showCancelButton: true,
+        /*
         inputValidator: (value) => {
             return new Promise((resolve) => {
                 if (value === "Permit" || value === "Hourly") 
@@ -108,6 +156,7 @@ function createpopupview(spotID, OccupantID) // creates spot pop up
                 }
             })
         }
+        */
     })
 }
 
