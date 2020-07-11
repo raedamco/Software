@@ -209,8 +209,8 @@ function dataLogRows(tableID, description, time_start,time_end, occupied, id,Spo
         }
         else
         {
-             console.log("in datalog rows for " + time_start)
-           td.appendChild(rowText);
+            console.log("in datalog rows for " + time_start)
+            td.appendChild(rowText);
             td.appendChild(br);
             td.appendChild(rowText2);
             td.appendChild(br2);
