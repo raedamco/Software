@@ -32,8 +32,7 @@ class spot
         this.Rotation = rotation;
         this.Occupant = occupant;
         this.Type = type;
-       // if(this.Type != undefined)
-            console.log("7/10/2020 type: " + this.Type);
+   
         this.x_ratio = 1/20; // ratio based on map size will need to map out floors manually 
         this.y_ratio = 1/25;  // will need to be passed in long term. Ratios control height/width 
         this.X = id; // used for placing on map
@@ -79,7 +78,7 @@ class spot
 
 }
 // this function update 7/10/2020 for spot type updates
-function createpopupview(spotID, OccupantID) // creates spot pop up
+async function createpopupview(spotID, OccupantID) // creates spot pop up
 {
       var the_spot = Spots.get(spotID);
      // console.log("test: " + the_spot.Occupied);
@@ -89,7 +88,7 @@ function createpopupview(spotID, OccupantID) // creates spot pop up
             '<label for="EV"> EV</label><br>'
           }
       else{
-            var ev = '<input type= "checkbox" id="EV" name="EV" value="true" >'+
+            var ev = '<input type= "checkbox" id="EV" name="EV" value="false" >'+
             '<label for="EV"> EV</label><br>'
       }
     if(the_spot.Type.Hourly)
@@ -99,7 +98,7 @@ function createpopupview(spotID, OccupantID) // creates spot pop up
         }
         else
         {
-             var hourly = '<input type= "checkbox" id="hourly" name="hourly" value="true" >'+
+             var hourly = '<input type= "checkbox" id="hourly" name="hourly" value="false" >'+
             '<label for="hourly"> Hourly</label><br>'    
         }
       if(the_spot.Type.Permit)
@@ -109,7 +108,7 @@ function createpopupview(spotID, OccupantID) // creates spot pop up
         }
         else
         {
-             var permit = '<input type= "checkbox" id="permit" name="permit" value="true" >'+
+             var permit = '<input type= "checkbox" id="permit" name="permit" value="false" >'+
             '<label for="permit"> Permit</label><br>'
         }
         if(the_spot.Type.ADA)
@@ -119,25 +118,31 @@ function createpopupview(spotID, OccupantID) // creates spot pop up
         }
         else
         {
-             var ADA = '<input type= "checkbox" id="ADA" name="ADA" value="true" >'+
+             var ADA = '<input type= "checkbox" id="ADA" name="ADA" value="false" >'+
             '<label for="ADA"> ADA</label><br>'
         }
     
-    Swal.fire({
+   const{value: typeValues} = await Swal.fire({
       
         title: 'Settings for spot ' + spotID,
-        text: 'Spot Type(s) ',
-        /*if(the_spot.type.EV){
-            html:''
-        },*/
+        
         html:
+            '<h4> Spot Type(s): </h4>'+
             hourly +
             permit+
             ADA+
             ev,
-        
         footer: '<button onclick="showSensorLog(' + spotID +')">Sensor Log</button>',
         showCancelButton: true,
+        focusConfirm: false,
+        preConfirm: () => {
+            return [
+                document.getElementById('ADA').checked,
+                document.getElementById('permit').checked,
+                document.getElementById('hourly').checked,
+                document.getElementById('EV').checked
+            ]
+        }
         /*
         inputValidator: (value) => {
             return new Promise((resolve) => {
@@ -158,6 +163,16 @@ function createpopupview(spotID, OccupantID) // creates spot pop up
         }
         */
     })
+   if(typeValues)
+   {
+           updateSpotData(spotID,typeValues);
+           Swal.fire({
+                      title: "Success",
+                      text: "Spot " + spotID + " type has been updated",
+                      icon: "success",
+                      confirmButtonText: "Close"
+                    })
+   }
 }
 
 function showSensorLog(SpotID)
@@ -398,25 +413,27 @@ function loadData() // initializes logs
     
     });
 }
-
-function updateSpotData(StructureID, FloorID, SpotID, Value)
+// value[] 0 = ADA 1= permit 2 =hourly 3= EV
+function updateSpotData(SpotID, Value)
 {
+  
     // Send updated settings then dimiss popup or alert enforcmenet about issue
-    let Permit,
-        Hourly
-
-    if (Value == "Permit")
-    {
-        Permit = true;
-        Hourly = false;
-    }else if (Value == "Hourly")
-    {
-        Hourly = true
-        Permit = false;
-    }
-
-    database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc("1").update({
+    var ADA = Value[0];
+    var Permit = Value[1];
+    var Hourly = Value[2];
+    var EV = Value[3];
+    // updates map with new values
+    var the_spot = Spots.get(SpotID);
+    the_spot.Type.ADA = ADA;
+    the_spot.Type.Permit = Permit;
+     the_spot.Type.Hourly = Hourly;
+     the_spot.Type.EV = EV;
+    
+    /// change it so PSU, structure, and floor are passed in 
+    database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).update({
         "Spot Type.Permit": Permit,
         "Spot Type.Hourly": Hourly,
+        "Spot Type.EV": EV,
+        "Spot Type.ADA": ADA
     })
 }
