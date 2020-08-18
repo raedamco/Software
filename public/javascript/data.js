@@ -13,7 +13,7 @@ class average_chart // average occupancy graph for floor
    constructor()
     {
         
-        this.data_amount = 5; // the latest x amount of points  
+        this.data_amount = 10; // the latest x amount of points  
         /// long term look into dynamically changing ^^^ based off zoom/graph scope : week/month/3 months/etc 
         
         /****************************************************************/
@@ -52,8 +52,11 @@ class average_chart // average occupancy graph for floor
                         console.log(doc.data()["Average"]);
                         test.occupancyData.push(doc.data()["Average"]);
                         var temp2 =  doc.data()["Time"].toDate();
+                        console.log(temp2);
                         test.occupanceReadTime.push(temp2);
-                        test.occupancyTime.push(temp2.getTime());
+                        test.occupancyTime.push((temp2.getTime()-(2.52*Math.pow(10,7))));
+                       // console.log(test.occupancyTime)
+                       // console.log((2.52*(10^7)));
                         if(i >= (test.data_amount-1))
                         {
                             await test.temp.render();
