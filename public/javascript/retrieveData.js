@@ -3,7 +3,7 @@
 //  retrieveData.js
 //  Raedam 
 //
-//  Created on 5/13/2020. Modified on 6/30/2020 by Austin Mckee.
+//  Created on 5/13/2020. Modified on 8/17/2020 by Austin Mckee.
 //  Copyright © 2020 Raedam. All rights reserved.
 //
 // This file holds code for the dashboard initialization. This file starts creating objects of the structure classes and is called by html file
@@ -74,6 +74,7 @@ async function getData() {
         });
     });
 }
+// fix how numbering system works below
 // starts grabbing floor from database and creates floor class objects. Also adds floor objects in map.
 function getFloors(StructureID) { 
     var floorArray = [];
@@ -82,7 +83,7 @@ function getFloors(StructureID) {
         var id = doc.data()["Floors"];
         floorArray.push(id);
         
-        for (var i = 0; i < floorArray; ++i) {
+        for (var i = 1; i < floorArray; ++i) {
             var available = doc.data()["Floor Data"]["Floor " + (1+i)]["Available"];
             var capacity = doc.data()["Floor Data"]["Floor " + (1+i)]["Capacity"];
             
