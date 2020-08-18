@@ -49,10 +49,10 @@ class average_chart // average occupancy graph for floor
                 {
                     querySnapshot.forEach(async function(doc)
                     {
-                        console.log(doc.data()["Average"]);
+                      //  console.log(doc.data()["Average"]);
                         test.occupancyData.push(doc.data()["Average"]);
                         var temp2 =  doc.data()["Time"].toDate();
-                        console.log(temp2);
+                        //console.log(temp2);
                         test.occupanceReadTime.push(temp2);
                         test.occupancyTime.push((temp2.getTime()-(2.52*Math.pow(10,7))));
                        // console.log(test.occupancyTime)
