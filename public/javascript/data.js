@@ -13,9 +13,11 @@ class average_chart // average occupancy graph for floor
    constructor()
     {
         
-        this.data_amount = 10; // the latest x amount of points  
+        this.data_amount = 12; // the latest x amount of points  
         /// long term look into dynamically changing ^^^ based off zoom/graph scope : week/month/3 months/etc 
         
+        // 12 hours / 24 hours/ 1 week/ 1 month for beta launch 
+        // 12 hours will be default
         /****************************************************************/
         this.occupancyData = []; // amount occupied array
         this.occupancyTime =[]; // time stamp
@@ -64,6 +66,7 @@ class average_chart // average occupancy graph for floor
                         i++;
 
                     });
+                    test.temp.hideSeries('24hours')
                 }).catch(function(error) 
                 {
                     alert("Error getting documents: " + error);
@@ -82,6 +85,8 @@ class average_chart // average occupancy graph for floor
    }
    
 }
+// zoomx function for 24hrs/week/mpnth charts etc
+// could use zoomx/customicons and custom function to make zoom work how you want
  // creates chart 
  async function generateAverageOccupancuData(averageChart)
 {
@@ -89,8 +94,14 @@ class average_chart // average occupancy graph for floor
     {
         chart: 
         {
+          //selection:{
+           //   enabled: true
+        //  },
           height: 600,
           type: averageChart.graph_type,
+           zoom:{
+               enabled:false
+           },
         },
         dataLabels: 
         {
@@ -101,14 +112,24 @@ class average_chart // average occupancy graph for floor
           curve: 'smooth',
         },
         series: 
-        [{
-          name: 'Occupied',
-          data: await averageChart.occupancyData,
-        }],
+        [
+            {
+                name: '12hours',
+                data: [12,14]//await averageChart.occupancyData
+            },
+            {
+                name: '24hours',
+                data: [0,21]
+            },
+        ],
         xaxis: 
         {
           type: 'datetime',
-          categories: await averageChart.occupancyTime,
+          categories: ['01/01/2003', '02/01/2003'], //await averageChart.occupancyTime,
+        },
+        legend:
+        {
+            show:false
         },
       /*
       yaxis: {
@@ -136,8 +157,28 @@ class average_chart // average occupancy graph for floor
     }
     var chart = new ApexCharts(document.querySelector("#average_chart"),await options);// make sure to change this line for different charts/div classes
     averageChart.temp = chart;
+    console.log(averageChart)
 }
-
+function toggleSeries(radio)
+{
+    averageChart.toggleSeries(radio.value)
+}
+async function test_toggle(averageChart)
+{
+    /*
+    console.log(averageChart)
+    if(await averageChart.temp.toggleSeries('12hours')== false)
+        {
+            await averageChart.temp.toggleSeries('12hours')
+        }
+   if(await averageChart.temp.toggleSeries('24hours'))
+        {
+            await averageChart.temp.toggleSeries('24hours')
+        }
+        */
+    
+    // averageChart.temp.hideSeries('12hours')
+}
 // base function called by webpage that creates class object and calls function and monitors for changes 
 async function average_graph()
 {
@@ -146,6 +187,8 @@ async function average_graph()
     
     var averageChart = new average_chart;
     await averageChart.getData(averageChart);
+    console.log(averageChart);
+     test_toggle(await averageChart);
     var unsubscribe = database.collection(averageChart.organization).doc(averageChart.parking_structure).collection(averageChart.floor).orderBy("Time","desc").limit(averageChart.data_amount).onSnapshot(async function(snapshot)
                 {  
                     snapshot.docChanges().forEach(async function(change)
@@ -159,4 +202,5 @@ async function average_graph()
                         }
                     });
                 });
+   
 }
