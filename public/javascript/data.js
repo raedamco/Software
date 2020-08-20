@@ -13,10 +13,11 @@ class average_chart // average occupancy graph for floor
    constructor()
     {
         // testting 24 as highest right now
-        this.data_amount = 168; // the latest x amount of points  
+        this.data_amount = 744; // the latest x amount of points  
         /// long term look into dynamically changing ^^^ based off zoom/graph scope : week/month/3 months/etc 
         
         // 12 hours / 24 hours/ 1 week/ 1 month for beta launch 
+        // going to have to look into how to do a month
         // 12 hours will be default
         /****************************************************************/
         this.occupancyData = []; // amount occupied array
@@ -167,7 +168,14 @@ function toggleSeries(radio)
             the_averagechart.temp.zoomX(the_averagechart.occupancyTime[23],the_averagechart.occupancyTime[0])
         }
    
-   
+   if(radio.value == "week")
+        {
+            the_averagechart.temp.zoomX(the_averagechart.occupancyTime[167],the_averagechart.occupancyTime[0])
+        }
+     if(radio.value == "month")
+        {
+            the_averagechart.temp.zoomX(the_averagechart.occupancyTime[743],the_averagechart.occupancyTime[0])
+        }
 }
 async function test_toggle(averageChart)
 {
