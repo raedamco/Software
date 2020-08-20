@@ -12,8 +12,8 @@ class average_chart // average occupancy graph for floor
 {
    constructor()
     {
-        
-        this.data_amount = 12; // the latest x amount of points  
+        // testting 24 as highest right now
+        this.data_amount = 168; // the latest x amount of points  
         /// long term look into dynamically changing ^^^ based off zoom/graph scope : week/month/3 months/etc 
         
         // 12 hours / 24 hours/ 1 week/ 1 month for beta launch 
@@ -66,7 +66,7 @@ class average_chart // average occupancy graph for floor
                         i++;
 
                     });
-                    test.temp.hideSeries('24hours')
+                  
                 }).catch(function(error) 
                 {
                     alert("Error getting documents: " + error);
@@ -113,19 +113,16 @@ class average_chart // average occupancy graph for floor
         },
         series: 
         [
+//            
             {
-                name: '12hours',
-                data: [12,14]//await averageChart.occupancyData
-            },
-            {
-                name: '24hours',
-                data: [0,21]
+//               
+                data: await await averageChart.occupancyData
             },
         ],
         xaxis: 
         {
           type: 'datetime',
-          categories: ['01/01/2003', '02/01/2003'], //await averageChart.occupancyTime,
+          categories: await averageChart.occupancyTime,
         },
         legend:
         {
@@ -161,24 +158,23 @@ class average_chart // average occupancy graph for floor
 }
 function toggleSeries(radio)
 {
-    averageChart.toggleSeries(radio.value)
+    if(radio.value == "12hours")
+        {
+             the_averagechart.temp.zoomX(the_averagechart.occupancyTime[11],the_averagechart.occupancyTime[0])
+        }
+    if(radio.value == "24hours")
+        {
+            the_averagechart.temp.zoomX(the_averagechart.occupancyTime[23],the_averagechart.occupancyTime[0])
+        }
+   
+   
 }
 async function test_toggle(averageChart)
 {
-    /*
-    console.log(averageChart)
-    if(await averageChart.temp.toggleSeries('12hours')== false)
-        {
-            await averageChart.temp.toggleSeries('12hours')
-        }
-   if(await averageChart.temp.toggleSeries('24hours'))
-        {
-            await averageChart.temp.toggleSeries('24hours')
-        }
-        */
+   
     
-    // averageChart.temp.hideSeries('12hours')
 }
+var the_averagechart;
 // base function called by webpage that creates class object and calls function and monitors for changes 
 async function average_graph()
 {
@@ -202,5 +198,6 @@ async function average_graph()
                         }
                     });
                 });
+    the_averagechart = averageChart;
    
 }
