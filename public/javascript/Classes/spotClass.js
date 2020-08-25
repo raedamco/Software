@@ -207,12 +207,12 @@ class log{
         }
         update(time_end) // helps update log on new value
         {
-            this.htmlDoc.removeChild(this.log_text[3]);
+            this.htmlDoc.removeChild(this.log_text[2]);
             this.htmlDoc.removeChild(this.log_text[4]);
             this.htmlDoc.removeChild(this.log_text[1]);
             this.time_end = time_end;
-            this.time_end_text = document.createTextNode("END: "+ time_end);
-            this.log_text[3] = this.time_end_text;
+            this.time_end_text = document.createTextNode("End: "+ time_end);
+            this.log_text[2] = this.time_end_text;
             this.htmlDoc.appendChild(this.time_end_text);
             this.htmlDoc.appendChild(this.log_text[1]);
             this.htmlDoc.appendChild(this.log_text[4]);
@@ -231,13 +231,13 @@ function dataLogRows(tableID, description, time_start,time_end, occupied, id,Spo
     var br2 = document.createElement("BR");
     if(occupied == true)
         {
-            var rowText = document.createTextNode("Start: "+time_start);
-            var rowText2 = document.createTextNode("END: "+ time_end);
+            var rowText2 = document.createTextNode("Start: "+time_start);
+            var rowText = document.createTextNode("End: "+ time_end);
             var rowText3 = document.createTextNode("Occuppied");
         }else
         {
-              var rowText = document.createTextNode("Start: "+time_start);
-            var rowText2 = document.createTextNode("END: "+ time_end);
+              var rowText2 = document.createTextNode("Start: "+time_start);
+            var rowText = document.createTextNode("End: "+ time_end);
             var rowText3 = document.createTextNode("Unoccuppied");   
         }
     
