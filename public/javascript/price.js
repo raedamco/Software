@@ -57,6 +57,8 @@ function price_form()
     title.style.textAlign= "left";
     title.appendChild(name);
      title_div.appendChild(title);
+   
+    title_div.setAttribute("id","price_title");
     
     var price_div =document.createElement("div");
      price_div.style.width= "250px";
@@ -66,7 +68,8 @@ function price_form()
     price.style.textAlign= "left";
     price.style.fontSize = "14px";
      price_div.appendChild(price);
-    price_div 
+     price_div.style.left = "500px"
+   
     var the_div = document.getElementById("coming_soon");
     the_div.appendChild(title_div);
      the_div.appendChild(price_div);
