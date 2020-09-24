@@ -108,9 +108,18 @@ function authverification() {
 }
 
 function displayAccountData(){
+    var username;
+    
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
-            document.getElementById("name").innerHTML = "Hello, <br><br>" + user.email;
+            database.collection("Users").doc("Companies").collection("PSU").where("UUID", "==", user.uid).get().then(function(querySnapshot) {
+                querySnapshot.forEach(function(doc) {
+                    username = doc.data().Name;
+                });
+                document.getElementById("name").innerHTML = "Hello, <br><br>" + username;
+            }).catch(function(error) {
+                alert("Error getting documents: " + error);
+            });
         }else{
             signOut();
         }
