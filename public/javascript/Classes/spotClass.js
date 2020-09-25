@@ -413,6 +413,7 @@ function loadData() // initializes logs
     
     });
 }
+// here for update checks
 // value[] 0 = ADA 1= permit 2 =hourly 3= EV
 function updateSpotData(SpotID, Value)
 {
