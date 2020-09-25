@@ -22,22 +22,29 @@
 
 	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400" rel="stylesheet">
-	
+        
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-storage.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-auth.js"></script>
-     
-    <script src="javascript/core.js"></script>      
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+    <script src="javascript/FirebaseSetup.js"></script>
+    <script src="javascript/core.js"></script>
+    <script src="javascript/htmlElements.js"></script>
         
-   <!-- Favicon START -->
+    <script src="javascript/retrieveData.js"></script>
+    <script src="javascript/price.js"></script>
+        
+    <!-- Favicon START -->
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
     <link rel="manifest" href="favicon_io/site.webmanifest">
     <!-- Favicon END --> 
-        
+	
 	<!-- Animate.css -->
 	<link rel="stylesheet" href="css/animate.css">
 	<!-- Icomoon Icon Fonts-->
@@ -54,6 +61,9 @@
 
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
+        
+    <!-- Map style -->
+    <link rel="stylesheet" href="css/map.css">
 
 	<!-- Modernizr JS -->
 	<script src="js/modernizr-2.6.2.min.js"></script>
@@ -75,11 +85,10 @@
     <!-- User Authentication. Verify User should be able to access data START-->
     <script>
         window.onload = function(){ 
-            authverification(); 
             getData();
         }
     </script>
-    <!-- User Authentication. Verify User should be able to access data END-->    
+    <!-- User Authentication. Verify User should be able to access data END-->
         
 	</head>
 	<body>
@@ -96,7 +105,7 @@
 						</div>
 						<div class="col-md-10 text-right menu-1">
 							<ul>
-								<li><a href="dashboard.html">Facilities</a></li>
+								<li class="active"><a href="dashboard.html">Facilities</a></li>
 								<li><a href="predictions.html">Summary</a></li>
 								<li><a href="enforcement.html">Enforcement</a></li>
                                 <li class="has-dropdown">
@@ -114,28 +123,20 @@
 				</div>
 			</div>
 		</nav>
-        <script src="javascript/price.js"></script>
-       
-        <div class ="coming_soon" id="coming_soon">
-                             
-                           </div>
-		<div class="tp-services">
+
+		<div class="tp-services" id="container">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-12 text-center animate-box" style="padding-bottom: 150px;">
-                       
+					<div class="col-md-12 text-center animate-box">
+                       <div class="main" id="main">
+                            <h1 id="structureTitle" style="padding-top: 50px; padding-bottom: 50px"></h1>
+                        </div>
 					</div>
 				</div>
 			</div>
 		</div>
-         <script>
-        window.onload = function(){
-           
-            test_price();
-           
-        }
-        </script>
-		<footer id="tp-footer">
+
+		<footer id="tp-footer" style="margin-top: 400px">
 			<div class="copy">
 				<div class="container">
 					<div class="row">

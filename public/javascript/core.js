@@ -38,7 +38,7 @@ function initApp() {
 }
 
 function signIn() {
-    var email = document.getElementById('emailInput').value;
+    var email = document.getElementById('emailInput').value; 
     var password = document.getElementById('passwordInput').value;
 
     if (email.length <= 0 || password.length <= 0) {

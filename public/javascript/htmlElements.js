@@ -60,41 +60,6 @@
         }
     }
 
-/* Theme Selection START */
-/*
-function changeTheme() {
-    const toggleSwitch = document.getElementById('themeSwitchButton');
-    const currentTheme = localStorage.getItem('theme');
-    var darkMode = Boolean();
-    
-    if (currentTheme) {
-        document.documentElement.setAttribute('data-theme', currentTheme);
-
-        if (darkMode === 'dark') {
-            darkMode = true;
-        } else {
-            darkMode = false;
-        }
-    }
-
-    function switchTheme(onclick) {
-        if (darkMode === true) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            darkMode = false;
-            document.documentElement.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
-        }    
-    }
-
-    //toggleSwitch.addEventListener('click', switchTheme, false);
-}
-*/ 
-/* Theme Selection END */
-
-
-
 
 
 

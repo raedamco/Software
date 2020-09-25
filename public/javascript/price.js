@@ -6,143 +6,115 @@
 //  Copyright © 2020 Raedam. All rights reserved.
 //
 // This file holds code for price adjustment
-/*
-firebase.auth().onAuthStateChanged(function(user) 
-        {
-            if(user) 
-            {
-                database.collection(test.organization).doc(test.parking_structure).collection(test.floor).orderBy("Time","desc").limit(test.data_amount).get().then(async function(querySnapshot) 
-                {
-                    querySnapshot.forEach(async function(doc)
-                    {
-                      
-                        var price =  doc.data()["Pricing"]["Minute"];
-                      
-                    });
-                  
-                }).catch(function(error) 
-                {
-                    alert("Error getting documents: " + error);
-                });
-                
-                     
-            }else
-            {
-                signOut();
-            }
-        });
-*/
 
-function test_price()
-{
-  
-    var the_database = database.collection("PSU").doc("Parking Structure 1");
-the_database.get().then(function(doc) {
-    if(doc.exists){
-         price = doc.data()["Pricing"]["Minute"];
-       
-        price_form(price);
-           //return price; 
-    }else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-         price = null;
-        price_form(price);
-    }
-   
-}).catch(function(error) {
-    console.log("Error getting document:", error);
-});
-  
-    
+async function getData() {
+    firebase.auth().onAuthStateChanged(function(user) {
+        if(user) {
+            var title = document.getElementById("structureTitle");
+            setAttributes(title,{"id": "structureTitle"}, "Organization Settings");
+            database.collection("Companies").where("Info.CUID", "==", "f6KIyH6vyFTTrQ6J6zjaRzlqXN32").get().then(function(querySnapshot) {
+                querySnapshot.forEach(function(doc) {
+                    retrievePricingData();
+                });
+            }).catch(function(error) {
+                alert("Error getting documents: " + error);
+            });
+        }else{
+            signOut();
+        }
+    });
 }
-function price_submit(price)
-{
-    
+
+var currentPrice;
+
+function retrievePricingData(){
+    database.collection("PSU").doc("Parking Structure 1").get().then(function(doc) {
+        if(doc.exists){
+            price = doc.data()["Pricing"]["Minute"];
+            currentPrice = price;
+            setupPage(price);
+        }else{
+            price = null;
+            price_form(price);
+        }
+   
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    });
+}
+
+function price_submit(price){
+    var newPrice = parseFloat(price).toFixed(3);
     database.collection("PSU").doc("Parking Structure 1").update({
-            "Pricing.Minute" : price.value
-           
-         })    
+        "Pricing.Minute" : parseFloat(newPrice)
+    }).then(function() {
+        var adjustedRow = document.getElementById("Structure1");
+        adjustedRow.innerHTML = "Current pricing rate for Parking Structure 1: $" + newPrice + "/min  (click row to adjust)";
+        Swal.fire({
+          title: "Success",
+          text: "Rate has been updated to " + price.value,
+          icon: "success",
+          confirmButtonText: "Close"
+        })
+    }).catch(function(error) {
+        Swal.fire({
+          title: "Error",
+          text: "Error updating rate",
+          icon: "error",
+          confirmButtonText: "Close"
+        })
+    });
+}
+
+// create table of orangaization's structure and add popup settings modification
+function setupPage(currentPrice){
+    var container = document.getElementById("container");
+    var table = document.createElement('table');
+    table.backgroundColor = "red";
+    table.id = "OrganizationPricingLabel";
+    container.appendChild(table);
+    
+    var tr = document.createElement('tr');
+    var td = document.createElement('td');
+    td.id = "Structure1";
+
+    var rowText = document.createTextNode("Current pricing rate for Parking Structure 1 =  $" + currentPrice + "/min (click row to adjust)");
+    td.appendChild(rowText);
+    tr.appendChild(td);
+    table.appendChild(tr);
+    
+    onRowClick("OrganizationPricingLabel", function(row){
+        popupInput();
+    });
 }
     
-function price_form(the_price)
-{
-//        var title_div = document.createElement("div");
-//    title_div.style.width= "250px";
-//    var title = document.createElement("h3");
-//    var name = document.createTextNode("Parking Structure 1");
-//   title.style.color = "black";
-//    title.style.textAlign= "left";
-//    title.appendChild(name);
-//     title_div.appendChild(title);
-//   
-//    title_div.setAttribute("id","price_title");
-    // div for price form
-    
-    
-    
-   
-    
-    // price_div.appendChild(price);
-  
-    
-    var the_div = document.getElementById("coming_soon");
-   // the_div.appendChild(title_div);
-   
-    
-    //table settings and creation
-    var price_table = document.createElement("TABLE");
-    the_div.appendChild(price_table);
-    price_table.style.fontSize = "24px";
-    price_table.style.color = "black";
-    price_table.style.border = "1";
-    price_table.id="price_table";
-    price_table.style.borderCollapse = "separate";
-     price_table.style.borderSpacing = "20px";
-    
-    // first row
-    var row1 = price_table.insertRow(0);
-    
-    // structure label
-    var cell1 = row1.insertCell(0);
-    cell1.innerHTML = "Parking Structure 1";
-    
-    // price input
-    var price = document.createElement("input");
-    price.setAttribute("type","number");
-    price.setAttribute("step","0.05");
-    price.value = the_price ;//await Number(current_value);
-    price.style.color = "black";
-    price.style.fontSize = "14px";
-    price.style.width = "70px"
-    var cell2 = row1.insertCell(1);
-    
-    var input_table = document.createElement("TABLE");
-    var inputrow = input_table.insertRow(0);
-    var inputcell = inputrow.insertCell(0);
-    inputcell.appendChild(price);
-    var inputcell2 = inputrow.insertCell(1);
-    inputcell2.innerHTML="/min";
-    cell2.appendChild(input_table);
-    
-    var cell3 = row1.insertCell(2);
-    var submit = document.createElement("button");
-    submit.value = "submit";
-    submit.onclick = function(){
-         price_submit(price);
-           
-    };
-    submit.style.height= "40px";
-    submit.style.width ="90px";
-    submit.name = "submit";
-    submit.type = "submit";
-    submit.innerHTML = "submit";
-    cell3.appendChild(submit);
-   
-  
-//    var the_p = document.createElement("p");
-//    var the_p_words = document.createTextNode("/min");
-//    cell2.appendChild(the_p);
-//    the_p.appendChild(the_p_words);
+// redirects to object in row's onRowClick function (if it's a structure the sturcuture's/ if it's a floor that floor's) 
+function onRowClick(tableId, callback) {
+    var table = document.getElementById(tableId);
+    var rows = table.getElementsByTagName("tr");
+    for (var i = 0; i < rows.length; i++) {
+        table.rows[i].onclick = function (row) {
+            return function () {
+                callback(row);
+            };
+        }
+        (table.rows[i]);
+    }
+};
+
+function popupInput(){
+    const { value: Double } = Swal.fire({
+      input: 'text',
+      inputPlaceholder: 'Enter new rate/minute (Ex: 0.05)',
+      inputValidator: (value) => {
+        if (!value) {
+            return 'You need to write something!'
+        }else{
+            console.log("VALUE", value);
+            price_submit(value);
+        }
+      }
+    })
+
     
 }
