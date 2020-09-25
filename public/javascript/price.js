@@ -56,7 +56,15 @@ the_database.get().then(function(doc) {
   
     
 }
-
+function price_submit(price)
+{
+    
+    database.collection("PSU").doc("Parking Structure 1").update({
+            "Pricing.Minute" : price.value
+           
+         })    
+}
+    
 function price_form(the_price)
 {
 //        var title_div = document.createElement("div");
@@ -116,6 +124,21 @@ function price_form(the_price)
     var inputcell2 = inputrow.insertCell(1);
     inputcell2.innerHTML="/min";
     cell2.appendChild(input_table);
+    
+    var cell3 = row1.insertCell(2);
+    var submit = document.createElement("button");
+    submit.value = "submit";
+    submit.onclick = function(){
+         price_submit(price);
+           
+    };
+    submit.style.height= "40px";
+    submit.style.width ="90px";
+    submit.name = "submit";
+    submit.type = "submit";
+    submit.innerHTML = "submit";
+    cell3.appendChild(submit);
+   
   
 //    var the_p = document.createElement("p");
 //    var the_p_words = document.createTextNode("/min");
