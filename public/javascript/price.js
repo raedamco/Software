@@ -78,7 +78,7 @@ function setupPage(currentPrice){
     var td = document.createElement('td');
     td.id = "Structure1";
 
-    var rowText = document.createTextNode("Current pricing rate for Parking Structure 1 =  $" + currentPrice + "/min (click row to adjust)");
+    var rowText = document.createTextNode("Current pricing rate for Parking Structure 1 $" + currentPrice + "/min (click row to adjust)");
     td.appendChild(rowText);
     tr.appendChild(td);
     table.appendChild(tr);
