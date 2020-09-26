@@ -138,6 +138,11 @@ function getSpots(StructureID, FloorID) {
                 var ghost = new ghost_spot(i-1,i-1,0,0)
                 ghost.createSpots();
             }
+         for(i = 10; i<16; i+=1 )
+            {
+                var ghost = new ghost_spot(i,i,0,0)
+                ghost.createSpots();
+            }
         /////////////////////////////////
          window.addEventListener("resize", function()
     {

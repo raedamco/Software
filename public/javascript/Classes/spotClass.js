@@ -52,7 +52,7 @@ class spot
         setAttributes(htmlSpot, {"class": "parking-spot", "id": this.ID}, this.ID);
         htmlSpot.innerHTML = this.ID;
         htmlSpot.style.top = this.Y;
-        htmlSpot.style.left = (this.X+2)*(this.x_ratio * document.getElementById('map').clientWidth) + "px";
+        htmlSpot.style.left = (this.X)*(this.x_ratio * document.getElementById('map').clientWidth)+(this.x_ratio * document.getElementById('map').clientWidth) + "px";
         htmlSpot.style.width = "4.8%";
         htmlSpot.style.height = "18%";
         this.element = document.getElementById("map").appendChild(htmlSpot);
