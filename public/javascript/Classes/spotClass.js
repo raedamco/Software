@@ -95,6 +95,11 @@ class ghost_spot extends spot {
         /// need to add min page sizes and address coming from database long term along with mapping y-axis
        // console.log("7/10/2020 spot id"+ this.ID)
 	}
+   createSpots()
+  {
+       super.createSpots();
+      this.htmlSpot.innerHTML = "";
+  }
     update()
     {
         this.element.style.backgroundColor = "grey";
