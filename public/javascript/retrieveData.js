@@ -133,6 +133,11 @@ function getSpots(StructureID, FloorID) {
         Spots.set(doc.id, spotClass);
         Spots.get(doc.id).update(occupied);
     });
+        for(i = 0; i<2; i+=1 )
+            {
+                var ghost = new ghost_spot(i-1,i-1,0,0)
+                ghost.createSpots();
+            }
         /////////////////////////////////
          window.addEventListener("resize", function()
     {

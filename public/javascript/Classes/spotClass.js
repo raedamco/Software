@@ -24,7 +24,10 @@ function spot_resize(value)
 }
 //////////////////////////////////////////////
 class spot 
-{
+{   constuctor()
+    {
+        console.log("test");
+    }
     constructor(id, occupied, occupant, x, y, rotation, type)
     {
         this.ID = id;
@@ -49,7 +52,7 @@ class spot
         setAttributes(htmlSpot, {"class": "parking-spot", "id": this.ID}, this.ID);
         htmlSpot.innerHTML = this.ID;
         htmlSpot.style.top = this.Y;
-        htmlSpot.style.left = (this.X-1)*(this.x_ratio * document.getElementById('map').clientWidth) + "px";
+        htmlSpot.style.left = (this.X+2)*(this.x_ratio * document.getElementById('map').clientWidth) + "px";
         htmlSpot.style.width = "4.8%";
         htmlSpot.style.height = "18%";
         this.element = document.getElementById("map").appendChild(htmlSpot);
@@ -76,6 +79,26 @@ class spot
 		}
 	}
 
+}
+class ghost_spot extends spot {
+    
+    constructor(id,x, y, rotation)
+    {
+        super();
+        this.ID = id;
+        this.Rotation = rotation;
+      
+        this.x_ratio = 1/20; // ratio based on map size will need to map out floors manually 
+        this.y_ratio = 1/25;  // will need to be passed in long term. Ratios control height/width 
+        this.X = id; // used for placing on map
+        this.Y = 0;  // same as above
+        /// need to add min page sizes and address coming from database long term along with mapping y-axis
+       // console.log("7/10/2020 spot id"+ this.ID)
+	}
+    update()
+    {
+        this.element.style.backgroundColor = "grey";
+    }
 }
 // this function update 7/10/2020 for spot type updates
 async function createpopupview(spotID, OccupantID) // creates spot pop up
