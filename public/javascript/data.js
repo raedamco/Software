@@ -2,7 +2,7 @@
 //  data.js
 //  Raedam 
 //
-//  Created on 5/13/2020. Modified on 6/30/2020 by Austin Mckee.
+//  Created on 5/13/2020. Modified on 10/5/2020 by Austin Mckee.
 //  Copyright © 2020 Raedam. All rights reserved.
 //
 // This file holds code for the Average Occupancy Graph
@@ -63,6 +63,11 @@ class average_chart // average occupancy graph for floor
                         if(i >= (test.data_amount-1))
                         {
                             await test.temp.render();
+                            if(heat_count == 0)
+                                {
+                                    heat_graph(); // makes heat map because it has error if heat map starts before 
+                                }
+                           
                         }
                         i++;
 

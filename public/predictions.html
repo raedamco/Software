@@ -1,4 +1,6 @@
+
 <!DOCTYPE HTML>
+
 <html>
 	<head>
 	<meta charset="utf-8">
@@ -81,17 +83,19 @@
 
     <script src="javascript/revenue.js"></script>   
     <script src="javascript/data.js"></script>
-        
+         <script src="javascript/heatmap.js"></script>
     <!-- User Authentication. Verify User should be able to access data START-->
     <script>
         window.onload = function(){
             authverification();
+                //heat_graph(); for some reason average graph need to render before heat map
            // test_graph();
             average_graph();
+        
 //            revChart = new revenue_graph;
 //            revChart.getRev();
            // getData();
-            // getRev();
+           // getRev();
             //generateAverageOccupancuData();
         }
     </script>
@@ -139,6 +143,7 @@
                 <div id="average_chart">
                     
                 </div>
+                 
                 <form>
                     <div>
                         <input type ="radio" name="data_amount"  onclick ="toggleSeries(this)" value="12hours">
@@ -157,6 +162,9 @@
                         <label>month</label>
                     </div>
                 </form>
+                <div id="heat_chart">
+                    
+                </div>
 <!--
 
                 <div id="chartprediction">
