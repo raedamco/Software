@@ -49,8 +49,8 @@ async function get_percent(spotID)
       {
             percent =Math.floor(heat_occupied/(heat_occupied+heat_unoccupied)*100);
       }
-        console.log(percent);
-        return percent;
+      //  console.log(percent);
+        return await percent;
         
            // call function that uses percentage
      })
@@ -121,22 +121,16 @@ class heat_map
     }
     async heat(heat_object)
     {
-      /*
-        this.jan_data =  generateData(heat_object.data_amount,this.min,this.max);
-        this.feb_data =  generateData(heat_object.data_amount,this.min,this.max);
-        this.mar_data = generateData(heat_object.data_amount,this.min,this.max);
-        this.apr_data =  generateData(heat_object.data_amount,this.min,this.max);
-        this.may_data =  generateData(heat_object.data_amount,this.min,this.max);
-        this.jun_data = generateData(heat_object.data_amount,this.min,this.max);
-        this.july_data =  generateData(heat_object.data_amount,this.min,this.max);
-        this.aug_data =  generateData(heat_object.data_amount,this.min,this.max);
-        this.sep_data = generateData(heat_object.data_amount,this.min,this.max);
-       */
         for(let i=0; i<this.spot_count; i+=1)
             {
               this.data[i]= get_percent(String(i+1));
                 //console.log(this.data[i])
                 //console.log(get_percent(String(i+1)));
+               // if( i == (this.spot_count-1))
+                   // {
+                   //     await heat_object.chart.render();
+                  //  }
+                console.log(await this.data[i]);
             }
         for(let i=0; i<this.spot_count; i+=1)
             {
@@ -159,7 +153,9 @@ class heat_map
                        " name: " + String(i+1) + ", \n "+
                          "data: " +String(await this.data[i])+ " \n"+
                         "} ]; \n"
-                )
+                            
+                )  
+                         
                     }
                 else {
 
@@ -172,9 +168,9 @@ class heat_map
                 )
                 }
         }
-        console.log(this.data_string)
+        //console.log(this.data_string)
         heatmap_test(heat_object);
-       
+       //await heat_object.chart.render();
     }
    
     
@@ -214,11 +210,9 @@ var the_series = [{
 //console.log(test_gendata);
   async function heatmap_test(myChart)
 {
-     console.log("was here oct 2020", myChart.data);
+     //console.log("was here oct 2020", myChart.data);
         var options = {
-          series: [{name: 'row 1',
-                   data: myChart.data // issue here
-                  }],
+          
           chart: {
           height: 350,
           type: 'heatmap',
@@ -266,23 +260,33 @@ var the_series = [{
         stroke: {
           width: 1
         },
+        series: 
+        [{  name: 'row 1',
+            data:  await myChart.data//[11,22,33,44,55,66,77,88,99]//// issue here
+                  
+         }],
+            xaxis:
+            {
+              categories:[1,2,3,4,5,6,7,8,9]  
+            },
         title: {
           text: 'HeatMap Chart with Color Range'
         },
         };
 
         var chart = new ApexCharts(document.querySelector("#heat_chart"),  await options);
-    
+        console.log(myChart.data)
         //chart.render();
        myChart.chart =  chart;
        await myChart.chart.render();
+       myChart.chart.appendData(await myChart.data)
 }
 // has to be called after average if on same page for some reason 
- function heat_graph()
+ async function heat_graph()
 {
      heat_count = 1;
     var myChart = new heat_map;
    
-    myChart.heat(myChart);
-    console.log(myChart.chart);
+    myChart.heat(await myChart);
+    console.log(await myChart.data);
 }
