@@ -105,11 +105,10 @@ function generateData(num_count, min,max)
     return data_array;
 }
 
-//test_gendata = generateData(20,-30,55);
-//console.log(test_gendata);
+
   async function heatmap_create(myChart)
 {
-     //console.log("was here oct 2020", myChart.data);
+    
         var options = {
           
           chart: {
@@ -156,6 +155,10 @@ function generateData(num_count, min,max)
         dataLabels: {
           enabled: false
         },
+        legend:{
+            show: true,
+            showForSingleSeries: true,
+        },
         stroke: {
           width: 1
         },
@@ -176,7 +179,7 @@ function generateData(num_count, min,max)
 
         var chart = new ApexCharts(document.querySelector("#heat_chart"),  await options);
         console.log(myChart.data)
-        //chart.render();
+
        myChart.chart =  chart;
        await myChart.chart.render();
     
