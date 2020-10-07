@@ -132,7 +132,7 @@ class average_chart // average occupancy graph for floor
         },
         legend:
         {
-            show:false
+            show:true
         },
       /*
       yaxis: {
@@ -182,11 +182,11 @@ function toggleSeries(radio)
             the_averagechart.temp.zoomX(the_averagechart.occupancyTime[743],the_averagechart.occupancyTime[0])
         }
 }
-async function test_toggle(averageChart)
-{
-   
-    
-}
+//async function test_toggle(averageChart)
+//{
+//   
+//    
+//}
 var the_averagechart;
 // base function called by webpage that creates class object and calls function and monitors for changes 
 async function average_graph()
@@ -197,7 +197,7 @@ async function average_graph()
     var averageChart = new average_chart;
     await averageChart.getData(averageChart);
     console.log(averageChart);
-     test_toggle(await averageChart);
+//     test_toggle(await averageChart);
     var unsubscribe = database.collection(averageChart.organization).doc(averageChart.parking_structure).collection(averageChart.floor).orderBy("Time","desc").limit(averageChart.data_amount).onSnapshot(async function(snapshot)
                 {  
                     snapshot.docChanges().forEach(async function(change)

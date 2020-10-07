@@ -78,7 +78,7 @@ class heat_map
             {
                 this.spotIDs.push(i+1);
                 this.data[i]= await get_percent(String(i+1));
-               console.log(this.spotIDs)
+           
                 
             }
         
