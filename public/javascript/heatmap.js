@@ -2,14 +2,13 @@
 //  heatmap.js
 //  Raedam 
 //
-//  Created on 9/25/2020. Modified on 10/5/2020 by Austin Mckee.
+//  Created on 9/25/2020. Modified on 10/6/2020 by Austin Mckee.
 //  Copyright © 2020 Raedam. All rights reserved.
 //
 // This file holds code for floor heat map
 var heat_count = 0;
  
-   // heat_occupied[9]= 1;
-   // heat_unoccupied[9]= 1;
+
 
 async function get_percent(spotID)
 {   
@@ -26,14 +25,11 @@ async function get_percent(spotID)
            
             if(doc.data().Occupied)
                 {
-                    //await occupied_counter(spotID, the_length);
-                   // the_heatmap.total_occupied = the_heatmap.total_occupied+ the_length;
-                    //console.log(the_heatmap.total_occupied);
+                    
                     heat_occupied+= the_length;
                 }
             else{
-                //the_heatmap.total_unoccupied = the_heatmap.total_unoccupied +the_length;
-                //await unoccupied_counter(spotID,the_length);
+               
                 heat_unoccupied+= the_length;
             }})
             
@@ -49,59 +45,18 @@ async function get_percent(spotID)
       {
             percent =Math.floor(heat_occupied/(heat_occupied+heat_unoccupied)*100);
       }
-      //  console.log(percent);
+   
         return await percent;
         
-           // call function that uses percentage
+           
      })
 
  
-   //return get_percent(spotID);
+  
            
          return percent;
 }
-/*
-async function occupied_counter(spotid, num)
-{   if(heat_occupied.get(spotid) != null)
-    {
-         heat_occupied.set(spotid,num); 
-    }
-    else{
-         let temp = heat_occupied.get(spotid);
-         temp+= num;
-         heat_occupied.set(spotid,temp); 
-    }
-}
-async function unoccupied_counter(spotid, num)
-{   
-  if(heat_unoccupied.get(spotid) != null)
-    {
-         heat_unoccupied.set(spotid,num); 
-    }
-    else{
-         let temp = heat_unoccupied.get(spotid);
-         temp+= num;
-         heat_unoccupied.set(spotid,temp); 
-    }
-}
-async function get_percent(spotID)
-{
-    console.log(heat_occupied.get(spotID));
-     if(await heat_occupied.get(spotID) == 0)
-     {
-            percent = 0;
-     }
-      else if(heat_unoccupied.get(spotID)== 0)
-      {
-            percent = 100;
-      }
-      else
-      {
-            percent = heat_occupied.get(spotID)/(heat_occupied.get(spotID)+heat_unoccupied.get(spotID));
-      }
-    return percent;
-}
-*/
+
 class heat_map
 {
     constructor()
@@ -113,64 +68,23 @@ class heat_map
         this.data =[];
         this.data_string ="";
         this.spot_count = 9;
-//        this.total_occupied =0;
-//        this.total_unoccupied=0;
-//        this.spotID = "9";
-        // heat_occupied[9]+= 1;
+        this.spotIDs =[];
         
     }
     async heat(heat_object)
     {
+        // temporary while spots are ids 1-9 will need to change format when ids are not in order
         for(let i=0; i<this.spot_count; i+=1)
             {
-              this.data[i]= get_percent(String(i+1));
-                //console.log(this.data[i])
-                //console.log(get_percent(String(i+1)));
-               // if( i == (this.spot_count-1))
-                   // {
-                   //     await heat_object.chart.render();
-                  //  }
-                console.log(await this.data[i]);
+                this.spotIDs.push(i+1);
+                this.data[i]= await get_percent(String(i+1));
+               console.log(this.spotIDs)
+                
             }
-        for(let i=0; i<this.spot_count; i+=1)
-            {
-                if(i == 0)
-                {
-                    this.data_string = this.data_string.concat(
-                        "[  \n "+
-                        "{  \n"+
-                        " name: " + String(i+1) + ", \n "+
-                         "data: "+ String(await this.data[i])+ " \n"+
-                        "}, \n"
-                        
-                    )
-                }
-                else if( i == (this.spot_count-1))
-                    {
-                        this.data_string = this.data_string.concat(
-                 
-                        "{  \n"+
-                       " name: " + String(i+1) + ", \n "+
-                         "data: " +String(await this.data[i])+ " \n"+
-                        "} ]; \n"
-                            
-                )  
-                         
-                    }
-                else {
+        
+      
+        heatmap_create(heat_object);
 
-                this.data_string = this.data_string.concat(
-                   
-                        "{  \n"+
-                        " name: " + String(i+1) + ", \n "+
-                         "data: "+ String(await this.data[i])+ " \n"+
-                        "}, \n"
-                )
-                }
-        }
-        //console.log(this.data_string)
-        heatmap_test(heat_object);
-       //await heat_object.chart.render();
     }
    
     
@@ -190,25 +104,10 @@ function generateData(num_count, min,max)
     }
     return data_array;
 }
-var the_series = [{
-            name: 'Jan',
-            data: generateData(20,0,100)
-          },
-          {
-            name: 'Feb',
-            data: generateData(20,0,100)
-          },
-          {
-            name: 'Mar',
-            data: generateData(20,0,100)
-          },
-          {
-            name: 'Apr',
-            data: generateData(20,0,100)
-          } ] ;
+
 //test_gendata = generateData(20,-30,55);
 //console.log(test_gendata);
-  async function heatmap_test(myChart)
+  async function heatmap_create(myChart)
 {
      //console.log("was here oct 2020", myChart.data);
         var options = {
@@ -261,16 +160,17 @@ var the_series = [{
           width: 1
         },
         series: 
-        [{  name: 'row 1',
-            data:  await myChart.data//[11,22,33,44,55,66,77,88,99]//// issue here
-                  
-         }],
+        
+       [{  name: "",
+           data:  await myChart.data
+                 
+        }],
             xaxis:
             {
-              categories:[1,2,3,4,5,6,7,8,9]  
+              categories:await myChart.spotIDs  
             },
         title: {
-          text: 'HeatMap Chart with Color Range'
+          text: 'HeatMap - Structure 1,Floor 2'
         },
         };
 
@@ -279,7 +179,7 @@ var the_series = [{
         //chart.render();
        myChart.chart =  chart;
        await myChart.chart.render();
-       myChart.chart.appendData(await myChart.data)
+    
 }
 // has to be called after average if on same page for some reason 
  async function heat_graph()
