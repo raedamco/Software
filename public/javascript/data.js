@@ -62,7 +62,10 @@ class average_chart // average occupancy graph for floor
                        // console.log((2.52*(10^7)));
                         if(i >= (test.data_amount-1))
                         {
-                            await test.temp.render();
+                            //alert("Hello")
+                           var render_check = await test.temp.render();
+                            console.log(await render_check);
+                           test.temp.zoomX(await test.occupancyTime[11],await test.occupancyTime[0]);
                             if(heat_count == 0)
                                 {
                                     heat_graph(); // makes heat map because it has error if heat map starts before 
@@ -99,7 +102,33 @@ class average_chart // average occupancy graph for floor
     var options = 
     {
         chart: 
-        {
+        {   
+            toolbar:{
+           //offsetX: -500,
+            show:true,
+            tools:{
+//            customIcons: [
+//            {
+//                    icon: '<img src="../public/images/loc.png" width="20">',
+//                    title: 'time selection',
+//                /*
+//                    click: function(chart, options)
+//                    {
+//                        averageChart.temp.zoomX(averageChart.occupancyTime[11], averageChart.occupancyTime[0])
+//                        //averageChart.temp.zoomX(await averageChart.occupancyTime[11],await averageChart.occupancyTime[0])
+//                    },
+//                    */
+//                //hover: 
+//      
+//            },
+//            {
+//                icon: '<img src="../public/images/loc.png" width="20">',
+//                    title: 'tooltip of the icon',
+//            }
+//            
+//            ],
+            }
+        },
           //selection:{
            //   enabled: true
         //  },
@@ -160,7 +189,7 @@ class average_chart // average occupancy graph for floor
     }
     var chart = new ApexCharts(document.querySelector("#average_chart"),await options);// make sure to change this line for different charts/div classes
     averageChart.temp = chart;
-    console.log(averageChart)
+  
 }
 function toggleSeries(radio)
 {
