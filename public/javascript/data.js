@@ -100,33 +100,38 @@ class average_chart // average occupancy graph for floor
  async function generateAverageOccupancuData(averageChart)
 {
     var options = 
-    {
+    await {
         chart: 
         {   
             toolbar:{
            //offsetX: -500,
             show:true,
             tools:{
-//            customIcons: [
-//            {
-//                    icon: '<img src="../public/images/loc.png" width="20">',
-//                    title: 'time selection',
-//                /*
-//                    click: function(chart, options)
-//                    {
-//                        averageChart.temp.zoomX(averageChart.occupancyTime[11], averageChart.occupancyTime[0])
-//                        //averageChart.temp.zoomX(await averageChart.occupancyTime[11],await averageChart.occupancyTime[0])
-//                    },
-//                    */
+         customIcons: await [
+          {
+                  icon: await '<img src="../public/images/loc.png" width="20">',
+                 
+                  title: 'time selection',
+                  class: 'custom-icon',
+//                  click: function(chart, options)
+//                   {
+//                      averageChart.temp.zoomX(averageChart.occupancyTime[11], averageChart.occupancyTime[0])
+//                      //averageChart.temp.zoomX(await averageChart.occupancyTime[11],await averageChart.occupancyTime[0])
+//                  }
+//                   
 //                //hover: 
 //      
-//            },
+           }
 //            {
 //                icon: '<img src="../public/images/loc.png" width="20">',
 //                    title: 'tooltip of the icon',
 //            }
 //            
-//            ],
+        ],
+                zoom: false,
+          zoomin: false,
+          zoomout: false,
+          reset: false      
             }
         },
           //selection:{
@@ -134,9 +139,9 @@ class average_chart // average occupancy graph for floor
         //  },
           height: 600,
           type: averageChart.graph_type,
-           zoom:{
-               enabled:false
-           },
+//           zoom:{
+//               enabled:false
+//           },
         },
         dataLabels: 
         {
