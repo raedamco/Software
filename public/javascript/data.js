@@ -107,17 +107,23 @@ class average_chart // average occupancy graph for floor
            //offsetX: -500,
             show:true,
             tools:{
-         customIcons: await [
+         customIcons:  [
           {
-                  icon: await '<img src="../public/images/loc.png" width="20">',
+                  icon: '<img src="../public/images/loc.png" width="20">',
                  
                   title: 'time selection',
                   class: 'custom-icon',
-//                  click: function(chart, options)
-//                   {
+               click: function(chart, options)
+                 {
+                       var first_item = document.createElement("div");
+                      
+                       first_item.className="apexcharts-menu-item exportSVG";
+                       first_item.innerHTML= "TEST";
+                        document.getElementById("average_chart").appendChild(first_item);                                          
+                       
 //                      averageChart.temp.zoomX(averageChart.occupancyTime[11], averageChart.occupancyTime[0])
 //                      //averageChart.temp.zoomX(await averageChart.occupancyTime[11],await averageChart.occupancyTime[0])
-//                  }
+                }
 //                   
 //                //hover: 
 //      
