@@ -100,12 +100,14 @@ class average_chart // average occupancy graph for floor
  async function generateAverageOccupancuData(averageChart)
 {
     var dropdown = false;
+       var dropdown_array =[];
     var options = 
     await {
         chart: 
         {   
             toolbar:{
-           //offsetX: -500,
+            
+           offsetX: -100,
             show:true,
             tools:{
          customIcons:  [
@@ -116,29 +118,87 @@ class average_chart // average occupancy graph for floor
                   class: 'custom-icon',
                click: function(chart, options)
                  {
-                       if(dropdown == false)
-                       {
-                           var first_item = document.createElement("div");
-                         first_item.id = "item1";
-                       //first_item.className="apexcharts-menu-item exportSVG";
-                       first_item.innerHTML= "TEST";
-                       // documentdocument.getElementByClassName("apexcharts-toolbar").appendChild(first_item);    
-                         var chartDiv =  document.getElementById("average_chart");//.getElementByTagName("div").getElementByClassName("apexcharts-toolbar");
+                  
+                     function dropdown_create()
+                     {
+                         
+                        var chartDiv =  document.getElementById("average_chart");
                         var chartDiv2 = chartDiv.getElementsByTagName("div")[0];
                         var toolbar = chartDiv2.getElementsByClassName("apexcharts-toolbar");
-                           //var testamount = toolbar.length;
-                          // console.log(testamount);
+                         
+                         var first_item = document.createElement("div");
+                         dropdown_array[0]= first_item;
+                         first_item.id = "item1";
+                         first_item.style.paddingLeft = "5px";
+                         first_item.innerHTML= "week";
+                         first_item.style.cursor = "pointer";
+                         first_item.onclick = function(){
+                               the_averagechart.temp.zoomX(the_averagechart.occupancyTime[167],the_averagechart.occupancyTime[0]);
+                               dropdown = false;
+                           }
+                         
+                          var second_item = document.createElement("div");
+                          dropdown_array.push(second_item);
+                          second_item.id = "item2";
+                          second_item.style.paddingLeft = "5px";
+                          second_item.innerHTML= "month";
+                          second_item.style.cursor = "pointer";
+                          second_item.onclick = function(){
+                               the_averagechart.temp.zoomX(the_averagechart.occupancyTime[743],the_averagechart.occupancyTime[0]);
+                                dropdown = false;
+                           }
+                          
+                            var third_item = document.createElement("div");
+                          dropdown_array.push(third_item);
+                          third_item.id = "item3";
+                          third_item.style.paddingLeft = "5px";
+                          third_item.innerHTML= "day";
+                          third_item.style.cursor = "pointer";
+                          third_item.onclick = function(){
+                               the_averagechart.temp.zoomX(the_averagechart.occupancyTime[23],the_averagechart.occupancyTime[0]);
+                                dropdown = false;
+                           }
                            toolbar[0].appendChild(first_item);
+                           toolbar[0].appendChild(second_item);
+                              toolbar[0].appendChild(third_item);
+                         
+                         var fourth_item = document.createElement("div");
+                          dropdown_array.push(fourth_item);
+                          fourth_item.id = "item4";
+                          fourth_item.style.paddingLeft = "5px";
+                          fourth_item.innerHTML= "12hr";
+                          fourth_item.style.cursor = "pointer";
+                          fourth_item.onclick = function(){
+                               the_averagechart.temp.zoomX(the_averagechart.occupancyTime[11],the_averagechart.occupancyTime[0]);
+                                dropdown = false;
+                           }
+                          
+                           toolbar[0].appendChild(first_item);
+                           toolbar[0].appendChild(second_item);
+                           toolbar[0].appendChild(third_item);
+                           toolbar[0].appendChild(fourth_item);
+                     }
+                     
+                       if(dropdown == false)
+                       {  
+                         //the_averagechart.offsetX = -100;
+                         dropdown_create();
+                       
                         dropdown =true;
-//                      averageChart.temp.zoomX(averageChart.occupancyTime[11], averageChart.occupancyTime[0])
-//                      //averageChart.temp.zoomX(await averageChart.occupancyTime[11],await averageChart.occupancyTime[0])
                        }
                      else
                          {
-                             var item1 = document.getElementById("item1");
-                             dropdown = false;
-                             item1.remove();
+                             function dropdown_remove(item,index,array)
+                             {
+                                 item.remove();
+                             }
+                             console.log(dropdown_array);
+                            dropdown_array.forEach(dropdown_remove);
+                            dropdown_array = [];
+                            dropdown = false;
                              //document.getElementBy
+                             console.log("error things")
+                              
                          }
                        
                 }
