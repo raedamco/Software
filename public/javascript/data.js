@@ -99,6 +99,7 @@ class average_chart // average occupancy graph for floor
  // creates chart 
  async function generateAverageOccupancuData(averageChart)
 {
+    var dropdown = false;
     var options = 
     await {
         chart: 
@@ -115,14 +116,31 @@ class average_chart // average occupancy graph for floor
                   class: 'custom-icon',
                click: function(chart, options)
                  {
-                       var first_item = document.createElement("div");
-                      
-                       first_item.className="apexcharts-menu-item exportSVG";
+                       if(dropdown == false)
+                       {
+                           var first_item = document.createElement("div");
+                         first_item.id = "item1";
+                       //first_item.className="apexcharts-menu-item exportSVG";
                        first_item.innerHTML= "TEST";
-                        document.getElementById("average_chart").appendChild(first_item);                                          
-                       
+                       // documentdocument.getElementByClassName("apexcharts-toolbar").appendChild(first_item);    
+                         var chartDiv =  document.getElementById("average_chart");//.getElementByTagName("div").getElementByClassName("apexcharts-toolbar");
+                        var chartDiv2 = chartDiv.getElementsByTagName("div")[0];
+                        var toolbar = chartDiv2.getElementsByClassName("apexcharts-toolbar");
+                           //var testamount = toolbar.length;
+                          // console.log(testamount);
+                           toolbar[0].appendChild(first_item);
+                        dropdown =true;
 //                      averageChart.temp.zoomX(averageChart.occupancyTime[11], averageChart.occupancyTime[0])
 //                      //averageChart.temp.zoomX(await averageChart.occupancyTime[11],await averageChart.occupancyTime[0])
+                       }
+                     else
+                         {
+                             var item1 = document.getElementById("item1");
+                             dropdown = false;
+                             item1.remove();
+                             //document.getElementBy
+                         }
+                       
                 }
 //                   
 //                //hover: 
