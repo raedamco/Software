@@ -112,7 +112,7 @@ class average_chart // average occupancy graph for floor
             tools:{
          customIcons:  [
           {
-                  icon: '<img src="../public/images/loc.png" width="20">',
+                  icon: '<img src="../public/images/time.png" width="20">',
                  
                   title: 'time selection',
                   class: 'custom-icon',
@@ -280,26 +280,26 @@ class average_chart // average occupancy graph for floor
     averageChart.temp = chart;
   
 }
-function toggleSeries(radio)
-{
-    if(radio.value == "12hours")
-        {
-             the_averagechart.temp.zoomX(the_averagechart.occupancyTime[11],the_averagechart.occupancyTime[0])
-        }
-    if(radio.value == "24hours")
-        {
-            the_averagechart.temp.zoomX(the_averagechart.occupancyTime[23],the_averagechart.occupancyTime[0])
-        }
-   
-   if(radio.value == "week")
-        {
-            the_averagechart.temp.zoomX(the_averagechart.occupancyTime[167],the_averagechart.occupancyTime[0])
-        }
-     if(radio.value == "month")
-        {
-            the_averagechart.temp.zoomX(the_averagechart.occupancyTime[743],the_averagechart.occupancyTime[0])
-        }
-}
+//function toggleSeries(radio)
+//{
+//    if(radio.value == "12hours")
+//        {
+//             the_averagechart.temp.zoomX(the_averagechart.occupancyTime[11],the_averagechart.occupancyTime[0])
+//        }
+//    if(radio.value == "24hours")
+//        {
+//            the_averagechart.temp.zoomX(the_averagechart.occupancyTime[23],the_averagechart.occupancyTime[0])
+//        }
+//   
+//   if(radio.value == "week")
+//        {
+//            the_averagechart.temp.zoomX(the_averagechart.occupancyTime[167],the_averagechart.occupancyTime[0])
+//        }
+//     if(radio.value == "month")
+//        {
+//            the_averagechart.temp.zoomX(the_averagechart.occupancyTime[743],the_averagechart.occupancyTime[0])
+//        }
+//}
 //async function test_toggle(averageChart)
 //{
 //   
