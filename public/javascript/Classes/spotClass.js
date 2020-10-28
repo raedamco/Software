@@ -17,6 +17,7 @@ var logs =  new Map(); // map of logs for spots object (Rowid, description)
 function test_resize()// call function to resize all spot objects on page
 {
     Spots.forEach(spot_resize)
+     Ghosts.forEach(spot_resize)
 }
 function spot_resize(value) 
 {
@@ -67,7 +68,7 @@ class spot
     on_resize()
     {
          this.htmlSpot.style.top = this.Y;
-         this.htmlSpot.style.left = (this.X-1)*(this.x_ratio * document.getElementById('map').clientWidth) + "px";
+         this.htmlSpot.style.left = (this.X)*(this.x_ratio * document.getElementById('map').clientWidth)+(this.x_ratio * document.getElementById('map').clientWidth) + "px";//(this.X)*(this.x_ratio * document.getElementById('map').clientWidth) + "px";
     }
 ////////////////////////////////////////////
 	update(occupied)// updates spot occupancy
