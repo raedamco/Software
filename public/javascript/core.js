@@ -108,15 +108,33 @@ function authverification() {
 }
 
 function displayAccountData(){
+ /* "Users" "Commuters"*/
     var username;
     
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
+            //console.log(user)
             database.collection("Users").doc("Companies").collection("PSU").where("UUID", "==", user.uid).get().then(function(querySnapshot) {
-                querySnapshot.forEach(function(doc) {
+                    var counter = 0;     
+                    querySnapshot.forEach(function(doc) {
+                    counter +=1;
                     username = doc.data().Name;
+                    if(username == undefined)
+                        {
+                            username = "First Name Last Name"
+                            console.log("undefined result")
+                        }
+                    else{
+                        console.log("spooky")
+                    }
                 });
+                  if(counter == 0)
+                    {
+                        console.log(counter);
+                        displayCommutersData();
+                    }
                 document.getElementById("name").innerHTML = "Hello, <br><br>" + username;
+              
             }).catch(function(error) {
                 alert("Error getting documents: " + error);
             });
@@ -125,7 +143,44 @@ function displayAccountData(){
         }
     });
 }
-
+function displayCommutersData(){
+   /* "Users" "Commuters"*/
+    var username;
+    
+    firebase.auth().onAuthStateChanged(function(user) {
+        if(user) {
+        
+            console.log(user)
+            database.collection("Users").doc("Commuters").collection("Users").where("UUID", "==", user.uid).get().then(function(querySnapshot) {
+                    var counter = 0; 
+               // if(querySnapshot.doc == null || querySnapshot.doc == undefined)
+                   // {
+                   //     username = "First and Last Name"
+                  //  }
+               // else{
+                //console.log(querySnapshot.data);
+                querySnapshot.forEach(function(doc) {
+                    counter +=1;
+                    console.log(querySnapshot)
+                    username = doc.data().Name;
+                    console.log(counter);
+                    if(username == undefined)
+                        {
+                            username = "First Name Last Name"
+                            console.log("undefined result")
+                        }
+                });
+             //   }
+                document.getElementById("name").innerHTML = "Hello, <br><br>" + username;
+            }).catch(function(error) {
+                alert("Error getting documents: " + error);
+            });
+        }else{
+            signOut();
+        }
+    });
+            
+}
 function getUserData(user){
     if(user) {
         database.collection("Companies").where("Info.CUID", "==", user.uid).get().then(function(querySnapshot) {
