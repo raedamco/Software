@@ -124,17 +124,19 @@ function displayAccountData(){
                             username = "First Name Last Name"
                             console.log("undefined result")
                         }
-                    else{
-                        console.log("spooky")
-                    }
                 });
                   if(counter == 0)
                     {
-                        console.log(counter);
+                       
                         displayCommutersData();
+                       
                     }
-                document.getElementById("name").innerHTML = "Hello, <br><br>" + username;
+                else
+                    {
+                        document.getElementById("name").innerHTML = "Hello, <br><br>" + username;
               
+                    }
+                
             }).catch(function(error) {
                 alert("Error getting documents: " + error);
             });
@@ -146,32 +148,61 @@ function displayAccountData(){
 function displayCommutersData(){
    /* "Users" "Commuters"*/
     var username;
-    
+    var role;
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
         
-            console.log(user)
+         
             database.collection("Users").doc("Commuters").collection("Users").where("UUID", "==", user.uid).get().then(function(querySnapshot) {
-                    var counter = 0; 
-               // if(querySnapshot.doc == null || querySnapshot.doc == undefined)
-                   // {
-                   //     username = "First and Last Name"
-                  //  }
-               // else{
-                //console.log(querySnapshot.data);
+                
                 querySnapshot.forEach(function(doc) {
-                    counter +=1;
-                    console.log(querySnapshot)
+                 
+                    
                     username = doc.data().Name;
-                    console.log(counter);
+                    role = doc.data().Role;
                     if(username == undefined)
                         {
                             username = "First Name Last Name"
                             console.log("undefined result")
                         }
+                      if(role == undefined)
+                        {
+                            role = "user"
+                            console.log("undefined result")
+                        }
                 });
-             //   }
-                document.getElementById("name").innerHTML = "Hello, <br><br>" + username;
+                
+                var profile_box = document.getElementById("profile-box");
+                profile_box.style.position = "relative";
+                profile_box.style.top = "-50px";
+                 profile_box.style.bottom = "auto";
+                profile_box.style.height = "350px";
+                profile_box.style.border = "2px solid #a1a1a1";
+                
+                var edit_box = document.getElementById("edit");
+                edit_box.style.position = "absolute";
+                edit_box.style.right = "30px";
+                
+                var edit_img = document.createElement("img");
+                edit_img.style.position = "absolute";
+                edit_img.src = 'images/edit.png';
+                edit_img.width = "30";
+                edit_img.height ="30";
+                edit_box.appendChild( edit_img);
+                
+                var profile_pic_elem = document.createElement("img");
+                profile_pic_elem.style.padding ="20px"
+                profile_pic_elem.src = 'images/profile.png'; // placeholder image look into profile pictures
+                profile_pic_elem.width ="190";
+                profile_pic_elem.height ="190";
+                document.getElementById("profile-picture").appendChild(profile_pic_elem);
+               
+                document.getElementById("name").innerHTML = username;
+                
+                var role_div =   document.getElementById("role");
+                role_div.style.color="#a1a1a1";
+                role_div.innerHTML = role;
+         // document.getElementById("name").innerHTML = "Hello, <br><br>" + username + role;
             }).catch(function(error) {
                 alert("Error getting documents: " + error);
             });
@@ -179,7 +210,36 @@ function displayCommutersData(){
             signOut();
         }
     });
-            
+    
+//    
+//        var username;
+//    
+//    firebase.auth().onAuthStateChanged(function(user) {
+//        if(user) {
+//        
+//            console.log(user)
+//            database.collection("Users").doc("Commuters").collection("Users").where("UUID", "==", user.uid).get().then(function(querySnapshot) {
+//                    var counter = 0; 
+//                querySnapshot.forEach(function(doc) {
+//                    counter +=1;
+//                    console.log(querySnapshot)
+//                    username = doc.data().Name;
+//                    console.log(counter);
+//                    if(username == undefined)
+//                        {
+//                            username = "First Name Last Name"
+//                            console.log("undefined result")
+//                        }
+//                });
+//                document.getElementById("name").innerHTML = "Hello, <br><br>" + username;
+//            }).catch(function(error) {
+//                alert("Error getting documents: " + error);
+//            });
+//        }else{
+//            signOut();
+//        }
+//    });
+//            
 }
 function getUserData(user){
     if(user) {
