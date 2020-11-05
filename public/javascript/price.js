@@ -45,6 +45,8 @@ function retrievePricingData(){
 
 function price_submit(price){
     var newPrice = parseFloat(price).toFixed(3);
+    var test =  database.collection("PSU").doc("Parking Structure 1"); 
+    console.log(test);
     database.collection("PSU").doc("Parking Structure 1").update({
         "Pricing.Minute" : parseFloat(newPrice)
     }).then(function() {
