@@ -112,7 +112,7 @@ class average_chart // average occupancy graph for floor
             tools:{
          customIcons:  [
           {
-                  icon: '<img src="images/time.png" width="20">',
+                  icon: '<img src="images/time.svg" width="20">',
                  
                   title: 'time selection',
                   class: 'custom-icon',

@@ -186,7 +186,7 @@ function displayCommutersData(){
                 
                 var edit_img = document.createElement("img");
                 edit_img.style.position = "absolute";
-                edit_img.src = 'images/edit.png';
+                edit_img.src = 'images/edit.svg';
                 edit_img.width = "30";
                 edit_img.height ="30";
                 edit_img.onclick = function(){profilePopup();}
@@ -194,7 +194,7 @@ function displayCommutersData(){
                 
                 var profile_pic_elem = document.createElement("img");
                 profile_pic_elem.style.padding ="20px"
-                profile_pic_elem.src = 'images/profile.png'; // placeholder image look into profile pictures
+                profile_pic_elem.src = 'images/profile.svg'; // placeholder image look into profile pictures
                 profile_pic_elem.width ="190";
                 profile_pic_elem.height ="190";
                 document.getElementById("profile-picture").appendChild(profile_pic_elem);
