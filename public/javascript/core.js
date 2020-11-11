@@ -26,21 +26,31 @@ if (!firebase.apps.length) {
 function subdomain_login(user)
 {
     var email = user.email;
-    var pos = email.search("a"); 
+    var pos = email.search("@pdx.edu"); 
     if(pos >= 0)
         {
-            window.location.assign("pdx.raedam.co");
+            if(window.location.hostname !="pdx.raedam.co")
+                {
+                     window.location.hostname ="pdx.raedam.co";
+                    // window.location.href ="pdx.raedam.co"
+                 
+                }
+            else
+                {
+                     window.location = "dashboard.html";
+                }
+               
         }
     else
         {
             pos = email.search("@raedam.co");
             if(pos >= 0)
                 {
-                   window.location = "profile.html";
+                   window.location = "dashboard.html";
                 }
             else
                 {
-                    window.location = "dashboard.html";
+                    window.location = "profile.html";
                 }
         }
     //console.log("email: ", email, "search ", pos);
