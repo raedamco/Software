@@ -23,6 +23,29 @@ if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
+function subdomain_login(user)
+{
+    var email = user.email;
+    var pos = email.search("a"); 
+    if(pos >= 0)
+        {
+            window.location.assign("pdx.raedam.co");
+        }
+    else
+        {
+            pos = email.search("@raedam.co");
+            if(pos >= 0)
+                {
+                   window.location = "profile.html";
+                }
+            else
+                {
+                    window.location = "dashboard.html";
+                }
+        }
+    //console.log("email: ", email, "search ", pos);
+}
+
 firebase.analytics();
 var auth = firebase.auth();
 var database = firebase.firestore();

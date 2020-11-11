@@ -49,7 +49,7 @@ function displayAccountData(){
     var role;
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
-         console.log(user)
+        
             database.collection("Users").doc("Companies").collection("PSU").where("UUID", "==", user.uid).get().then(function(querySnapshot) {
                     var counter = 0;     
                     querySnapshot.forEach(function(doc) {

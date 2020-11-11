@@ -82,7 +82,10 @@
         window.onload = function(){
             firebase.auth().onAuthStateChanged(function(user) {
                 if(user) {
-                    window.location = "dashboard.html";
+                   // window.location.href = "dashboard.html";
+                         
+                    //window.location.href("pdx.raedam.co")
+                    subdomain_login(user);
                 }
             });
             navigate();
