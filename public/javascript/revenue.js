@@ -24,7 +24,7 @@ class revenue_graph // for revenue vs time graph
         
         this.graph_type = "area"; // line, area, or scatter
         /*********************************************************/
-        this.organization = "PSU"; // specific data set for grabbing
+        this.organization = "Portland State University"; // specific data set for grabbing
         this.data_level ="Revenue"; // first level after oragnization (takes place of park-structure)
         this.data_level2 = "money"; // second level in database to grab from takes place of floor
         /// should modify above code to have values as inputs so it can be used for any organization
@@ -39,7 +39,7 @@ class revenue_graph // for revenue vs time graph
         {
             if(user) 
             {
-                database.collection(test.organization).doc(test.data_level).collection(test.data_level2).orderBy("Time","desc").limit(test.data_amount).get().then(async function(querySnapshot) 
+                database.collection("Companies").doc(test.organization).collection("Data").doc(test.data_level).collection(test.data_level2).orderBy("Time","desc").limit(test.data_amount).get().then(async function(querySnapshot) 
                 {
                     querySnapshot.forEach(async function(doc)
                     {

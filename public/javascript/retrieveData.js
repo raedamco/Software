@@ -42,7 +42,8 @@ async function getData() {
  async function getStructures(CUID){
     createTable("structureTable");
      /// longterm have organization("PSU") as input for scaling
-    database.collection("PSU").get().then( async function(querySnapshot) {
+     // updated path
+    database.collection("Companies").doc("Portland State University").collection("Data").get().then( async function(querySnapshot) {
         querySnapshot.forEach( async function(doc) {
             var id = doc.id;
             if (await doc.data()  != undefined){
@@ -64,10 +65,11 @@ async function getData() {
         alert("Error getting documents: " + error);
     });
      /// longterm have organization("PSU") as input for scaling
-    database.collection("PSU").onSnapshot(function(snapshot) {
+     // updated
+    database.collection("Companies").doc("Portland State University").collection("Data").onSnapshot(function(snapshot) {
         snapshot.docChanges().forEach(function(change) {
             if (State != "Structure"){
-                var unsubscribe =  database.collection("PSU").onSnapshot(function () {
+                var unsubscribe =  database.collection("Companies").doc("Portland State University").collection("Data").onSnapshot(function () {
                     console.log("Unsubscribed to strucutre listener");
                 });
                 unsubscribe();
@@ -84,7 +86,7 @@ async function getData() {
 function getFloors(StructureID) { 
     var floorArray = [];
      /// longterm have organization("PSU") as input for scaling
-    database.collection("PSU").doc(StructureID).get().then(function(doc) {
+   database.collection("Companies").doc("Portland State University").collection("Data").doc(StructureID).get().then(function(doc) {
         var id = doc.data()["Floors"];
         floorArray.push(id);
         
@@ -102,10 +104,10 @@ function getFloors(StructureID) {
         alert("Error getting documents: " + error);
     });
      /// longterm have organization("PSU") as input for scaling
-    database.collection("PSU").onSnapshot(function(snapshot) {
+    database.collection("Companies").doc("Portland State University").collection("Data").onSnapshot(function(snapshot) {
         snapshot.docChanges().forEach(function(change) {
             if (State != "Floor"){
-                var unsubscribe =  database.collection("PSU").onSnapshot(function () {
+                var unsubscribe =  database.collection("Companies").doc("Portland State University").collection("Data").onSnapshot(function () {
                     console.log("Unsubscribed to strucutre listener");
                 });
                 unsubscribe();
@@ -123,7 +125,7 @@ function getFloors(StructureID) {
 // starts grabbing spotsfrom database and creates spot class objects. Also adds spot objects in map.
 function getSpots(StructureID, FloorID) {
     /// longterm have organization("PSU") as input for scaling
-    database.collection("PSU").doc(StructureID).collection(FloorID).get().then(function(querySnapshot) {
+    database.collection("Companies").doc("Portland State University").collection("Data").doc(StructureID).collection(FloorID).get().then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
         var id = doc.id;
         var occupied = doc.data()["Occupancy"]["Occupied"];
@@ -161,10 +163,10 @@ function getSpots(StructureID, FloorID) {
     });
     // listen for change below
      /// longterm have organization("PSU") as input for scaling
-    database.collection("PSU").doc(StructureID).collection(FloorID).onSnapshot(function(snapshot) {
+    database.collection("Companies").doc("Portland State University").collection("Data").doc(StructureID).collection(FloorID).onSnapshot(function(snapshot) {
         snapshot.docChanges().forEach(function(change) {
             if (State != "Spot"){
-                var unsubscribe =  database.collection("PSU").onSnapshot(function () {
+                var unsubscribe =  database.collection("Companies").doc("Portland State University").collection("Data").onSnapshot(function () {
                     console.log("Unsubscribed to strucutre listener");
                 });
                 unsubscribe();
