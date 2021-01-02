@@ -371,7 +371,7 @@ function loadData() // initializes logs
         createTable("logsTable");
     }
 
-    database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").orderBy("Time.End", "desc").get().then(function(querySnapshot) 
+   database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").orderBy("Time.End", "desc").get().then(function(querySnapshot) 
     {
         querySnapshot.forEach(function(doc) 
         {
@@ -414,7 +414,7 @@ function loadData() // initializes logs
     });
     
     // below checks for the most recent log being modified if it is it call an update function 
-    database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").onSnapshot(function(snapshot)
+    database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).collection("Data").onSnapshot(function(snapshot)
     {   
         snapshot.docChanges().forEach(function(change)
         {
@@ -460,7 +460,7 @@ function updateSpotData(SpotID, Value)
      the_spot.Type.EV = EV;
     
     /// change it so PSU, structure, and floor are passed in 
-    database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).update({
+   database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).update({
         "Spot Type.Permit": Permit,
         "Spot Type.Hourly": Hourly,
         "Spot Type.EV": EV,

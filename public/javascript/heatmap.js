@@ -12,7 +12,7 @@ var heat_count = 0;
 
 async function get_percent(spotID)
 {   
-   var percent = database.collection("PSU").doc("Parking Structure 1").collection("Floor 2").doc(spotID).collection("Data").orderBy("Time.End", "desc").get().then(async function(querySnapshot) 
+   var percent = database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").collection("Floor 2").doc(spotID).collection("Data").orderBy("Time.End", "desc").get().then(async function(querySnapshot) 
     {
        var percent = 0;
         var heat_occupied = 0;

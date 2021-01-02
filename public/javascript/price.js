@@ -26,9 +26,9 @@ async function getData() {
 }
 
 var currentPrice;
-
+// path updated
 function retrievePricingData(){
-    database.collection("PSU").doc("Parking Structure 1").get().then(function(doc) {
+    database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").get().then(function(doc) {
         if(doc.exists){
             price = doc.data()["Pricing"]["Minute"];
             currentPrice = price;
@@ -45,9 +45,9 @@ function retrievePricingData(){
 
 function price_submit(price){
     var newPrice = parseFloat(price).toFixed(3);
-    var test =  database.collection("PSU").doc("Parking Structure 1"); 
+    var test =  database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1"); //path updated
     console.log(test);
-    database.collection("PSU").doc("Parking Structure 1").update({
+   database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").update({
         "Pricing.Minute" : parseFloat(newPrice)
     }).then(function() {
         var adjustedRow = document.getElementById("Structure1");
