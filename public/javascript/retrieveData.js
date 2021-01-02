@@ -1,7 +1,7 @@
 /*eslint-disable */
 //
 //  retrieveData.js
-//  Raedam 
+//  Raedam
 //
 //  Created on 5/13/2020. Modified on 8/17/2020 by Austin Mckee.
 //  Copyright © 2020 Raedam. All rights reserved.
@@ -18,7 +18,7 @@ async function getData() {
         if(user) {
             var title = document.getElementById("structureTitle");
             setAttributes(title,{"id": "structureTitle"}, "Portland State University");
-            database.collection("Companies").where("Info.CUID", "==", "f6KIyH6vyFTTrQ6J6zjaRzlqXN32").get().then(function(querySnapshot) {
+            database.collection("Companies").where("Info.CUID", "==", "F2h875E6RUhVikpzPhhix1TuEN83").get().then(function(querySnapshot) {
                 querySnapshot.forEach(function(doc) {
                     var CompanyName = doc.data()["Info"].Name;
                     var CUID = doc.data()["Info"].CUID;
@@ -41,19 +41,19 @@ async function getData() {
         querySnapshot.forEach( async function(doc) {
             var id = doc.id;
             if (await doc.data()  != undefined){
-            
+
                     var capacity = await doc.data()["Capacity"]["Capacity"];
                     console.log("capacity test: " + capacity);
                     var available = doc.data()["Capacity"]["Available"];
                     console.log("available test: " + available);
                     var floors = doc.data()["Capacity"]["Floors"];
                     var location = doc.data()["Capacity"]["Location"];
-              
+
             var structureClass = new structure(id, capacity, available, floors, location);
 		    structureClass.createRow();
             Structures.set(id, structureClass);
             Structures.get(id).update(available);
-            
+
                 }});
     }).catch(function(error) {
         alert("Error getting documents: " + error);
@@ -70,23 +70,23 @@ async function getData() {
                 var id = change.doc.id;
                 var available = change.doc.data()["Capacity"]["Available"];
                 Structures.get(id).update(available);
-            } 
+            }
         });
     });
 }
 // fix how numbering system works below
 // starts grabbing floor from database and creates floor class objects. Also adds floor objects in map.
-function getFloors(StructureID) { 
+function getFloors(StructureID) {
     var floorArray = [];
      /// longterm have organization("PSU") as input for scaling
     database.collection("PSU").doc(StructureID).get().then(function(doc) {
         var id = doc.data()["Floors"];
         floorArray.push(id);
-        
+
         for (var i = 1; i < floorArray; ++i) {
             var available = doc.data()["Floor Data"]["Floor " + (1+i)]["Available"];
             var capacity = doc.data()["Floor Data"]["Floor " + (1+i)]["Capacity"];
-            
+
             var floorClass = new floor(StructureID, "Floor " + (1+i), capacity, available);
             floorClass.createRow();
             Floors.set("Floor " + (1+i), floorClass);
@@ -127,7 +127,7 @@ function getSpots(StructureID, FloorID) {
         var y = doc.data()["Layout"]["y"];
         var rotation = doc.data()["Layout"]["rotation"];
         var type = doc.data()["Spot Type"];
-    
+
         var spotClass = new spot(id, occupied, occupant, x, y, rotation,type);
 		spotClass.createSpots();
         Spots.set(doc.id, spotClass);
@@ -173,7 +173,7 @@ function getSpots(StructureID, FloorID) {
     });
 }
 
-// redirects to object in row's onRowClick function (if it's a structure the sturcuture's/ if it's a floor that floor's) 
+// redirects to object in row's onRowClick function (if it's a structure the sturcuture's/ if it's a floor that floor's)
 function onRowClick(tableId, callback) {
     var table = document.getElementById(tableId);
     var rows = table.getElementsByTagName("tr");
@@ -188,14 +188,14 @@ function onRowClick(tableId, callback) {
 };
 
 // creates HTML table
-function createTable(tableID) {   
+function createTable(tableID) {
     var container = document.getElementById("container");
     var table = document.createElement('table');
     table.id = tableID;
     container.appendChild(table);
 }
 
- 
+
 //Set multipule DOM attributes at once
 function setAttributes(el, attrs, text) {
     for(var key in attrs) {
@@ -215,5 +215,3 @@ function removeNode(node) {
 function hasClass(ele,cls) {
     return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)'));
 }
-
-
