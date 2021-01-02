@@ -28,7 +28,7 @@ class average_chart // average occupancy graph for floor
         this.graph_type = "area"; // line, area, or scatter
         
         /*********************************************************/
-        this.organization = "PSUData"; // specific data set for grabbing
+        this.organization = "Portland State University"; // specific data set for grabbing
         this.parking_structure ="Parking Structure 1"; // structure for data set
         this.floor = "Floor 2";  // floor for data set
         /// should modify above code to have values as inputs so it can be used for any organization
@@ -48,7 +48,7 @@ class average_chart // average occupancy graph for floor
         {
             if(user) 
             {
-                database.collection(test.organization).doc(test.parking_structure).collection(test.floor).orderBy("Time","desc").limit(test.data_amount).get().then(async function(querySnapshot) 
+                database.collection("Companies").doc(test.organization).collection("Data").doc(test.parking_structure).collection("Averages").data("Floors").collection(test.floor).orderBy("Time","desc").limit(test.data_amount).get().then(async function(querySnapshot) 
                 {
                     querySnapshot.forEach(async function(doc)
                     {
@@ -316,7 +316,7 @@ async function average_graph()
     await averageChart.getData(averageChart);
     console.log(averageChart);
 //     test_toggle(await averageChart);
-    var unsubscribe = database.collection(averageChart.organization).doc(averageChart.parking_structure).collection(averageChart.floor).orderBy("Time","desc").limit(averageChart.data_amount).onSnapshot(async function(snapshot)
+    var unsubscribe = database.collection("Companies").doc(averageChart.organization).collection("Data").doc(averageChart.parking_structure).collection("Averages").doc("Floors").collection(averageChart.floor).orderBy("Time","desc").limit(averageChart.data_amount).onSnapshot(async function(snapshot)
                 {  
                     snapshot.docChanges().forEach(async function(change)
                     {   

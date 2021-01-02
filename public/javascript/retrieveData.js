@@ -14,6 +14,7 @@ var Ghosts = new Map();
 // RETRIEVE DATA FROM DATABASE START //
 // essentially logs into database
 async function getData() {
+    console.log("here")
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
             var title = document.getElementById("structureTitle");
@@ -23,13 +24,17 @@ async function getData() {
                     var CompanyName = doc.data()["Info"].Name;
                     var CUID = doc.data()["Info"].CUID;
                     var Structures = doc.data()["Info"].Structures;
+                    console.log("here");
                     getStructures(CUID, Structures);
                 });
             }).catch(function(error) {
+                console.log("error")
                 alert("Error getting documents: " + error);
             });
         }else{
             signOut();
+            //////////////////////////////////////////////
+            console.log("signed out")
         }
     });
 }
