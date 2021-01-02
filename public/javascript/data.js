@@ -48,7 +48,7 @@ class average_chart // average occupancy graph for floor
         {
             if(user) 
             {
-                database.collection("Companies").doc(test.organization).collection("Data").doc(test.parking_structure).collection("Averages").data("Floors").collection(test.floor).orderBy("Time","desc").limit(test.data_amount).get().then(async function(querySnapshot) 
+                database.collection("Companies").doc(test.organization).collection("Data").doc(test.parking_structure).collection("Averages").doc("Floors").collection(test.floor).orderBy("Time","desc").limit(test.data_amount).get().then(async function(querySnapshot) 
                 {
                     querySnapshot.forEach(async function(doc)
                     {
