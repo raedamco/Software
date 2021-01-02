@@ -50,7 +50,7 @@ function displayAccountData(){
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
         
-            database.collection("Users").doc("Companies").collection("PSU").where("UUID", "==", user.uid).get().then(function(querySnapshot) {
+            database.collection("Users").doc("Companies").collection("Portland State University").where("UUID", "==", user.uid).get().then(function(querySnapshot) {
                     var counter = 0;     
                     querySnapshot.forEach(function(doc) {
                     counter +=1;
@@ -153,7 +153,7 @@ function displayCommutersData(){
             }
             else if(PSU_profile == true)
             {
-                   database.collection("Users").doc("Companies").collection("PSU").doc(user.uid).update({
+                   database.collection("Users").doc("Companies").collection("Portland State University").doc(user.uid).update({
                          "Name" : name
                      }).then(function() 
                 {
