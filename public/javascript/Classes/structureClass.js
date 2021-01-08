@@ -19,6 +19,7 @@ class structure
         this.available = available;
 		this.location = location;   
 		this.floors = floors;
+        //createRow();
 	}
     
     createRow() // creates html row

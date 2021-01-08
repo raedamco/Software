@@ -25,7 +25,7 @@ async function getData() {
                     var CUID = doc.data()["Info"].CUID;
                     var Structures = doc.data()["Info"].Structures;
                     console.log("here");
-                    getStructures(CUID, Structures);
+                    getStructures(CUID)//, Structures);
                 });
             }).catch(function(error) {
                 console.log("error")
@@ -40,6 +40,7 @@ async function getData() {
 }
  // starts grabbing structure from database and creates structure class objects. Also adds struture objects in map.
  async function getStructures(CUID){
+     console.log("1/1/2021")
     createTable("structureTable");
      /// longterm have organization("PSU") as input for scaling
      // updated path

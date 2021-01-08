@@ -150,6 +150,16 @@ async function createpopupview(spotID, OccupantID) // creates spot pop up
              var ADA = '<input type= "checkbox" id="ADA" name="ADA" value="false" >'+
             '<label for="ADA"> ADA</label><br>'
         }
+    if(the_spot.Type.Leased)
+        {
+            var Leased = '<input type= "checkbox" id="ADA" name="ADA" value="true" checked>'+
+            '<label for="ADA"> ADA</label><br>'
+        }
+        else
+        {
+             var Leased = '<input type= "checkbox" id="ADA" name="ADA" value="false" >'+
+            '<label for="ADA"> ADA</label><br>'
+        }
     
    const{value: typeValues} = await Swal.fire({
       
@@ -160,7 +170,8 @@ async function createpopupview(spotID, OccupantID) // creates spot pop up
             hourly +
             permit+
             ADA+
-            ev,
+            ev+
+            Leased,
         footer: '<button onclick="showSensorLog(' + spotID +')">Sensor Log</button>',
         showCancelButton: true,
         focusConfirm: false,
@@ -169,7 +180,8 @@ async function createpopupview(spotID, OccupantID) // creates spot pop up
                 document.getElementById('ADA').checked,
                 document.getElementById('permit').checked,
                 document.getElementById('hourly').checked,
-                document.getElementById('EV').checked
+                document.getElementById('EV').checked,
+                 document.getElementById('Leased').checked
             ]
         }
         /*
@@ -452,18 +464,21 @@ function updateSpotData(SpotID, Value)
     var Permit = Value[1];
     var Hourly = Value[2];
     var EV = Value[3];
+    var Leased = Value[4];
     // updates map with new values
     var the_spot = Spots.get(SpotID);
     the_spot.Type.ADA = ADA;
     the_spot.Type.Permit = Permit;
      the_spot.Type.Hourly = Hourly;
      the_spot.Type.EV = EV;
+     the_spot.Type.Leased = Leased;
     
     /// change it so PSU, structure, and floor are passed in 
    database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").collection("Floor 2").doc(SpotID).update({
         "Spot Type.Permit": Permit,
         "Spot Type.Hourly": Hourly,
         "Spot Type.EV": EV,
-        "Spot Type.ADA": ADA
+        "Spot Type.ADA": ADA,
+        "Spot Type.Leased": Leased
     })
 }
