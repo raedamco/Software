@@ -152,13 +152,13 @@ async function createpopupview(spotID, OccupantID) // creates spot pop up
         }
     if(the_spot.Type.Leased)
         {
-            var Leased = '<input type= "checkbox" id="ADA" name="ADA" value="true" checked>'+
-            '<label for="ADA"> ADA</label><br>'
+            var Leased = '<input type= "checkbox" id="Leased" name="Leased" value="true" checked>'+
+            '<label for="Leased"> Leased</label><br>'
         }
         else
         {
-             var Leased = '<input type= "checkbox" id="ADA" name="ADA" value="false" >'+
-            '<label for="ADA"> ADA</label><br>'
+             var Leased = '<input type= "checkbox" id="Leased" name="Leased" value="false" >'+
+            '<label for="Leased"> Leased</label><br>'
         }
     
    const{value: typeValues} = await Swal.fire({
