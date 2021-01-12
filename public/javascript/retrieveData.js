@@ -14,7 +14,7 @@ var Ghosts = new Map();
 // RETRIEVE DATA FROM DATABASE START //
 // essentially logs into database
 async function getData() {
-    console.log("here")
+   
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
             var title = document.getElementById("structureTitle");
@@ -24,7 +24,7 @@ async function getData() {
                     var CompanyName = doc.data()["Info"].Name;
                     var CUID = doc.data()["Info"].CUID;
                     var Structures = doc.data()["Info"].Structures;
-                    console.log("here");
+                
                     getStructures(CUID)//, Structures);
                 });
             }).catch(function(error) {
@@ -40,7 +40,7 @@ async function getData() {
 }
  // starts grabbing structure from database and creates structure class objects. Also adds struture objects in map.
  async function getStructures(CUID){
-     console.log("1/1/2021")
+   
     createTable("structureTable");
      /// longterm have organization("PSU") as input for scaling
      // updated path
@@ -50,9 +50,9 @@ async function getData() {
             if (await doc.data()  != undefined){
 
                     var capacity = await doc.data()["Capacity"]["Capacity"];
-                    console.log("capacity test: " + capacity);
+//                    console.log("capacity test: " + capacity);
                     var available = doc.data()["Capacity"]["Available"];
-                    console.log("available test: " + available);
+//                    console.log("available test: " + available);
                     var floors = doc.data()["Capacity"]["Floors"];
                     var location = doc.data()["Capacity"]["Location"];
 
@@ -194,6 +194,22 @@ function onRowClick(tableId, callback) {
         (table.rows[i]);
     }
 };
+// similar to onrowclick function above but handles onRowcontentmenu (for right click)
+function onRowContextMenu(tableId, callback) {
+     var table = document.getElementById(tableId);
+    var rows = table.getElementsByTagName("tr");
+    for (var i = 0; i < rows.length; i++) {
+        table.rows[i].oncontextmenu = function (row) {
+            return function () {
+                callback(row);
+                return false;
+            };
+        }
+        (table.rows[i]);
+    }
+    
+};
+
 
 // creates HTML table
 function createTable(tableID) {

@@ -30,7 +30,7 @@ class structure
         td.id = this.id;
      
         var rowText = document.createTextNode(this.id);
-        console.log("7/10/2020 " +td.id)
+
         td.appendChild(rowText);
         tr.appendChild(td);
         table.appendChild(tr);
@@ -46,6 +46,31 @@ class structure
             getFloors(rowid);
             
         });
+        onRowContextMenu("structureTable", function(row){
+          let theOptions = {'Active' : 'Active', 'Disable': 'Disable'};
+           // row.oncontextmenu.preventDefault();
+            console.log('sucess');
+            Swal.fire({
+            title: "Active",
+            icon: "question",
+            input:'radio',
+            inputValue: "Active",
+            inputOptions:theOptions,
+            inputValidator: (value) =>{
+                if(!value) {
+                    return 'You need to choose an option!'
+                }else if(value == "Active")
+                    {
+                        console.log("Active")
+                    }
+                else{
+                    console.log("disable")
+                }
+            },
+            confirmButtonText: "Confirm"
+            })
+            return false;
+        })
     }
     
     update(available) // updates data in row
