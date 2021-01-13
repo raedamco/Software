@@ -9,7 +9,65 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 var Structures = new Map(); // Map of structure objects
+async function getActive(row,ID){
+             
+              const docRef = database.collection('Companies').doc('Portland State University').collection('Data').doc(ID);
+              docRef.get().then(function(doc){
 
+               if(doc.data().Active)
+                   {
+                       //console.log("active");
+                       let info = [];
+                       info[0] =row;
+                       info[1] = "Active";
+                       return rowContextMenu(info);
+                   }
+              else
+                  {
+                      //console.log("Disable")
+                      let info = [];
+                      info[0] =row;
+                      info[1] = "Disable";
+                      return rowContextMenu(info);
+                  }
+              }).catch(function(error){
+                  console.log("Error getting document:", error);
+              });
+               
+          } 
+async function rowContextMenu(info) // info[0] = row info[1] = theDefault
+{
+    
+          let theOptions = {'Active' : 'Active', 'Disable': 'Disable'};
+           let theDefault = info[1];//await getActive(row.getElementsByTagName("td")[0].id);
+           let row = info[0];
+
+           if(theDefault != undefined)
+               {
+//                    console.log('sucess ' + await theDefault);
+                    await Swal.fire({
+                    title: "Active",
+                    icon: "question",
+                    input:'radio',
+                    inputValue:  theDefault,
+                    inputOptions:theOptions,
+                    inputValidator: (value) =>{
+                    if(!value) {
+                        return 'You need to choose an option!'
+                    }else if(value == "Active")
+                    {
+                        console.log("Active")
+                    }
+                    else{
+                        console.log("disable")
+                    }
+            },
+            confirmButtonText: "Confirm"
+            })
+        }
+               
+         
+}
 class structure
 {
 	constructor(id, capacity, available, floors, location)
@@ -46,29 +104,33 @@ class structure
             getFloors(rowid);
             
         });
-        onRowContextMenu("structureTable", function(row){
-          let theOptions = {'Active' : 'Active', 'Disable': 'Disable'};
-           // row.oncontextmenu.preventDefault();
-            console.log('sucess');
-            Swal.fire({
-            title: "Active",
-            icon: "question",
-            input:'radio',
-            inputValue: "Active",
-            inputOptions:theOptions,
-            inputValidator: (value) =>{
-                if(!value) {
-                    return 'You need to choose an option!'
-                }else if(value == "Active")
-                    {
-                        console.log("Active")
-                    }
-                else{
-                    console.log("disable")
-                }
-            },
-            confirmButtonText: "Confirm"
-            })
+          
+                 
+        onRowContextMenu("structureTable", async function(row){
+            await getActive(row,row.getElementsByTagName("td")[0].id);
+//          let theOptions = {'Active' : 'Active', 'Disable': 'Disable'};
+//           let theDefault = await getActive(row.getElementsByTagName("td")[0].id);
+//           // row.oncontextmenu.preventDefault();
+//            console.log('sucess' + await theDefault);
+//            Swal.fire({
+//            title: "Active",
+//            icon: "question",
+//            input:'radio',
+//            inputValue:  'Active',
+//            inputOptions:theOptions,
+//            inputValidator: (value) =>{
+//                if(!value) {
+//                    return 'You need to choose an option!'
+//                }else if(value == "Active")
+//                    {
+//                        console.log("Active")
+//                    }
+//                else{
+//                    console.log("disable")
+//                }
+//            },
+//            confirmButtonText: "Confirm"
+//            })
             return false;
         })
     }
