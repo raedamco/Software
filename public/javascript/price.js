@@ -10,9 +10,10 @@
 async function getData() {
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
+           
             var title = document.getElementById("structureTitle");
             setAttributes(title,{"id": "structureTitle"}, "Organization Settings");
-            database.collection("Companies").where("Info.CUID", "==", "f6KIyH6vyFTTrQ6J6zjaRzlqXN32").get().then(function(querySnapshot) {
+            database.collection("Companies").where("Info.CUID", "==", "F2h875E6RUhVikpzPhhix1TuEN83").get().then(function(querySnapshot) {
                 querySnapshot.forEach(function(doc) {
                     retrievePricingData();
                 });
@@ -28,9 +29,12 @@ async function getData() {
 var currentPrice;
 // path updated
 function retrievePricingData(){
+    
     database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").get().then(function(doc) {
         if(doc.exists){
-            price = doc.data()["Pricing"]["Minute"];
+           // console.log(doc.data());
+            price = doc.data()["Pricing"]["Minute"];//.Pricing.Minute;//["Minute"];
+            console.log(price)
             currentPrice = price;
             setupPage(price);
         }else{
@@ -46,7 +50,7 @@ function retrievePricingData(){
 function price_submit(price){
     var newPrice = parseFloat(price).toFixed(3);
     var test =  database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1"); //path updated
-    console.log(test);
+    //console.log(test);
    database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").update({
         "Pricing.Minute" : parseFloat(newPrice)
     }).then(function() {
