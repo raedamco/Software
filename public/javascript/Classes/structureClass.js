@@ -9,6 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 var Structures = new Map(); // Map of structure objects
+// add var for company
 async function getActive(row,ID){
              
               const docRef = database.collection('Companies').doc('Portland State University').collection('Data').doc(ID);
@@ -35,6 +36,14 @@ async function getActive(row,ID){
               });
                
           } 
+function changeActive(value,row) // add var for company
+{
+    let ID = row.getElementsByTagName("td")[0].id;
+    const docRef = database.collection('Companies').doc('Portland State University').collection('Data').doc(ID).update({
+        Active: value
+    })
+}
+// add var for company 
 async function rowContextMenu(info) // info[0] = row info[1] = theDefault
 {
     
@@ -56,10 +65,10 @@ async function rowContextMenu(info) // info[0] = row info[1] = theDefault
                         return 'You need to choose an option!'
                     }else if(value == "Active")
                     {
-                        console.log("Active")
+                        changeActive(true,row)
                     }
                     else{
-                        console.log("disable")
+                        changeActive(false,row)
                     }
             },
             confirmButtonText: "Confirm"
