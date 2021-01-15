@@ -2080,3 +2080,6 @@ input[type=password]:focus, input[type=text]:focus, input[type=password]:not(:pl
     width: 100%;
     display: block; 
 }
+.price-label {
+    font-size: 18px;
+}

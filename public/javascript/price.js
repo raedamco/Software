@@ -144,12 +144,12 @@ function onRowClick(tableId, callback) {
 function popupInput(){
     (async () => {
   const { value: formValues } = await Swal.fire({
-    title: 'Price',
+   
 
     html:
-        
-      '<input type = number id="price" min ="0.01" step ="0.01" value ="0.01"  >' +
-      '<label for="price-unit"> </label>'+
+         '<label class = "price-label" for="price-unit"> Price </label></br></br>'+ 
+      '<input type = number id="price" min ="0.01" step ="0.01" value ="0.01"  ></br></br>' +
+      '<label class = "price-label" for="price-unit"> Unit </label>'+
       '<select id="price-unit" >'+
       '<option value="Minute"> Minute </option>' +
          '<option value="Day"> Day </option>' +
