@@ -33,10 +33,24 @@ function retrievePricingData(){
     database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").get().then(function(doc) {
         if(doc.exists){
            // console.log(doc.data());
-            price = doc.data()["Pricing"]["Minute"];//.Pricing.Minute;//["Minute"];
+            let currentUnit = doc.data()["Pricing"]["CurrentUnit"];
+            switch(currentUnit)
+            {
+                case "Hour":
+                 price = doc.data()["Pricing"]["Hour"];
+                 break;
+                case "Minute":
+                 price = doc.data()["Pricing"]["Minute"];
+                 break;
+                case "Day":
+                 price = doc.data()["Pricing"]["Day"];
+                break;
+            }
+            
+           //.Pricing.Minute;//["Minute"];
             console.log(price)
             currentPrice = price;
-            setupPage(price);
+            setupPage(price,currentUnit);
         }else{
             price = null;
             price_form(price);
@@ -57,19 +71,22 @@ function price_submit(price,unit){
        {
            updateValue = database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").update({
        
-             "Pricing.Minute" : parseFloat(newPrice)
+             "Pricing.Minute" : parseFloat(newPrice),
+               "Pricing.CurrentUnit" : unit
         })
         }
         else if(unit == "Day")
        {
             updateValue = database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").update({
-            "Pricing.Day" : parseFloat(newPrice)
+            "Pricing.Day" : parseFloat(newPrice),
+               "Pricing.CurrentUnit" : unit
            })
        }
        else if(unit == "Hour")
        {
             updateValue = database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").update({
-            "Pricing.Hour" : parseFloat(newPrice)
+            "Pricing.Hour" : parseFloat(newPrice),
+               "Pricing.CurrentUnit" : unit
         })
        }
         
@@ -93,7 +110,7 @@ function price_submit(price,unit){
 
 }
 // create table of orangaization's structure and add popup settings modification
-function setupPage(currentPrice){
+function setupPage(currentPrice,currentUnit){
     var container = document.getElementById("container");
     var table = document.createElement('table');
     table.backgroundColor = "red";
@@ -104,7 +121,7 @@ function setupPage(currentPrice){
     var td = document.createElement('td');
     td.id = "Structure1";
 
-    var rowText = document.createTextNode("Current pricing rate for Parking Structure 1 $" + currentPrice + "/min (click row to adjust)");
+    var rowText = document.createTextNode("Current pricing rate for Parking Structure 1 $" + currentPrice + "/"+ currentUnit+"(click row to adjust)");
     td.appendChild(rowText);
     tr.appendChild(td);
     table.appendChild(tr);
