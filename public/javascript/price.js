@@ -47,18 +47,38 @@ function retrievePricingData(){
     });
 }
 
-function price_submit(price){
-    var newPrice = parseFloat(price).toFixed(3);
-    var test =  database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1"); //path updated
+function price_submit(price,unit){
+    console.log(price);
+    var newPrice = parseFloat(price).toFixed(2);
+   // var test =  database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1"); //path updated
     //console.log(test);
-   database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").update({
-        "Pricing.Minute" : parseFloat(newPrice)
-    }).then(function() {
+    let updateValue;
+    if(unit == "Minute")
+       {
+           updateValue = database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").update({
+       
+             "Pricing.Minute" : parseFloat(newPrice)
+        })
+        }
+        else if(unit == "Day")
+       {
+            updateValue = database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").update({
+            "Pricing.Day" : parseFloat(newPrice)
+           })
+       }
+       else if(unit == "Hour")
+       {
+            updateValue = database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").update({
+            "Pricing.Hour" : parseFloat(newPrice)
+        })
+       }
+        
+        updateValue.then(function() {
         var adjustedRow = document.getElementById("Structure1");
-        adjustedRow.innerHTML = "Current pricing rate for Parking Structure 1: $" + newPrice + "/min  (click row to adjust)";
+        adjustedRow.innerHTML = "Current pricing rate for Parking Structure 1: $" + newPrice + "/" +unit+  "(click row to adjust)";
         Swal.fire({
           title: "Success",
-          text: "Rate has been updated to " + price.value,
+          text: "Rate has been updated to " + price,//price.value,
           icon: "success",
           confirmButtonText: "Close"
         })
@@ -70,8 +90,8 @@ function price_submit(price){
           confirmButtonText: "Close"
         })
     });
-}
 
+}
 // create table of orangaization's structure and add popup settings modification
 function setupPage(currentPrice){
     var container = document.getElementById("container");
@@ -108,16 +128,59 @@ function onRowClick(tableId, callback) {
     }
 };
 
+//function popupInput(){
+//    const { value: Double } = Swal.fire({
+//      input: 'text',
+//      inputPlaceholder: 'Enter new rate',
+//      inputValidator: (value) => {
+//        if (!value) {
+//            return 'You need to write something!'
+//        }else{
+//            price_submit(value);
+//        }
+//      }
+//    })
+//}
 function popupInput(){
-    const { value: Double } = Swal.fire({
-      input: 'text',
-      inputPlaceholder: 'Enter new rate/minute (Ex: 0.05)',
-      inputValidator: (value) => {
-        if (!value) {
-            return 'You need to write something!'
-        }else{
-            price_submit(value);
-        }
-      }
-    })
+    (async () => {
+  const { value: formValues } = await Swal.fire({
+    title: 'Price',
+
+    html:
+        
+      '<input type = number id="price" min ="0.01" step ="0.01" value ="0.01"  >' +
+      '<label for="price-unit"> </label>'+
+      '<select id="price-unit" >'+
+      '<option value="Minute"> Minute </option>' +
+         '<option value="Day"> Day </option>' +
+       '<option value="Hour"> Hour </option>'
+      +  '</select>',
+          
+    focusConfirm: false,
+      
+    preConfirm: () => {
+      return [
+        document.getElementById('price').value,
+        document.getElementById('price-unit').value
+      ]
+    }
+  })
+  
+    
+        
+
+  if (formValues) {
+      console.log(formValues)
+      if(formValues[0] > 0)
+          {
+              price_submit(formValues[0],formValues[1]);
+          }
+      else
+          {
+              console.log("darn")
+          }
+    //Swal.fire(JSON.stringify(formValues))
+  }
+
+  })()
 }
