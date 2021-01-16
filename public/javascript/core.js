@@ -50,7 +50,7 @@ function subdomain_login(user)
                 }
             else
                 {
-                    window.location = "profile.html";
+                    window.location = "dashboard.html";
                 }
         }
     //console.log("email: ", email, "search ", pos);
