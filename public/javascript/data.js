@@ -2,13 +2,16 @@
 //  data.js
 //  Raedam 
 //
-//  Created on 5/13/2020. Modified on 10/5/2020 by Austin Mckee.
+//  Created on 5/13/2020. Modified on 1/30/2021 by Austin Mckee.
 //  Copyright © 2020 Raedam. All rights reserved.
 //
 // This file holds code for the Average Occupancy Graph
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-class average_chart // average occupancy graph for floor
+/**
+ * average occupancy graph for floor
+ */
+class average_chart 
 {
    constructor()
     {
@@ -38,34 +41,36 @@ class average_chart // average occupancy graph for floor
     
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    // gets data from database for charts and stores in class
-   async getData(test) 
+    
+    /**
+     * gets data from database for charts and stores in class
+     * @param {object} graphValue instance of average_chart class
+     */
+   async getData(graphValue) 
    {
-       // test.temp = chart 
+      
        
         var i =0;
         firebase.auth().onAuthStateChanged(function(user) 
         {
             if(user) 
             {
-                database.collection("Companies").doc(test.organization).collection("Data").doc(test.parking_structure).collection("Averages").doc("Floors").collection(test.floor).orderBy("Time","desc").limit(test.data_amount).get().then(async function(querySnapshot) 
+                database.collection("Companies").doc(graphValue.organization).collection("Data").doc(graphValue.parking_structure).collection("Averages").doc("Floors").collection(graphValue.floor).orderBy("Time","desc").limit(graphValue.data_amount).get().then(async function(querySnapshot) 
                 {
                     querySnapshot.forEach(async function(doc)
                     {
-                      //  console.log(doc.data()["Average"]);
-                        test.occupancyData.push(doc.data()["Average"]);
-                        var temp2 =  doc.data()["Time"].toDate();
-                        //console.log(temp2);
-                        test.occupanceReadTime.push(temp2);
-                        test.occupancyTime.push((temp2.getTime()-(2.52*Math.pow(10,7))));
-                       // console.log(test.occupancyTime)
-                       // console.log((2.52*(10^7)));
-                        if(i >= (test.data_amount-1))
+                      
+                        graphValue.occupancyData.push(doc.data()["Average"]);
+                        let time =  doc.data()["Time"].toDate();
+                        
+                        graphValue.occupanceReadTime.push(time);
+                        graphValue.occupancyTime.push((time.getTime()-(2.52*Math.pow(10,7))));
+                      
+                        if(i >= (graphValue.data_amount-1))
                         {
-                            //alert("Hello")
-                           var render_check = await test.temp.render();
-                            console.log(await render_check);
-                           test.temp.zoomX(await test.occupancyTime[11],await test.occupancyTime[0]);
+                         
+                           const render_check = await graphValue.temp.render();
+                           graphValue.temp.zoomX(await graphValue.occupancyTime[11],await graphValue.occupancyTime[0]);
                             if(heat_count == 0)
                                 {
                                     heat_graph(); // makes heat map because it has error if heat map starts before 
@@ -88,15 +93,17 @@ class average_chart // average occupancy graph for floor
             }
         });
        
-        generateAverageOccupancuData(test);
+        generateAverageOccupancuData(graphValue);
        
                       
    }
    
 }
-// zoomx function for 24hrs/week/mpnth charts etc
-// could use zoomx/customicons and custom function to make zoom work how you want
- // creates chart 
+
+ /**
+  * creates the actual chart for user to interface with on webpage
+  * @param {object} averageChart instance of average_chart class
+  */
  async function generateAverageOccupancuData(averageChart)
 {
     var dropdown = false;
@@ -280,43 +287,17 @@ class average_chart // average occupancy graph for floor
     averageChart.temp = chart;
   
 }
-//function toggleSeries(radio)
-//{
-//    if(radio.value == "12hours")
-//        {
-//             the_averagechart.temp.zoomX(the_averagechart.occupancyTime[11],the_averagechart.occupancyTime[0])
-//        }
-//    if(radio.value == "24hours")
-//        {
-//            the_averagechart.temp.zoomX(the_averagechart.occupancyTime[23],the_averagechart.occupancyTime[0])
-//        }
-//   
-//   if(radio.value == "week")
-//        {
-//            the_averagechart.temp.zoomX(the_averagechart.occupancyTime[167],the_averagechart.occupancyTime[0])
-//        }
-//     if(radio.value == "month")
-//        {
-//            the_averagechart.temp.zoomX(the_averagechart.occupancyTime[743],the_averagechart.occupancyTime[0])
-//        }
-//}
-//async function test_toggle(averageChart)
-//{
-//   
-//    
-//}
 var the_averagechart;
-// base function called by webpage that creates class object and calls function and monitors for changes 
+/** base function called by webpage that creates class object and calls function and monitors for changes  */ 
 async function average_graph()
 {
     /// this function should have parameters long term that makes it easy to call for any organization
     
     
-    var averageChart = new average_chart;
+    let averageChart = new average_chart;
     await averageChart.getData(averageChart);
     console.log(averageChart);
-//     test_toggle(await averageChart);
-    var unsubscribe = database.collection("Companies").doc(averageChart.organization).collection("Data").doc(averageChart.parking_structure).collection("Averages").doc("Floors").collection(averageChart.floor).orderBy("Time","desc").limit(averageChart.data_amount).onSnapshot(async function(snapshot)
+    let unsubscribe = database.collection("Companies").doc(averageChart.organization).collection("Data").doc(averageChart.parking_structure).collection("Averages").doc("Floors").collection(averageChart.floor).orderBy("Time","desc").limit(averageChart.data_amount).onSnapshot(async function(snapshot)
                 {  
                     snapshot.docChanges().forEach(async function(change)
                     {   

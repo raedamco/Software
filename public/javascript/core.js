@@ -3,7 +3,7 @@
 //  core.js
 //  Raedam 
 //
-//  Created on 10/25/2019. Modified on 6/30/2020 by Omar Waked.
+//  Created on 10/25/2019. Modified on 1/30/2021 by Austin Mckee.
 //  Copyright © 2020 Raedam. All rights reserved.
 //
 // DESCRIPTION OF FILE
@@ -22,7 +22,10 @@ var firebaseConfig = {
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
-
+/**
+ * function that redirects a user to the correct sub domain 
+ * @param {object} user firebase user object representing current user
+ */
 function subdomain_login(user)
 {
     var email = user.email;
@@ -32,7 +35,6 @@ function subdomain_login(user)
             if(window.location.hostname !="pdx.raedam.co")
                 {
                      window.location.hostname ="pdx.raedam.co";
-                    // window.location.href ="pdx.raedam.co"
                  
                 }
             else
@@ -53,7 +55,6 @@ function subdomain_login(user)
                     window.location = "dashboard.html";
                 }
         }
-    //console.log("email: ", email, "search ", pos);
 }
 
 firebase.analytics();
@@ -140,7 +141,10 @@ function authverification() {
     });
 }
 
-
+/**
+ * 
+ * @param {object} user firebase user object representing current user 
+ */
 function getUserData(user){
     if(user) {
         database.collection("Companies").where("Info.CUID", "==", user.uid).get().then(function(querySnapshot) {
