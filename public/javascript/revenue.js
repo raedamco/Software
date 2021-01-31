@@ -1,7 +1,7 @@
 //
 //  revenue.js
 //  Raedam 
-//
+// TODO finish comments
 //  Created on 5/13/2020. Modified on 6/30/2020 by Austin Mckee.
 //  Copyright © 2020 Raedam. All rights reserved.
 //

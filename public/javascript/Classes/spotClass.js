@@ -1,7 +1,7 @@
 //
 //  spotClass.js
 //  Raedam
-//
+// TODO finish comments
 //  Created on 5/13/2020. Modified on 7/10/2020.
 //  Copyright © 2020 Raedam. All rights reserved.
 //

@@ -2,14 +2,17 @@
 //  heatmap.js
 //  Raedam 
 //
-//  Created on 9/25/2020. Modified on 10/6/2020 by Austin Mckee.
+//  Created on 9/25/2020. Modified on 1/30/2020 by Austin Mckee.
 //  Copyright © 2020 Raedam. All rights reserved.
 //
 // This file holds code for floor heat map
 var heat_count = 0;
  
 
-
+/**
+ * Returns percent of time spot is occupied 
+ * @param {number} spotID id of spot you want to get the percent for 
+ */
 async function get_percent(spotID)
 {   
    var percent = database.collection("Companies").doc("Portland State University").collection("Data").doc("Parking Structure 1").collection("Floor 2").doc(spotID).collection("Data").orderBy("Time.End", "desc").get().then(async function(querySnapshot) 
@@ -56,7 +59,9 @@ async function get_percent(spotID)
            
          return percent;
 }
-
+/**
+ * heat_map class is class object that holds information for heat map graph  
+ */
 class heat_map
 {
     constructor()
@@ -89,23 +94,10 @@ class heat_map
    
     
 }
-
-
-
-
-function generateData(num_count, min,max)
-{
-    var data_array= [];
-    for(i=num_count; i>0; i-=1)
-    {
-        var temp = Math.random() * (max - min + 1) + min;
-        temp = Math.floor(temp);
-        data_array.push(temp);    
-    }
-    return data_array;
-}
-
-
+/**
+ * Creates heatmap on webpage using heat map object
+ * @param {class heat_map} myChart instance of heat map object
+ */
   async function heatmap_create(myChart)
 {
     
@@ -184,7 +176,10 @@ function generateData(num_count, min,max)
        await myChart.chart.render();
     
 }
-// has to be called after average if on same page for some reason 
+// has to be called after average if on same page for some reason
+/**
+ * creates heat_map object and calls functions to display it on webpage
+ */ 
  async function heat_graph()
 {
      heat_count = 1;

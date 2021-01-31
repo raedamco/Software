@@ -1,4 +1,4 @@
-//
+// TODO finish function comments
 //  profile.js
 //  Raedam 
 //
@@ -8,6 +8,11 @@
 // This file holds code for profile page 
 var PSU_profile = false;
 var commuter_profile = false;
+/**
+ * 
+ * @param {*} username 
+ * @param {*} role 
+ */
 function displayUserBox(username, role)
 {
          var profile_box = document.getElementById("profile-box");
@@ -84,6 +89,9 @@ function displayAccountData(){
         }
     });
 }
+/**
+ * 
+ */
 function displayCommutersData(){
    /* "Users" "Commuters"*/
     var username;
@@ -123,6 +131,10 @@ function displayCommutersData(){
     });
              
 }
+/**
+ * 
+ * @param {*} name 
+ */
  function setName(name)
 {              
        firebase.auth().onAuthStateChanged(function(user) {
@@ -184,6 +196,9 @@ function displayCommutersData(){
             
         
 }
+/**
+ * 
+ */
 function profilePopup(){
     const { value: Double } = Swal.fire({
       input: 'text',

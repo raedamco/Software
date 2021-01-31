@@ -1,14 +1,10 @@
-// const firebaseConfig = {
-//     apiKey: "AIzaSyCKghNDOPOufY-8SYVGW4xpOeZC3fDVZko",
-//     authDomain: "theory-parking.firebaseapp.com",
-//     databaseURL: "https://theory-parking.firebaseio.com",
-//     projectId: "theory-parking",
-//     storageBucket: "theory-parking.appspot.com",
-//     messagingSenderId: "192548003681",
-//     appId: "1:192548003681:web:1f092e58a62891359caf20",
-//     measurementId: "G-D9YWC0BFVD"
-// };
-// firebaseConfig.initializeApp(config);
+//  Notifications.js
+//  Raedam 
+//
+//  Created on 1/17/2021. Modified on 1/30/2021 by Austin Mckee.
+//  Copyright © 2020 Raedam. All rights reserved.
+//
+// In progress notification system setup and testing
 
 const messaging = firebase.messaging();
 messaging.getToken({ vapidKey: 'BCoBL38Noyfzy4R_pMtKggRD8foKriG7dCYizWO7rr1D6Hli-LSNfGMmvLXtWaPLEitd1GWcTb-cbGwaybksVZ8' }).then((currentToken) => {

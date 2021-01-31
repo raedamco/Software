@@ -1,7 +1,7 @@
 //
 //  Account.js
 //  Raedam 
-//
+// TODO finish comments
 //  Created on 10/25/2019. Modified on 6/30/2020 by Omar Waked.
 //  Copyright © 2020 Raedam. All rights reserved.
 //

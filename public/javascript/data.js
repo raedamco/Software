@@ -36,7 +36,8 @@ class average_chart
         this.floor = "Floor 2";  // floor for data set
         /// should modify above code to have values as inputs so it can be used for any organization
         
-        this.temp = null;
+        this.temp = null; // TODO rename
+        
     }
     
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 /*eslint-disable */
-//
+// TODO finsh comments
 //  retrieveData.js
 //  Raedam
 //
@@ -91,10 +91,12 @@ function getFloors(StructureID) {
         var id = doc.data()["Floors"];
         floorArray.push(id);
 
-        for (var i = 1; i < floorArray; ++i) {
-            var available = doc.data()["Floor Data"]["Floor " + (1+i)]["Available"];
-            var capacity = doc.data()["Floor Data"]["Floor " + (1+i)]["Capacity"];
-
+        for (var i = 1; i < floorArray; ++i) 
+        {
+            let occupied = doc.data()["Floor Data"]["Floor " + (1+i)]["Occupied"];
+            let unoccupied = doc.data()["Floor Data"]["Floor " + (1+i)]["Unoccupied"];
+            let capacity = occupied.length + unoccupied.length;
+            let available = unoccupied.length;
             var floorClass = new floor(StructureID, "Floor " + (1+i), capacity, available);
             floorClass.createRow();
             Floors.set("Floor " + (1+i), floorClass);
