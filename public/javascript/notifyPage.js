@@ -9,25 +9,22 @@
 //const { get } = require("core-js/fn/dict");
 
 const messaging = firebase.messaging();
-// messaging
-//   .requestPermission()
-//   .then(function () {
-//     console.log("have permission");
-//     return messaging.getToken({
-//       vapidKey:
-//         "BCoBL38Noyfzy4R_pMtKggRD8foKriG7dCYizWO7rr1D6Hli-LSNfGMmvLXtWaPLEitd1GWcTb-cbGwaybksVZ8",
-//     });
-//   })
-//   .then(function (token) {
-//     console.log(token);
-//   })
-//   .catch(function (err) {
-//     console.log("Error: " + err);
-//   });
-//user = firebase.auth();
-async function getCurrentUser(auth) {
-  return await auth; //.currentUser;
-}
+messaging
+  .requestPermission()
+  .then(function () {
+    console.log("have permission");
+    return messaging.getToken({
+      vapidKey:
+        "BCoBL38Noyfzy4R_pMtKggRD8foKriG7dCYizWO7rr1D6Hli-LSNfGMmvLXtWaPLEitd1GWcTb-cbGwaybksVZ8",
+    });
+  })
+  .then(function (token) {
+    console.log(token);
+  })
+  .catch(function (err) {
+    console.log("Error: " + err);
+  });
+
 messaging
   .getToken({
     vapidKey:
@@ -47,11 +44,12 @@ messaging
 
         userPath.get().then((doc) => {
           if (doc.exists) {
-            console.log("Document data:", doc.data());
             if (doc.data().tokens) {
               const originalTokens = doc.data().tokens;
-              originalTokens.push(currentToken);
-              userPath.update({ tokens: originalTokens });
+              if (!originalTokens.some((token) => token === currentToken)) {
+                originalTokens.push(currentToken);
+                userPath.update({ tokens: originalTokens });
+              }
             } else {
               userPath.update({ tokens: [currentToken] });
             }
@@ -62,11 +60,7 @@ messaging
         });
         //database.collection("Users").doc("Companies").collection("Users").doc(user.uid).set
         // console.log(orignalTokens);
-        console.log(user.uid);
       });
-
-      console.log(currentToken);
-      console.log(auth);
     } else {
       // Show permission request UI
       console.log(
