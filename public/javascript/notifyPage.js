@@ -26,7 +26,7 @@ const messaging = firebase.messaging();
 //   });
 //user = firebase.auth();
 async function getCurrentUser(auth) {
-  return await auth.currentUser;
+  return await auth; //.currentUser;
 }
 messaging
   .getToken({
@@ -37,8 +37,33 @@ messaging
     if (currentToken) {
       // Send the token to your server and update the UI if necessary
       // ...
-      const auth = firebase.auth();
-      getCurrentUser(auth).then((currentUser) => console.log(currentUser));
+
+      firebase.auth().onAuthStateChanged(function (user) {
+        const userPath = database
+          .collection("Users")
+          .doc("Companies")
+          .collection("Users")
+          .doc(user.uid);
+
+        userPath.get().then((doc) => {
+          if (doc.exists) {
+            console.log("Document data:", doc.data());
+            if (doc.data().tokens) {
+              const originalTokens = doc.data().tokens;
+              originalTokens.push(currentToken);
+              userPath.update({ tokens: originalTokens });
+            } else {
+              userPath.update({ tokens: [currentToken] });
+            }
+          } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+          }
+        });
+        //database.collection("Users").doc("Companies").collection("Users").doc(user.uid).set
+        // console.log(orignalTokens);
+        console.log(user.uid);
+      });
 
       console.log(currentToken);
       console.log(auth);
