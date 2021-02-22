@@ -74,6 +74,10 @@ messaging
     // ...
   });
 
+messaging.onMessage(function (payload) {
+  console.log("onMessage", payload);
+});
+
 // messaging.usePubilcVapidKey('BCoBL38Noyfzy4R_pMtKggRD8foKriG7dCYizWO7rr1D6Hli-LSNfGMmvLXtWaPLEitd1GWcTb-cbGwaybksVZ8');
 // messaging.requestPermission().then(function(){
 //     console.log("have Permission");
