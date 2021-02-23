@@ -7,7 +7,7 @@
 // In progress notification system setup and testing
 
 //const { get } = require("core-js/fn/dict");
-
+// createMessage = require("createMessage.js");
 const messaging = firebase.messaging();
 messaging
   .requestPermission()
@@ -76,6 +76,10 @@ messaging
 
 messaging.onMessage(function (payload) {
   console.log("onMessage", payload);
+  console.log(payload.notification);
+  const title = payload.notification.title;
+  const message = payload.notification.body;
+  createMessage(title, message);
 });
 
 // messaging.usePubilcVapidKey('BCoBL38Noyfzy4R_pMtKggRD8foKriG7dCYizWO7rr1D6Hli-LSNfGMmvLXtWaPLEitd1GWcTb-cbGwaybksVZ8');

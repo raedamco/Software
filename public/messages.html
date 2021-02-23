@@ -23,13 +23,19 @@
 	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400" rel="stylesheet">
    
-    <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
+
+	<script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-messaging.js"></script>  
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-storage.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-auth.js"></script>
-     
+
+	
+
     <script src="javascript/core.js"></script>      
+	<script src="javascript/notifyPage.js"></script>   
+	<script src="javascript/createMessage.js"></script> 
         
     <!-- Favicon START -->
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
@@ -76,7 +82,7 @@
     <script>
         window.onload = function(){ 
             authverification(); 
-            getData();
+            //getData();
         }
     </script>
     <!-- User Authentication. Verify User should be able to access data END-->
