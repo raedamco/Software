@@ -49,9 +49,10 @@ function getMessage() {
       .collection("Users")
       .doc(user.uid);
     userPath.get().then((doc) => {
+      console.log(doc.data());
       const messages = doc.data().messages;
       const messageContainer = document.getElementById("message-container");
-      for (let message in messages) {
+      for (let message of messages) {
         const messageRow = document.createElement("div");
         messageRow.classList.add("row");
         messageContainer.appendChild(messageRow);
