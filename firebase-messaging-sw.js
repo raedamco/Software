@@ -1,6 +1,6 @@
 importScripts("https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js");
 importScripts("https://www.gstatic.com/firebasejs/7.2.1/firebase-messaging.js");
-
+importScripts("public/javascript/createMessage.js");
 var firebaseConfig = {
   apiKey: "AIzaSyCKghNDOPOufY-8SYVGW4xpOeZC3fDVZko",
   authDomain: "theory-parking.firebaseapp.com",
@@ -15,10 +15,9 @@ firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 
-// messaging.onMessage(function (payload) {
-//   console.log("onMessage", payload);
-//   console.log(payload.notification);
-//   const title = payload.notification.title;
-//   const message = payload.notification.body;
-//   createMessage(title, message);
-// });
+messaging.setBackgroundMessageHandler(function (payload) {
+  const title = payload.notification.title;
+  const message = payload.notification.body;
+  // createMessage(title, message); TODO look into later
+  return self.ServiceWorkerRegistration.showNotification(title, message);
+});

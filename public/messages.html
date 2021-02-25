@@ -81,7 +81,8 @@
     <!-- User Authentication. Verify User should be able to access data START-->
     <script>
         window.onload = function(){ 
-            authverification(); 
+            authverification();
+			getMessage(); 
             //getData();
         }
     </script>
@@ -123,12 +124,13 @@
         <!-- <div class ="coming_soon">
                               <p>Coming Soon<p>
                            </div> -->
-					<section class = "container messages  ">
+					<section class = "container messages  " id="message-container">
 						<div class = "row  ">
-							<div class =" col-lg-12 col-md-12 col-sm-12 "> Test </div>
+							<div class =" col-lg-12 col-md-12 col-sm-12 message-top "> Messages: </div>
+							
 						</div>
-						<div class = "row  ">
-							<div class =" col-lg-4 col-md-3 col-sm-3 "> Test </div>
+						<div class = "row ">
+							<div class =" col-lg-12 col-md-12 col-sm-12 new-message"> Test </div>
 						</div>
 
 
