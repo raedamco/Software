@@ -14,11 +14,3 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
-
-// messaging.onMessage(function (payload) {
-//   console.log("onMessage", payload);
-//   console.log(payload.notification);
-//   const title = payload.notification.title;
-//   const message = payload.notification.body;
-//   createMessage(title, message);
-// });

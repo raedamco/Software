@@ -40,3 +40,27 @@ function createMessage(title, message) {
   });
 }
 // module.exports = createMessage;
+
+function getMessage() {
+  firebase.auth().onAuthStateChanged(function (user) {
+    const userPath = database
+      .collection("Users")
+      .doc("Companies")
+      .collection("Users")
+      .doc(user.uid);
+    userPath.get().then((doc) => {
+      const messages = doc.data().messages;
+      const messageContainer = document.getElementById("message-container");
+      for (let message in messages) {
+        const messageRow = document.createElement("div");
+        messageRow.classList.add("row");
+        messageContainer.appendChild(messageRow);
+
+        let newMessage = document.createElement("div");
+        newMessage.innerHTML = `${message.title} :  ${message.message}`;
+        newMessage.classList.add("new-message"); //col-lg-12 col-md-12 col-sm-12 new-message
+        messageRow.appendChild(newMessage);
+      }
+    });
+  });
+}
