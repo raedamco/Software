@@ -4,7 +4,7 @@
  * @param {String} title message title
  * @param {String} message message/ data from message
  */
-function createMessage(title, message) {
+async function createMessage(title, message) {
   firebase.auth().onAuthStateChanged(function (user) {
     const userPath = database
       .collection("Users")
@@ -40,7 +40,9 @@ function createMessage(title, message) {
   });
 }
 // module.exports = createMessage;
-
+/**
+ * This message pulls the users messages from firestore and displays them on message page
+ */
 function getMessage() {
   firebase.auth().onAuthStateChanged(function (user) {
     const userPath = database
@@ -64,4 +66,17 @@ function getMessage() {
       }
     });
   });
+}
+
+function addMessage(title, message) {
+  const messageContainer = document.getElementById("message-container");
+  const messageRow = document.createElement("div");
+  messageRow.classList.add("row");
+  messageRow.classList.add("flex-row-reverse");
+  messageContainer.appendChild(messageRow);
+
+  let newMessage = document.createElement("div");
+  newMessage.innerHTML = `${title} :  ${message}`;
+  newMessage.classList.add("new-message"); //col-lg-12 col-md-12 col-sm-12 new-message
+  messageRow.appendChild(newMessage);
 }
