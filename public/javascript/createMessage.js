@@ -54,15 +54,22 @@ function getMessage() {
       console.log(doc.data());
       const messages = doc.data().messages;
       const messageContainer = document.getElementById("message-container");
+
+      const messageTop = document.createElement("div");
+      messageTop.innerText = "Messages:";
+      messageTop.classList.add("message-top");
+      messageContainer.prepend(messageTop);
+
       for (let message of messages) {
         const messageRow = document.createElement("div");
         messageRow.classList.add("row");
-        messageContainer.appendChild(messageRow);
+        messageContainer.prepend(messageRow);
+        messageContainer.prepend(messageTop);
 
         let newMessage = document.createElement("div");
         newMessage.innerHTML = `${message.title} :  ${message.message}`;
         newMessage.classList.add("new-message"); //col-lg-12 col-md-12 col-sm-12 new-message
-        messageRow.appendChild(newMessage);
+        messageRow.prepend(newMessage);
       }
     });
   });
@@ -70,13 +77,15 @@ function getMessage() {
 
 function addMessage(title, message) {
   const messageContainer = document.getElementById("message-container");
+  const messageTop = document.querySelector(".message-top");
   const messageRow = document.createElement("div");
   messageRow.classList.add("row");
   messageRow.classList.add("flex-row-reverse");
-  messageContainer.appendChild(messageRow);
+  messageContainer.prepend(messageRow);
+  messageContainer.prepend(messageTop);
 
   let newMessage = document.createElement("div");
   newMessage.innerHTML = `${title} :  ${message}`;
   newMessage.classList.add("new-message"); //col-lg-12 col-md-12 col-sm-12 new-message
-  messageRow.appendChild(newMessage);
+  messageRow.prepend(newMessage);
 }
