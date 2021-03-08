@@ -28,6 +28,7 @@ async function createMessage(title, message) {
           ) {
             originalMessage.push(theMessage);
             userPath.update({ messages: originalMessage });
+            addMessage(theMessage.title, theMessage.message);
           }
         } else {
           userPath.update({ messages: [theMessage] });

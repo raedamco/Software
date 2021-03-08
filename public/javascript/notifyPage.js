@@ -79,9 +79,10 @@ messaging.onMessage(function (payload) {
   console.log(payload.notification);
   const title = payload.notification.title;
   const message = payload.notification.body;
-  createMessage(title, message).then(() => {
-    addMessage(title, message);
-  });
+  createMessage(title, message);
+  // .then(() => {
+  //   addMessage(title, message);
+  // });
 });
 
 // messaging.usePubilcVapidKey('BCoBL38Noyfzy4R_pMtKggRD8foKriG7dCYizWO7rr1D6Hli-LSNfGMmvLXtWaPLEitd1GWcTb-cbGwaybksVZ8');
