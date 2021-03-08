@@ -23,13 +23,19 @@
 	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400" rel="stylesheet">
    
-    <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
+
+	<script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-messaging.js"></script>  
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-storage.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-auth.js"></script>
-     
+
+	
+
     <script src="javascript/core.js"></script>      
+	<script src="javascript/notifyPage.js"></script>   
+	<script src="javascript/createMessage.js"></script> 
         
     <!-- Favicon START -->
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
@@ -54,7 +60,7 @@
 
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
-
+	<link rel="stylesheet" href="css/messages.css">
 	<!-- Modernizr JS -->
 	<script src="js/modernizr-2.6.2.min.js"></script>
 	<!-- FOR IE9 below -->
@@ -75,15 +81,16 @@
     <!-- User Authentication. Verify User should be able to access data START-->
     <script>
         window.onload = function(){ 
-            authverification(); 
-            getData();
+            authverification();
+			getMessage(); 
+            //getData();
         }
     </script>
     <!-- User Authentication. Verify User should be able to access data END-->
         
 	</head>
 	<body>
-		
+	<main>
 	<div class="tp-loader"></div>
 
 	<div id="page">
@@ -114,9 +121,17 @@
 				</div>
 			</div>
 		</nav>
-        <div class ="coming_soon">
+        <!-- <div class ="coming_soon">
                               <p>Coming Soon<p>
-                           </div>
+                           </div> -->
+					<section class = "container messages  " id="message-container">
+						<div class = "row  ">
+							<!-- <div class ="  message-top "> Messages: </div> -->
+							
+						</div>
+
+
+					</section>
 		<div class="tp-services">
 			<div class="container">
 				<div class="row">
@@ -126,6 +141,7 @@
 				</div>
 			</div>
 		</div>
+	</main>	
 
 		<footer id="tp-footer">
 			<div class="copy">
