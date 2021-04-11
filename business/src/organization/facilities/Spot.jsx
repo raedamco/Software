@@ -4,7 +4,11 @@ const database = window.firebase.firestore();
 
 const Spot = ({ organization, data }) => {
 	const { path, url, params } = useRouteMatch();
-	const [statusColor, setStatusColor] = useState();
+
+	const [statusColor, setStatusColor] = useState("");
+	const [xPos, setXPos] = useState(0);
+	const [yPos, setYPos] = useState(0);
+
 	const locationName = params.locationName.replaceAll("-", " ");
 	const subLocationName = params.subLocationName.replaceAll("-", " ");
 
@@ -18,6 +22,8 @@ const Spot = ({ organization, data }) => {
 			.collection(subLocationName)
 			.doc(`${data.Info["Spot ID"]}`)
 			.onSnapshot((doc) => {
+				setXPos(doc.data().Layout.x);
+				setYPos(doc.data().Layout.y);
 				if (doc.data().Occupancy.Occupied) {
 					setStatusColor("red");
 				} else {
@@ -31,7 +37,14 @@ const Spot = ({ organization, data }) => {
 	}, []);
 
 	return (
-		<div style={{ backgroundColor: statusColor, color: "white" }}>
+		<div
+			className="parking-spot"
+			style={{
+				backgroundColor: statusColor,
+				top: `${yPos}%`,
+				left: `${xPos}%`,
+			}}
+		>
 			{data.Info["Spot ID"]}
 		</div>
 	);

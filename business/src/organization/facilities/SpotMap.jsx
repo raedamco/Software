@@ -39,7 +39,7 @@ const SpotMap = ({ organization }) => {
 							>
 								{locationName} - {subLocationName}
 							</h1>
-							<div className="container panel panel-default">{spotList}</div>
+							<div className="panel panel-default map">{spotList}</div>
 						</div>
 					</div>
 				</div>

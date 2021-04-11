@@ -28,7 +28,6 @@ const Location = ({ organization, title = "", name, locationType }) => {
 			.collection("Data")
 			.doc(title)
 			.onSnapshot((snapshot) => {
-				console.log("snapshot:", snapshot.data());
 				const { Occupied, Unoccupied } = snapshot.data()["Floor Data"][name];
 				setFree(Unoccupied.length);
 				setTotal(Occupied.length + Unoccupied.length);
@@ -36,7 +35,6 @@ const Location = ({ organization, title = "", name, locationType }) => {
 	}
 
 	useEffect(() => {
-		console.log("Location:", locationType);
 		if (locationType == "location") {
 			getLocationCapacity();
 		} else if (locationType == "sublocation") {
