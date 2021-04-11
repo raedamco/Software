@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import * as firebase from "firebase";
+import firebase from "firebase";
 
 var firebaseConfig = {
 	apiKey: "AIzaSyCKghNDOPOufY-8SYVGW4xpOeZC3fDVZko",
