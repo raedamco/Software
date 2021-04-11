@@ -1,5 +1,3 @@
-import OrganizationRouter from "./organization";
-
 const Login = () => {
 	return (
 		<div>
@@ -12,7 +10,7 @@ const Login = () => {
 					backgroundSize: "cover",
 					backgroundPosition: "center",
 				}}
-				dataSection="home"
+				datasection="home"
 			>
 				<div className="overlay"></div>
 				<div className="display-t display-t2 text-center">
@@ -62,7 +60,7 @@ const Login = () => {
 									id="loginButton"
 									value="Login"
 									className="btn btn-primary"
-									onclick="signIn()"
+									onClick={window.signIn}
 								/>
 							</div>
 							<div className="form-group">
@@ -70,7 +68,7 @@ const Login = () => {
 									type="submit"
 									value="Forgot Password?"
 									className="btn btn-secondary"
-									onclick="forgotPassword()"
+									onClick={window.forgotPassword}
 								/>
 							</div>
 						</div>
