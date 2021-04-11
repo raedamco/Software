@@ -17,7 +17,6 @@ const LocationList = ({ organization, locationType }) => {
 				return doc.data().Locations;
 			})
 			.then((temp) => {
-				console.log("locations:", temp);
 				const loComp = temp.map((locationName, index) => (
 					<Location
 						key={index}
@@ -46,7 +45,6 @@ const LocationList = ({ organization, locationType }) => {
 				return Object.keys(doc.data()["Floor Data"]);
 			})
 			.then((temp) => {
-				console.log("temp:", temp);
 				const loComp = temp.map((locationName, index) => (
 					<Location
 						key={index}

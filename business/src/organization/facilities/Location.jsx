@@ -3,24 +3,46 @@ import { useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 const database = window.firebase.firestore();
 
-const Location = ({ organization, name }) => {
+const Location = ({ organization, title = "", name, locationType }) => {
 	const [free, setFree] = useState(0);
 	const [total, setTotal] = useState(0);
 	const { path, url, params } = useRouteMatch();
 
-	useEffect(() => {
+	function getLocationCapacity() {
 		database
 			.collection("Companies")
 			.doc(organization)
 			.collection("Data")
 			.doc(name)
-			.get()
-			.then((doc) => {
-				const { Available, Capacity } = doc.data().Capacity;
+			.onSnapshot((snapshot) => {
+				const { Available, Capacity } = snapshot.data().Capacity;
 				setFree(Available);
 				setTotal(Capacity);
 			});
-	}, []);
+	}
+
+	function getSubLocationCapacity() {
+		database
+			.collection("Companies")
+			.doc(organization)
+			.collection("Data")
+			.doc(title)
+			.onSnapshot((snapshot) => {
+				console.log("snapshot:", snapshot.data());
+				const { Occupied, Unoccupied } = snapshot.data()["Floor Data"][name];
+				setFree(Unoccupied.length);
+				setTotal(Occupied.length + Unoccupied.length);
+			});
+	}
+
+	useEffect(() => {
+		console.log("Location:", locationType);
+		if (locationType == "location") {
+			getLocationCapacity();
+		} else if (locationType == "sublocation") {
+			getSubLocationCapacity();
+		}
+	}, [locationType]);
 
 	return (
 		<Link to={`${url}/${name.replaceAll(" ", "-")}`}>
