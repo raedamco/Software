@@ -1,3 +1,10 @@
+//TODO Capacity dynamicaly changing
+//TODO Finish spots/sensor log
+//TODO Account
+//TODO Top button
+//TODO Summary
+//TODO Update Chart
+//TODO Redirect to login page when user isn't authenticated
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";

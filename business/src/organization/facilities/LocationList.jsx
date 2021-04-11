@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
+import { useRouteMatch } from "react-router";
 import Location from "./Location";
 const database = window.firebase.firestore();
 
-const LocationList = ({ organization }) => {
+const LocationList = ({ organization, locationType }) => {
+	const { path, url, params } = useRouteMatch();
 	const [locations, setLocations] = useState([]);
-	console.log("organization:", organization);
+	const [title, setTitle] = useState(organization);
 
-	function getStructures() {
+	function getLocation() {
 		database
 			.collection("Companies")
 			.doc(organization)
@@ -15,6 +17,7 @@ const LocationList = ({ organization }) => {
 				return doc.data().Locations;
 			})
 			.then((temp) => {
+				console.log("locations:", temp);
 				const loComp = temp.map((locationName, index) => (
 					<Location
 						key={index}
@@ -23,9 +26,35 @@ const LocationList = ({ organization }) => {
 					/>
 				));
 				setLocations([...loComp]);
-				console.log("Temp:", temp);
-				console.log("loComp:", loComp);
-				console.log("Locations:", locations);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	}
+
+	function getSubLocation() {
+		let subLocationName = params.locationName.replaceAll("-", " ");
+		database
+			.collection("Companies")
+			.doc(organization)
+			.collection("Data")
+			.doc(subLocationName)
+			.get()
+			.then((doc) => {
+				setTitle(subLocationName);
+				//TODO Fix floor data name in database
+				return Object.keys(doc.data()["Floor Data"]);
+			})
+			.then((temp) => {
+				console.log("temp:", temp);
+				const loComp = temp.map((locationName, index) => (
+					<Location
+						key={index}
+						organization={organization}
+						name={locationName}
+					/>
+				));
+				setLocations([...loComp]);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -34,10 +63,14 @@ const LocationList = ({ organization }) => {
 
 	useEffect(() => {
 		const abortController = new AbortController();
-		getStructures();
+		if (locationType === "location") {
+			getLocation();
+		} else if (locationType === "sublocation") {
+			getSubLocation();
+		}
 
 		return () => abortController.abort();
-	}, []);
+	}, [locationType]);
 
 	return (
 		<div className="tp-services" id="container">
@@ -50,7 +83,7 @@ const LocationList = ({ organization }) => {
 								id="structureTitle"
 								style={{ paddingTop: "50px", paddingBottom: "50px" }}
 							>
-								{organization}
+								{title}
 							</h1>
 							<div>{locations}</div>
 						</div>
