@@ -6,7 +6,7 @@ const database = window.firebase.firestore();
 const LineGraph = ({ organization, location, subLocation }) => {
 	const [options, setOptions] = useState({});
 	const [series, setSeries] = useState([]);
-	const [selection, setSelection] = useState("one_year");
+	const [selection, setSelection] = useState("one_month");
 
 	function getAverageData() {
 		database
@@ -27,7 +27,12 @@ const LineGraph = ({ organization, location, subLocation }) => {
 				collection.forEach((doc) => {
 					data.push(doc.data().Average);
 					time.push(doc.data().Time);
-					datetime.push([doc.data().Time.seconds * 1000, doc.data().Average]);
+					// datetime.push([doc.data().Time.seconds * 1000, doc.data().Average]);
+					let tempTime = doc.data().Time.toDate();
+					datetime.push([
+						tempTime.getTime() - 2.52 * Math.pow(10, 7),
+						doc.data().Average,
+					]);
 				});
 				if (data) {
 					console.log("Data:", data);
@@ -511,7 +516,7 @@ const LineGraph = ({ organization, location, subLocation }) => {
 					},
 					xaxis: {
 						type: "datetime",
-						min: new Date("4 Apr 2020").getTime(),
+						min: new Date("4 Mar 2021").getTime(),
 						max: new Date("4 Apr 2021").getTime(),
 						tickAmount: 6,
 						labels: {
