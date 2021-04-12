@@ -27,7 +27,7 @@ const LineGraph = ({ organization, location, subLocation }) => {
 				collection.forEach((doc) => {
 					data.push(doc.data().Average);
 					time.push(doc.data().Time);
-					datetime.push([doc.data().Time.nanoseconds, doc.data().Average]);
+					datetime.push([doc.data().Time.seconds * 1000, doc.data().Average]);
 				});
 				if (data) {
 					console.log("Data:", data);
@@ -506,21 +506,25 @@ const LineGraph = ({ organization, location, subLocation }) => {
 						size: 0,
 						style: "hollow",
 					},
+					stroke: {
+						curve: "smooth",
+					},
 					xaxis: {
 						type: "datetime",
-						min: new Date("01 Mar 2012").getTime(),
+						min: new Date("4 Apr 2020").getTime(),
+						max: new Date("4 Apr 2021").getTime(),
 						tickAmount: 6,
 						labels: {
-							// formatter: function (value, timestamp) {
-							// 	return new Date(timestamp);
-							// },
+							formatter: function (value, timestamp) {
+								return new Date(timestamp).toDateString();
+							},
 							// datetimeFormatter: {
 							// 	year: "yyy",
 							// 	month: "MMM 'yy",
 							// 	day: "dd MMM",
 							// 	hour: "HH:mm",
 							// },
-							format: "dd/MM",
+							// format: "dd/MM",
 						},
 					},
 					tooltip: {
@@ -544,6 +548,7 @@ const LineGraph = ({ organization, location, subLocation }) => {
 						},
 					},
 				});
+				console.log("Series:", series);
 			});
 	}
 
@@ -552,38 +557,43 @@ const LineGraph = ({ organization, location, subLocation }) => {
 		switch (timeline) {
 			case "one_month":
 				setOptions({
+					...options,
 					xaxis: {
-						min: new Date("28 Jan 2013").getTime(),
-						max: new Date("27 Feb 2013").getTime(),
+						min: new Date("4 Mar 2021").getTime(),
+						max: new Date("4 Apr 2021").getTime(),
 					},
 				});
 				break;
 			case "six_months":
 				setOptions({
+					...options,
 					xaxis: {
-						min: new Date("27 Sep 2012").getTime(),
-						max: new Date("27 Feb 2013").getTime(),
+						min: new Date("12 Oct 2020").getTime(),
+						max: new Date("4 Apr 2021").getTime(),
 					},
 				});
 				break;
 			case "one_year":
 				setOptions({
+					...options,
 					xaxis: {
-						min: new Date("27 Feb 2012").getTime(),
-						max: new Date("27 Feb 2013").getTime(),
+						min: new Date("4 Apr 2020").getTime(),
+						max: new Date("4 Apr 2021").getTime(),
 					},
 				});
 				break;
 			case "ytd":
 				setOptions({
+					...options,
 					xaxis: {
-						min: new Date("01 Jan 2013").getTime(),
-						max: new Date("27 Feb 2013").getTime(),
+						min: new Date("01 Jan 2021").getTime(),
+						max: new Date("4 Apr 2021").getTime(),
 					},
 				});
 				break;
 			case "all":
 				setOptions({
+					...options,
 					xaxis: {
 						min: undefined,
 						max: undefined,
@@ -592,6 +602,8 @@ const LineGraph = ({ organization, location, subLocation }) => {
 				break;
 			default:
 		}
+		console.log("Options:", options);
+		console.log("Series:", series);
 	}
 
 	useEffect(() => {
