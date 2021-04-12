@@ -1,0 +1,20 @@
+.coming-soon {
+	text-align: center;
+	font-size: 64px;
+}
+.align-middle {
+	vertical-align: middle;
+}
+
+.card-btn {
+	cursor: pointer;
+}
+
+.card-btn:hover {
+	background-color: #c4c4c4;
+}
+
+.table > tbody > tr > td,
+.table > thead > tr > th {
+	border: 0 !important;
+}

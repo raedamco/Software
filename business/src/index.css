@@ -22,8 +22,11 @@ body,
 }
 
 main {
+	margin: 0 auto;
 	flex: 1;
+	display: flex;
 }
+
 footer {
 	flex-shrink: 0;
 }

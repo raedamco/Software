@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Route, Switch, useRouteMatch } from "react-router";
 import CardList from "../common/CardList";
+import CommingSoon from "../common/CommingSoon";
+import NoData from "../common/NoData";
 import Location from "./facilities/Location";
 import LocationList from "./facilities/LocationList";
 import SensorLog from "./facilities/SensorLog";
@@ -20,24 +22,32 @@ const Organization = ({ organization }) => {
 			.collection("Data")
 			.doc(locationName)
 			.collection(subLocationName)
-			.doc(`${params.spotId}`)
+			.doc(`${urlParams.spotId}`)
 			.collection("Data")
 			.get()
 			.then((collection) => {
-				setPageTitle(`Data log for spot ${params.spotId}`);
-				return collection.data();
-			})
-			.then((temp) => {
-				const loComp = temp.map((log, index) => (
-					<SensorLog
-						key={index}
-						occupant={log.Occupant}
-						occupied={log.Occupied}
-						begin={log.Time.Begin}
-						end={log.Time.End}
-					/>
-				));
-				setList([...loComp]);
+				setPageTitle(`Data log for spot ${urlParams.spotId}`);
+				let temp = [];
+				console.log("collectin: ", collection);
+				if (!collection.size) {
+					temp.push(<NoData />);
+					setList(temp);
+					return;
+				}
+				let index = 0;
+				collection.forEach((doc) => {
+					temp.push(
+						<SensorLog
+							key={index}
+							occupant={doc.data().Occupant}
+							occupied={doc.data().Occupied}
+							begin={doc.data().Time.Begin}
+							end={doc.data().Time.End}
+						/>
+					);
+					index += 1;
+				});
+				setList(temp);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -115,6 +125,9 @@ const Organization = ({ organization }) => {
 				</Route>
 				<Route path={`${path}/facilities`}>
 					<CardList getJsx={getLocation} />
+				</Route>
+				<Route path={`${path}/enforcement`}>
+					<CommingSoon />
 				</Route>
 			</Switch>
 		</>

@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router";
-import ReactDOMServer from "react-dom/server";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { Link } from "react-router-dom";
 
 const SwalReact = withReactContent(Swal);
 const database = window.firebase.firestore();
@@ -102,7 +100,12 @@ const Spot = ({ organization, data }) => {
 			title: "Settings for spot " + data.Info["Spot ID"],
 			html: popupHTML,
 			footer: (
-				<button onClick={() => history.push(`${url}/${data.Info["Spot ID"]}`)}>
+				<button
+					onClick={() => {
+						SwalReact.close();
+						history.push(`${url}/${data.Info["Spot ID"]}`);
+					}}
+				>
 					Sensor Log
 				</button>
 			),

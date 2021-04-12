@@ -10,6 +10,7 @@ const SpotMap = ({ organization }) => {
 	const subLocationName = params.subLocationName.replaceAll("-", " ");
 
 	useEffect(() => {
+		const abortController = new AbortController();
 		database
 			.collection("Companies")
 			.doc(organization)
@@ -19,11 +20,16 @@ const SpotMap = ({ organization }) => {
 			.get()
 			.then((collection) => {
 				let tempList = [];
+				let index = 0;
 				collection.forEach((doc) => {
-					tempList.push(<Spot organization={organization} data={doc.data()} />);
+					tempList.push(
+						<Spot key={index} organization={organization} data={doc.data()} />
+					);
+					index += 1;
 				});
 				setSpotList(tempList);
 			});
+		return () => abortController.abort();
 	}, []);
 
 	return (
