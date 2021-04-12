@@ -1,12 +1,11 @@
-import { useState } from "react";
 import { Route, Switch, useRouteMatch } from "react-router";
 import CardList from "../common/CardList";
 import CommingSoon from "../common/CommingSoon";
 import NoData from "../common/NoData";
 import Location from "./facilities/Location";
-import LocationList from "./facilities/LocationList";
 import SensorLog from "./facilities/SensorLog";
 import SpotMap from "./facilities/SpotMap";
+import Price from "./Price";
 const database = window.firebase.firestore();
 
 const Organization = ({ organization }) => {
@@ -109,6 +108,30 @@ const Organization = ({ organization }) => {
 			});
 	}
 
+	function getLocationPrices(setList, setPageTitle, urlParams) {
+		database
+			.collection("Companies")
+			.doc(organization)
+			.get()
+			.then((doc) => {
+				setPageTitle("Organization Settings");
+				return doc.data().Locations;
+			})
+			.then((temp) => {
+				const loComp = temp.map((locationName, index) => (
+					<Price
+						key={index}
+						organization={organization}
+						locationName={locationName}
+					/>
+				));
+				setList([...loComp]);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	}
+
 	return (
 		<>
 			<Switch>
@@ -126,7 +149,17 @@ const Organization = ({ organization }) => {
 				<Route path={`${path}/facilities`}>
 					<CardList getJsx={getLocation} />
 				</Route>
+				<Route path={`${path}/summary`}></Route>
 				<Route path={`${path}/enforcement`}>
+					<CommingSoon />
+				</Route>
+				<Route path={`${path}/organization`}>
+					<CardList getJsx={getLocationPrices} />
+				</Route>
+				<Route path={`${path}/profile`}>
+					<CommingSoon />
+				</Route>
+				<Route path={`${path}/messages`}>
 					<CommingSoon />
 				</Route>
 			</Switch>
