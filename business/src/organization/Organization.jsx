@@ -3,14 +3,48 @@ import { Route, Switch, useRouteMatch } from "react-router";
 import CardList from "../common/CardList";
 import Location from "./facilities/Location";
 import LocationList from "./facilities/LocationList";
+import SensorLog from "./facilities/SensorLog";
 import SpotMap from "./facilities/SpotMap";
 const database = window.firebase.firestore();
 
 const Organization = ({ organization }) => {
 	const { path, url, params } = useRouteMatch();
-	//const [locationType, setLocationType] = useState("location");
 
-	function getLocation(setList, setPageTitle, params) {
+	function getLogs(setList, setPageTitle, urlParams) {
+		const locationName = urlParams.locationName.replaceAll("-", " ");
+		const subLocationName = urlParams.subLocationName.replaceAll("-", " ");
+
+		database
+			.collection("Companies")
+			.doc(organization)
+			.collection("Data")
+			.doc(locationName)
+			.collection(subLocationName)
+			.doc(`${params.spotId}`)
+			.collection("Data")
+			.get()
+			.then((collection) => {
+				setPageTitle(`Data log for spot ${params.spotId}`);
+				return collection.data();
+			})
+			.then((temp) => {
+				const loComp = temp.map((log, index) => (
+					<SensorLog
+						key={index}
+						occupant={log.Occupant}
+						occupied={log.Occupied}
+						begin={log.Time.Begin}
+						end={log.Time.End}
+					/>
+				));
+				setList([...loComp]);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	}
+
+	function getLocation(setList, setPageTitle, urlParams) {
 		database
 			.collection("Companies")
 			.doc(organization)
@@ -68,6 +102,11 @@ const Organization = ({ organization }) => {
 	return (
 		<>
 			<Switch>
+				<Route
+					path={`${path}/facilities/:locationName/:subLocationName/:spotId`}
+				>
+					<CardList getJsx={getLogs} />
+				</Route>
 				<Route path={`${path}/facilities/:locationName/:subLocationName`}>
 					<SpotMap organization={organization} />
 				</Route>

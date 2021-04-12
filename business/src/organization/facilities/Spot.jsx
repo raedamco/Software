@@ -21,7 +21,6 @@ const Spot = ({ organization, data }) => {
 	const subLocationName = params.subLocationName.replaceAll("-", " ");
 
 	function updateSpot() {
-		console.log("SubLocation:", subLocationName);
 		database
 			.collection("Companies")
 			.doc(organization)
