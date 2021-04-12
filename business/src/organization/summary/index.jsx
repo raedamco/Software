@@ -12,6 +12,7 @@ const Summary = ({ organization }) => {
 	}
 
 	function getSubLocations() {
+		let start = Date.now();
 		let compList = [];
 		database
 			.collection("Companies")
@@ -33,6 +34,13 @@ const Summary = ({ organization }) => {
 						})
 						.then((subLocations) => {
 							subLocations.forEach((subLocation) => {
+								console.log(
+									"Key:",
+									`${location.replaceAll(" ", "")}${subLocation.replaceAll(
+										" ",
+										""
+									)}`
+								);
 								compList.push(
 									<div key={`${location}-${subLocation}`}>
 										<LineGraph
@@ -48,6 +56,9 @@ const Summary = ({ organization }) => {
 									</div>
 								);
 							});
+							let delta = Date.now() - start;
+							let seconds = Math.floor(delta / 1000);
+							console.log("GetSublocations seconds:", seconds);
 							setJsx(compList);
 						});
 				});
