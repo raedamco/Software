@@ -516,7 +516,7 @@ const LineGraph = ({ organization, location, subLocation }) => {
           },
           xaxis: {
             type: "datetime",
-            min: new Date("4 Mar 2021"),
+            min: firstOfCurrentMonth,
             max: currentDate,
             tickAmount: 6,
             labels: {
@@ -580,7 +580,7 @@ const LineGraph = ({ organization, location, subLocation }) => {
           ...options,
           xaxis: {
             ...options.xaxis,
-            min: new Date("4 Mar 2021"),
+            min: firstOfCurrentMonth,
             max: currentDate,
           },
         });
@@ -590,7 +590,7 @@ const LineGraph = ({ organization, location, subLocation }) => {
           ...options,
           xaxis: {
             ...options.xaxis,
-            min: new Date("12 Oct 2020"),
+            min: sixMonthsAgo,
             max: currentDate,
           },
         });
@@ -600,7 +600,7 @@ const LineGraph = ({ organization, location, subLocation }) => {
           ...options,
           xaxis: {
             ...options.xaxis,
-            min: new Date("4 Apr 2020"),
+            min: aYearAgo,
             max: currentDate,
           },
         });
@@ -610,7 +610,7 @@ const LineGraph = ({ organization, location, subLocation }) => {
           ...options,
           xaxis: {
             ...options.xaxis,
-            min: new Date("01 Jan 2021"),
+            min: currentYearStart,
             max: currentDate,
           },
         });
