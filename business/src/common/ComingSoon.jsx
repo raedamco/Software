@@ -1,4 +1,4 @@
-const CommingSoon = () => {
+const ComingSoon = () => {
 	return (
 		<div className="coming-soon align-middle">
 			<p>Coming Soon</p>
@@ -6,4 +6,4 @@ const CommingSoon = () => {
 	);
 };
 
-export default CommingSoon;
+export default ComingSoon;

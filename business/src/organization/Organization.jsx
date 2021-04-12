@@ -1,11 +1,12 @@
 import { Route, Switch, useRouteMatch } from "react-router";
 import CardList from "../common/CardList";
-import CommingSoon from "../common/CommingSoon";
+import ComingSoon from "../common/ComingSoon";
 import NoData from "../common/NoData";
 import Location from "./facilities/Location";
 import SensorLog from "./facilities/SensorLog";
 import SpotMap from "./facilities/SpotMap";
 import Price from "./Price";
+import Summary from "./summary";
 const database = window.firebase.firestore();
 
 const Organization = ({ organization }) => {
@@ -149,18 +150,20 @@ const Organization = ({ organization }) => {
 				<Route path={`${path}/facilities`}>
 					<CardList getJsx={getLocation} />
 				</Route>
-				<Route path={`${path}/summary`}></Route>
+				<Route path={`${path}/summary`}>
+					<Summary organization={organization} />
+				</Route>
 				<Route path={`${path}/enforcement`}>
-					<CommingSoon />
+					<ComingSoon />
 				</Route>
 				<Route path={`${path}/organization`}>
 					<CardList getJsx={getLocationPrices} />
 				</Route>
 				<Route path={`${path}/profile`}>
-					<CommingSoon />
+					<ComingSoon />
 				</Route>
 				<Route path={`${path}/messages`}>
-					<CommingSoon />
+					<ComingSoon />
 				</Route>
 			</Switch>
 		</>

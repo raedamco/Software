@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 const database = window.firebase.firestore();
 
+//TODO add click to edit price
 const Price = ({ organization, locationName }) => {
 	const [day, setDay] = useState(0);
 	const [hour, setHour] = useState(0);
