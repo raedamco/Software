@@ -2,8 +2,12 @@
 	text-align: center;
 	font-size: 64px;
 }
+
 .align-middle {
-	vertical-align: middle;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -100%);
 }
 
 .card-btn {
