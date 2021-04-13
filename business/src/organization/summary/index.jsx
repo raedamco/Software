@@ -11,6 +11,7 @@ const Summary = ({ organization }) => {
 		getSubLocations();
 	}
 
+	//TODO fix second location disappearing
 	function getSubLocations() {
 		let start = Date.now();
 		let compList = [];

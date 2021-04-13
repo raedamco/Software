@@ -7,6 +7,7 @@
 //TODO Redirect to login page when user isn't authenticated
 //TODO Global database variable
 //TODO Delete extra bootstrap files
+//TODO Update some database data dynamically
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";

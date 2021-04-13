@@ -39,11 +39,6 @@ const LineGraph = ({ organization, location, subLocation }) => {
 						doc.data().Average,
 					]);
 				});
-				if (data) {
-					console.log("Data:", data);
-					console.log("Time:", time);
-					console.log("Datetime:", datetime);
-				}
 				setSeries([
 					{
 						data: datetime,
@@ -75,6 +70,7 @@ const LineGraph = ({ organization, location, subLocation }) => {
 						max: currentDate.getTime(),
 						tickAmount: 6,
 						labels: {
+							//TODO add time to tooltip
 							formatter: function (timestamp) {
 								return new Date(timestamp).toLocaleDateString("en-us");
 							},
@@ -107,7 +103,6 @@ const LineGraph = ({ organization, location, subLocation }) => {
 						},
 					},
 				});
-				console.log("Series:", series);
 			});
 	}
 	//////////////////////// Times ////////////////////////////////
@@ -181,8 +176,6 @@ const LineGraph = ({ organization, location, subLocation }) => {
 				break;
 			default:
 		}
-		console.log("Options:", options);
-		console.log("Series:", series);
 	}
 
 	useEffect(() => {
@@ -231,7 +224,7 @@ const LineGraph = ({ organization, location, subLocation }) => {
 					ALL
 				</button>
 			</div>
-			<Apex type="area" options={options} series={series} width="700" />
+			<Apex type="area" options={options} series={series} width="900" />
 		</div>
 	);
 };

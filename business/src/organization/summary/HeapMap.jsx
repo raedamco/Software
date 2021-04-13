@@ -14,17 +14,24 @@ const HeatMap = ({ organization, location, subLocation }) => {
 			.collection("Data")
 			.doc(location)
 			.collection(subLocation)
+			.orderBy("Info.Spot ID")
 			.get()
 			.then((collection) => {
 				let spotUtilizationList = [];
 				let spotIds = [];
 				collection.forEach((doc) => {
 					spotIds.push(doc.data().Info["Spot ID"]);
-					spotUtilizationList(doc.data().Utilization);
+					spotUtilizationList.push(doc.data().Utilization);
+					console.log("Spot:", doc.data().Info["Spot ID"]);
 				});
-				setSeries({
-					data: spotUtilizationList,
-				});
+				if (spotUtilizationList) {
+					console.log("Utiliztion:", spotUtilizationList);
+				}
+				setSeries([
+					{
+						data: spotUtilizationList,
+					},
+				]);
 				setOptions({
 					plotOptions: {
 						heatmap: {
@@ -75,6 +82,9 @@ const HeatMap = ({ organization, location, subLocation }) => {
 					xaxis: {
 						categories: spotIds,
 					},
+					yaxis: {
+						show: false,
+					},
 					title: {
 						text: `HeatMap - ${location}, ${subLocation}`,
 					},
@@ -90,7 +100,7 @@ const HeatMap = ({ organization, location, subLocation }) => {
 
 	return (
 		<>
-			<Apex type="heatmap" options={options} series={series} width="700" />
+			<Apex type="heatmap" options={options} series={series} width="900" />
 		</>
 	);
 };
