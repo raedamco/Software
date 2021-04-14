@@ -6,7 +6,7 @@ import Location from "./facilities/Location";
 import SensorLog from "./facilities/SensorLog";
 import SpotMap from "./facilities/SpotMap";
 import Price from "./Price";
-import Summary from "./summary";
+import Occupancy from "./occupancy";
 const database = window.firebase.firestore();
 
 const Organization = ({ organization }) => {
@@ -150,8 +150,8 @@ const Organization = ({ organization }) => {
 				<Route path={`${path}/facilities`}>
 					<CardList getJsx={getLocation} />
 				</Route>
-				<Route path={`${path}/summary`}>
-					<Summary organization={organization} />
+				<Route path={`${path}/occupancy`}>
+					<Occupancy organization={organization} />
 				</Route>
 				<Route path={`${path}/enforcement`}>
 					<ComingSoon />

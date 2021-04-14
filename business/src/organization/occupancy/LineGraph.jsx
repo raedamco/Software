@@ -41,6 +41,7 @@ const LineGraph = ({ organization, location, subLocation }) => {
 				});
 				setSeries([
 					{
+						name: "Spots Occupied",
 						data: datetime,
 					},
 				]);

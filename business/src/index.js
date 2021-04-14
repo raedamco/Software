@@ -1,3 +1,9 @@
+//TODO Add xaxis label for spots on heat map		done
+//TODO Percent Utilization for heatmap label		done
+//TODO Spots Occupied for line graph label			done extra
+//TODO Change summary header label: Occupancy		done
+//TODO Fix refresh showing blank page
+
 //TODO Capacity dynamicaly changing
 //TODO Finish spots/sensor log
 //TODO Account
@@ -8,6 +14,7 @@
 //TODO Global database variable
 //TODO Delete extra bootstrap files
 //TODO Update some database data dynamically
+//TODO Fix csv download for charts
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";

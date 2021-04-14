@@ -29,6 +29,7 @@ const HeatMap = ({ organization, location, subLocation }) => {
 				}
 				setSeries([
 					{
+						name: "Percent Utilization",
 						data: spotUtilizationList,
 					},
 				]);
@@ -81,6 +82,9 @@ const HeatMap = ({ organization, location, subLocation }) => {
 					},
 					xaxis: {
 						categories: spotIds,
+						title: {
+							text: "Spots",
+						},
 					},
 					yaxis: {
 						show: false,

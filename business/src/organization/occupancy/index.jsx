@@ -4,7 +4,7 @@ import LineGraph from "./LineGraph";
 
 const database = window.firebase.firestore();
 
-const Summary = ({ organization }) => {
+const Occupancy = ({ organization }) => {
 	const [jsx, setJsx] = useState([]);
 
 	function getJsx() {
@@ -76,4 +76,4 @@ const Summary = ({ organization }) => {
 	return <>{jsx}</>;
 };
 
-export default Summary;
+export default Occupancy;
