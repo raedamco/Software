@@ -1,0 +1,96 @@
+.coming-soon {
+	text-align: center;
+	font-size: 64px;
+}
+
+.align-middle {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -100%);
+}
+
+.card-btn {
+	cursor: pointer;
+}
+
+.card-btn:hover {
+	background-color: #c4c4c4;
+}
+
+.table > tbody > tr > td,
+.table > thead > tr > th {
+	border: 0 !important;
+}
+
+/* Chart Start */
+.chart button {
+	background: #fff;
+	color: #222;
+	border: 1px solid #e7e7e7;
+	border-bottom: 2px solid #ddd;
+	border-radius: 2px;
+	padding: 0px 17px;
+	margin-right: 5px;
+}
+
+.chart button.active {
+	color: #fff;
+	background: #008ffb;
+	border: 1px solid blue;
+	border-bottom: 2px solid blue;
+}
+/* Chart End */
+
+/* Dropdown Start */
+.has-dropdown-custom {
+	position: relative;
+	cursor: pointer;
+}
+.has-dropdown-custom:hover .dropdown-custom {
+	display: block;
+}
+.tp-nav ul .dropdown-custom {
+	display: none;
+	position: absolute;
+	z-index: 1002;
+	width: 140px;
+	-webkit-box-shadow: 0px 14px 33px -9px rgb(0 0 0 / 75%);
+	-moz-box-shadow: 0px 14px 33px -9px rgba(0, 0, 0, 0.75);
+	box-shadow: 0px 14px 33px -9px rgb(0 0 0 / 75%);
+	top: 40px;
+	left: 0px;
+	text-align: left;
+	background: #000;
+	padding: 20px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-ms-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-transition: 0s;
+	-o-transition: 0s;
+	transition: 0s;
+	cursor: pointer;
+}
+.dropdown-custom li {
+	display: block;
+	margin-bottom: 0px;
+	padding: 8px 0;
+}
+.dropdown-custom li a {
+	padding: 2px 0;
+	display: block;
+	color: #999999;
+	line-height: 1.2;
+	text-transform: none;
+	font-size: 13px;
+	letter-spacing: 0;
+}
+.tp-nav ul li.has-dropdown-custom .dropdown-custom li a {
+	color: #999999;
+	padding: 8px 0;
+}
+.tp-nav ul li.has-dropdown-custom .dropdown-custom li:hover a {
+	color: #fff;
+}
+/* Dropdown End */
