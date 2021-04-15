@@ -7,7 +7,7 @@ import OrganizationRouter from "./organization";
 
 function App() {
 	const [organization, setOrganization] = useState(null);
-	const [authUser, setAuthUser] = useState({ user: undefined });
+	const [authUser, setAuthUser] = useState(undefined);
 
 	useEffect(() => {
 		let auth = JSON.parse(localStorage.getItem("authUser"));
@@ -15,9 +15,7 @@ function App() {
 		if (auth) {
 			setAuthUser(auth);
 		} else {
-			setAuthUser({
-				user: null,
-			});
+			setAuthUser(null);
 		}
 		if (org) {
 			setOrganization(org);
@@ -26,16 +24,16 @@ function App() {
 		}
 	}, []);
 
-	useEffect(() => {
-		console.log("authUser:", authUser);
-	}, [authUser]);
+	// useEffect(() => {
+	// 	console.log("authUser:", authUser);
+	// }, [authUser]);
 
 	return (
 		<>
 			<Switch>
 				<Route path="/">
 					{/* TODO Move header to OrganizationRouter */}
-					{!authUser.user ? (
+					{!authUser ? (
 						<Login setAuthUser={setAuthUser} />
 					) : (
 						<>

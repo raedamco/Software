@@ -2,17 +2,16 @@
 //TODO Percent Utilization for heatmap label		done
 //TODO Spots Occupied for line graph label			done extra
 //TODO Change summary header label: Occupancy		done
-//TODO Fix refresh showing blank page
+//TODO Fix refresh showing blank page						done
+//TODO Redirect to login page when user isn't authenticated	done
 
 //TODO dev config
 //TODO Use firebase react component: https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial
 //TODO Capacity dynamicaly changing
-//TODO Finish spots/sensor log
 //TODO Account
 //TODO Top button
 //TODO Summary
 //TODO Update Chart
-//TODO Redirect to login page when user isn't authenticated
 //TODO Global database variable
 //TODO Delete extra bootstrap files
 //TODO Update some database data dynamically

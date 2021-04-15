@@ -66,10 +66,8 @@ const Login = ({ setAuthUser }) => {
 									className="btn btn-primary"
 									onClick={async () => {
 										window.signIn().then((user) => {
-											console.log("signin:", user);
 											setAuthUser(user);
 											localStorage.setItem("authUser", JSON.stringify(user));
-											//history.push("/");
 										});
 									}}
 								/>

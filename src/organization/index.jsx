@@ -8,12 +8,11 @@ const database = window.firebase.firestore();
 
 const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
 	const history = useHistory();
-	const { path, url, params } = useRouteMatch();
 	let organizations;
 	//const [user, setUser] = useState(1);
 
 	async function getOrganizations() {
-		if (await authUser.user) {
+		if (await authUser) {
 			organizations = await database
 				.collection("Users")
 				.doc("Companies")
@@ -34,13 +33,14 @@ const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
 						setOrganization(organizations[0]);
 						localStorage.setItem("organization", organizations[0]);
 						if (window.location.pathname === "/") {
-							history.push("/" + doc.data().Info.Subdomain + "/facilities");
+							window.location =
+								"https://" +
+								doc.data().Info.Url +
+								"/" +
+								doc.data().Info.Subdomain +
+								"/facilities";
+							//history.push("/" + doc.data().Info.Subdomain + "/facilities");
 						}
-						// window.location =
-						// 	"https://" +
-						// 	doc.data().Info.Url +
-						// 	"/" +
-						// 	doc.data().Info.Subdomain;
 					});
 			}
 		}
@@ -48,11 +48,11 @@ const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
 
 	useEffect(() => {
 		const abortController = new AbortController();
-		if (authUser.user) {
+		if (authUser) {
 			getOrganizations();
 		}
 		return () => abortController.abort();
-	}, [authUser.user]);
+	}, [authUser]);
 
 	//TODO Switch to firebase react components
 	// useEffect(() => {
@@ -63,7 +63,7 @@ const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
 	// 	});
 	// }, []);
 
-	if (authUser.user && authUser.user != 1) {
+	if (authUser && authUser.user != 1) {
 		return (
 			<>
 				<main>
@@ -79,10 +79,6 @@ const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
 				<Footer />
 			</>
 		);
-	} else if (authUser.user === null) {
-		//TODO fix redirect
-		//history.push("/login");
-		return null;
 	} else {
 		return null;
 	}

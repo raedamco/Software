@@ -40,9 +40,9 @@ const Header = ({ organization, setAuthUser }) => {
 								<li>
 									<Link to={`${organizationUrl}/enforcement`}>Enforcement</Link>
 								</li>
-								<li className="has-dropdown">
+								<li className="has-dropdown-custom">
 									<a>Account</a>
-									<ul className="dropdown">
+									<ul className="dropdown-custom">
 										<li>
 											<Link to={`${organizationUrl}/organization`}>
 												Organization
@@ -57,9 +57,8 @@ const Header = ({ organization, setAuthUser }) => {
 										<li
 											onClick={() => {
 												window.signOut();
-												setAuthUser({ user: null });
+												setAuthUser(null);
 												localStorage.removeItem("authUser");
-												//history.push("/login");
 											}}
 										>
 											<a>Logout</a>
