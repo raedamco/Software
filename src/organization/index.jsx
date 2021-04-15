@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
-import { Route, Switch, useHistory } from "react-router";
+import { Route, Switch, useHistory, useRouteMatch } from "react-router";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 import OrganizationList from "./OrganizationList";
 import Organization from "./Organization";
 const database = window.firebase.firestore();
 
-const OrganizationRouter = ({ organization, setOrganization }) => {
+const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
 	const history = useHistory();
+	const { path, url, params } = useRouteMatch();
 	let organizations;
-	const [user, setUser] = useState(1);
+	//const [user, setUser] = useState(1);
 
-	async function getOrganiztions() {
-		if (await user) {
+	async function getOrganizations() {
+		if (await authUser.user) {
 			organizations = await database
 				.collection("Users")
 				.doc("Companies")
 				.collection("Users")
-				.doc(user.uid)
+				.doc(authUser.user.uid)
 				.get()
 				.then((doc) => {
 					return doc.data().Companies;
@@ -31,7 +32,10 @@ const OrganizationRouter = ({ organization, setOrganization }) => {
 					.get()
 					.then((doc) => {
 						setOrganization(organizations[0]);
-						history.push("/" + doc.data().Info.Subdomain + "/facilities");
+						localStorage.setItem("organization", organizations[0]);
+						if (window.location.pathname === "/") {
+							history.push("/" + doc.data().Info.Subdomain + "/facilities");
+						}
 						// window.location =
 						// 	"https://" +
 						// 	doc.data().Info.Url +
@@ -44,19 +48,22 @@ const OrganizationRouter = ({ organization, setOrganization }) => {
 
 	useEffect(() => {
 		const abortController = new AbortController();
-		getOrganiztions();
+		if (authUser.user) {
+			getOrganizations();
+		}
 		return () => abortController.abort();
-	}, [user]);
+	}, [authUser.user]);
 
-	useEffect(() => {
-		window.firebase.auth().onAuthStateChanged(function (userAuth) {
-			if (userAuth) {
-				setUser(userAuth);
-			}
-		});
-	}, []);
+	//TODO Switch to firebase react components
+	// useEffect(() => {
+	// 	window.firebase.auth().onAuthStateChanged(function (userAuth) {
+	// 		if (userAuth) {
+	// 			setUser(userAuth);
+	// 		}
+	// 	});
+	// }, []);
 
-	if (user && user != 1) {
+	if (authUser.user && authUser.user != 1) {
 		return (
 			<>
 				<main>
@@ -72,9 +79,9 @@ const OrganizationRouter = ({ organization, setOrganization }) => {
 				<Footer />
 			</>
 		);
-	} else if (user == null) {
+	} else if (authUser.user === null) {
 		//TODO fix redirect
-		history.push("/login");
+		//history.push("/login");
 		return null;
 	} else {
 		return null;

@@ -22,11 +22,7 @@ const HeatMap = ({ organization, location, subLocation }) => {
 				collection.forEach((doc) => {
 					spotIds.push(doc.data().Info["Spot ID"]);
 					spotUtilizationList.push(doc.data().Utilization);
-					console.log("Spot:", doc.data().Info["Spot ID"]);
 				});
-				if (spotUtilizationList) {
-					console.log("Utiliztion:", spotUtilizationList);
-				}
 				setSeries([
 					{
 						name: "Percent Utilization",

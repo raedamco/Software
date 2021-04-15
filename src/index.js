@@ -4,6 +4,8 @@
 //TODO Change summary header label: Occupancy		done
 //TODO Fix refresh showing blank page
 
+//TODO dev config
+//TODO Use firebase react component: https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial
 //TODO Capacity dynamicaly changing
 //TODO Finish spots/sensor log
 //TODO Account

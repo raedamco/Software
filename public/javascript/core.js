@@ -35,7 +35,7 @@ function loginRedirect() {
 	window.location.href = "/";
 }
 
-function signIn() {
+async function signIn() {
 	const email = document.getElementById("emailInput").value;
 	const password = document.getElementById("passwordInput").value;
 
@@ -43,10 +43,12 @@ function signIn() {
 		presentError("Error", "Please enter all fields", "warning", "Ok");
 		auth.signOut();
 	}
-
-	auth
+	return await auth
 		.signInWithEmailAndPassword(email, password)
-		.then(() => loginRedirect())
+		.then((user) => {
+			// loginRedirect();
+			return user;
+		})
 		.catch(function (error) {
 			var errorCode = error.code;
 			var errorMessage = error.message;
@@ -79,9 +81,7 @@ function navigate() {
 
 function signOut() {
 	auth.signOut().then(
-		function () {
-			window.location.href = "/login";
-		},
+		function () {},
 		function (error) {
 			presentError("Error", error, "error", "Ok");
 		}

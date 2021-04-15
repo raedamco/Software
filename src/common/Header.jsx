@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+
 const database = window.firebase.firestore();
-const Header = ({ organization }) => {
+
+const Header = ({ organization, setAuthUser }) => {
+	const history = useHistory();
 	const [organizationUrl, setOrganizationUrl] = useState(null);
+
 	useEffect(() => {
 		if (organization) {
 			database
@@ -14,6 +18,7 @@ const Header = ({ organization }) => {
 				});
 		}
 	}, [organization]);
+
 	return (
 		<nav className="tp-nav" role="navigation">
 			<div className="top-menu">
@@ -49,7 +54,14 @@ const Header = ({ organization }) => {
 										<li>
 											<Link to={`${organizationUrl}/messages`}>Messages</Link>
 										</li>
-										<li onClick={window.signOut}>
+										<li
+											onClick={() => {
+												window.signOut();
+												setAuthUser({ user: null });
+												localStorage.removeItem("authUser");
+												//history.push("/login");
+											}}
+										>
 											<a>Logout</a>
 										</li>
 									</ul>
