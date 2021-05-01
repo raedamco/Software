@@ -157,6 +157,7 @@ const Spot = ({ organization, data }) => {
 					});
 				})
 				.catch(() => {
+					//TODO log to firebase logger
 					SwalReact.fire({
 						title: "Error",
 						text: "Something went wrong while updating the database",

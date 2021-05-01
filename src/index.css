@@ -13,7 +13,7 @@ html {
 html,
 body,
 #root {
-	height: 100%;
+	height: 100vh;
 }
 #root {
 	/* push footer to bottom on low content pages */

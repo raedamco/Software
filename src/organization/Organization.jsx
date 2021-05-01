@@ -28,7 +28,6 @@ const Organization = ({ organization }) => {
 			.then((collection) => {
 				setPageTitle(`Data log for spot ${urlParams.spotId}`);
 				let temp = [];
-				console.log("collectin: ", collection);
 				if (!collection.size) {
 					temp.push(<NoData />);
 					setList(temp);
@@ -50,11 +49,12 @@ const Organization = ({ organization }) => {
 				setList(temp);
 			})
 			.catch((error) => {
+				//TODO log to firebase logger
 				console.log(error);
 			});
 	}
 
-	function getLocation(setList, setPageTitle, urlParams) {
+	function getLocations(setList, setPageTitle, urlParams) {
 		database
 			.collection("Companies")
 			.doc(organization)
@@ -75,36 +75,38 @@ const Organization = ({ organization }) => {
 				setList([...loComp]);
 			})
 			.catch((error) => {
+				//TODO log to firebase logger
 				console.log(error);
 			});
 	}
 
-	function getSubLocation(setList, setPageTitle, urlParams) {
-		let subLocationName = urlParams.locationName.replaceAll("-", " ");
+	function getSubLocations(setList, setPageTitle, urlParams) {
+		let locationName = urlParams.locationName.replaceAll("-", " ");
 		database
 			.collection("Companies")
 			.doc(organization)
 			.collection("Data")
-			.doc(subLocationName)
+			.doc(locationName)
 			.get()
 			.then((doc) => {
-				setPageTitle(subLocationName);
+				setPageTitle(locationName);
 				//TODO Fix floor data name in database
 				return Object.keys(doc.data()["Floor Data"]);
 			})
 			.then((temp) => {
-				const loComp = temp.map((locationName, index) => (
+				const loComp = temp.map((subLocationName, index) => (
 					<Location
 						key={index}
 						organization={organization}
-						title={subLocationName}
-						name={locationName}
+						title={locationName}
+						name={subLocationName}
 						locationType="sublocation"
 					/>
 				));
 				setList([...loComp]);
 			})
 			.catch((error) => {
+				//TODO log to firebase logger
 				console.log(error);
 			});
 	}
@@ -129,6 +131,7 @@ const Organization = ({ organization }) => {
 				setList([...loComp]);
 			})
 			.catch((error) => {
+				//TODO log to firebase logger
 				console.log(error);
 			});
 	}
@@ -145,10 +148,10 @@ const Organization = ({ organization }) => {
 					<SpotMap organization={organization} />
 				</Route>
 				<Route path={`${path}/facilities/:locationName`}>
-					<CardList getJsx={getSubLocation} />
+					<CardList getJsx={getSubLocations} />
 				</Route>
 				<Route path={`${path}/facilities`}>
-					<CardList getJsx={getLocation} />
+					<CardList getJsx={getLocations} />
 				</Route>
 				<Route path={`${path}/occupancy`}>
 					<Occupancy organization={organization} />
