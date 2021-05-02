@@ -3,9 +3,9 @@ import { useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { database } from "../../FirebaseSetup";
 
 const SwalReact = withReactContent(Swal);
-const database = window.firebase.firestore();
 
 const Location = ({ organization, title = "", name, locationType }) => {
 	const [free, setFree] = useState(0);

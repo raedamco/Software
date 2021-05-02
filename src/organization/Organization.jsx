@@ -7,14 +7,14 @@ import SensorLog from "./facilities/SensorLog";
 import SpotMap from "./facilities/SpotMap";
 import Price from "./Price";
 import Occupancy from "./occupancy";
-const database = window.firebase.firestore();
+import { database } from "../FirebaseSetup";
 
 const Organization = ({ organization }) => {
-  const { path, url, params } = useRouteMatch();
+	const { path, url, params } = useRouteMatch();
 
-  function getLogs(setList, setPageTitle, urlParams) {
-    const locationName = urlParams.locationName.replaceAll("-", " ");
-    const subLocationName = urlParams.subLocationName.replaceAll("-", " ");
+	function getLogs(setList, setPageTitle, urlParams) {
+		const locationName = urlParams.locationName.replaceAll("-", " ");
+		const subLocationName = urlParams.subLocationName.replaceAll("-", " ");
 
 		database
 			.collection("Companies")

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-
-const database = window.firebase.firestore();
+import { database, signOut } from "../FirebaseSetup";
 
 const Header = ({ organization, setAuthUser }) => {
 	const history = useHistory();
 	const [organizationUrl, setOrganizationUrl] = useState(null);
 
 	useEffect(() => {
+		const abortController = new AbortController();
 		if (organization) {
 			database
 				.collection("Companies")
@@ -17,6 +17,7 @@ const Header = ({ organization, setAuthUser }) => {
 					setOrganizationUrl("/" + doc.data().Info.Name.replaceAll(" ", "-"));
 				});
 		}
+		return () => abortController.abort();
 	}, [organization]);
 
 	return (
@@ -56,9 +57,8 @@ const Header = ({ organization, setAuthUser }) => {
 										</li>
 										<li
 											onClick={() => {
-												window.signOut();
+												signOut();
 												setAuthUser(null);
-												localStorage.removeItem("authUser");
 											}}
 										>
 											<a>Logout</a>

@@ -1,6 +1,6 @@
 const Footer = () => {
 	return (
-		<footer id="tp-footer" style={{ marginTop: "400px" }}>
+		<footer id="tp-footer">
 			<div className="copy">
 				<div className="container">
 					<div className="row">

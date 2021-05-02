@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { database } from "../../FirebaseSetup";
 
 const SwalReact = withReactContent(Swal);
-const database = window.firebase.firestore();
 
 const Spot = ({ organization, data }) => {
 	const { path, url, params } = useRouteMatch();
@@ -52,7 +52,7 @@ const Spot = ({ organization, data }) => {
 		});
 	};
 
-	async function spotAlert() {
+	function spotAlert() {
 		// Spot alert checklist
 		let popupHTML = (
 			<>
@@ -126,7 +126,9 @@ const Spot = ({ organization, data }) => {
 			showCancelButton: true,
 			focusConfirm: false,
 			preConfirm: () => {
+				const abortController = new AbortController();
 				updateDatabase();
+				return () => abortController.abort();
 			},
 		});
 
@@ -169,16 +171,19 @@ const Spot = ({ organization, data }) => {
 	}
 
 	useEffect(() => {
+		const abortController = new AbortController();
 		updateSpot();
+		return () => abortController.abort();
 	}, []);
 
-	useEffect(() => {
-		console.log("Form data:", formData);
-	}, [formData]);
+	//TODO Delete temp logs
+	// useEffect(() => {
+	// 	console.log("Form data:", formData);
+	// }, [formData]);
 
-	useEffect(() => {
-		console.log("Spot Types:", spotTypes);
-	}, [spotTypes]);
+	// useEffect(() => {
+	// 	console.log("Spot Types:", spotTypes);
+	// }, [spotTypes]);
 
 	return (
 		<div
@@ -188,7 +193,11 @@ const Spot = ({ organization, data }) => {
 				top: `${yPos}%`,
 				left: `${xPos}%`,
 			}}
-			onClick={spotAlert}
+			onClick={() => {
+				const abortController = new AbortController();
+				spotAlert();
+				return () => abortController.abort();
+			}}
 		>
 			{data.Info["Spot ID"]}
 		</div>

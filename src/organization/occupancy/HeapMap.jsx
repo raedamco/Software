@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Apex from "react-apexcharts";
-
-const database = window.firebase.firestore();
+import { database } from "../../FirebaseSetup";
 
 const HeatMap = ({ organization, location, subLocation }) => {
 	const [options, setOptions] = useState({});

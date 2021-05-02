@@ -4,15 +4,9 @@ import Header from "../common/Header";
 import Footer from "../common/Footer";
 import OrganizationList from "./OrganizationList";
 import Organization from "./Organization";
-//const database = window.firebase.firestore();
+import { database } from "../FirebaseSetup";
 
-const OrganizationRouter = ({
-	firebase,
-	organization,
-	setOrganization,
-	authUser,
-}) => {
-	const database = firebase.database;
+const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
 	const history = useHistory();
 	let organizations;
 	//const [user, setUser] = useState(1);

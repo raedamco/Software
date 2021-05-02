@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import HeatMap from "./HeapMap";
 import LineGraph from "./LineGraph";
-
-const database = window.firebase.firestore();
+import { database } from "../../FirebaseSetup";
 
 const Occupancy = ({ organization }) => {
 	const [jsx, setJsx] = useState([]);

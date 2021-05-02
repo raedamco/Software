@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router";
 import Location from "./Location";
-const database = window.firebase.firestore();
+import { database } from "../FirebaseSetup";
 
 const LocationList = ({ organization, locationType }) => {
 	const { path, url, params } = useRouteMatch();

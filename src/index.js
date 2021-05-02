@@ -1,13 +1,6 @@
-//TODO Add xaxis label for spots on heat map		done
-//TODO Percent Utilization for heatmap label		done
-//TODO Spots Occupied for line graph label			done extra
-//TODO Change summary header label: Occupancy		done
-//TODO Fix refresh showing blank page						done
-//TODO Redirect to login page when user isn't authenticated	done
-
+//TODO fix async memory leak in spot/spotmap
 //TODO dev config
-//TODO Use firebase react component: https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial
-//TODO Capacity dynamicaly changing
+//TODO Capacity dynamically changing
 //TODO Account
 //TODO Top button
 //TODO Summary
@@ -21,13 +14,10 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import Firebase, { FirebaseContext } from "./firebase";
 
 ReactDOM.render(
 	<React.StrictMode>
-		<FirebaseContext.Provider value={new Firebase()}>
-			<App />
-		</FirebaseContext.Provider>
+		<App />
 	</React.StrictMode>,
 	document.getElementById("root")
 );
