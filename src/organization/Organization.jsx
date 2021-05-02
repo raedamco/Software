@@ -10,11 +10,11 @@ import Occupancy from "./occupancy";
 const database = window.firebase.firestore();
 
 const Organization = ({ organization }) => {
-	const { path, url, params } = useRouteMatch();
+  const { path, url, params } = useRouteMatch();
 
-	function getLogs(setList, setPageTitle, urlParams) {
-		const locationName = urlParams.locationName.replaceAll("-", " ");
-		const subLocationName = urlParams.subLocationName.replaceAll("-", " ");
+  function getLogs(setList, setPageTitle, urlParams) {
+    const locationName = urlParams.locationName.replaceAll("-", " ");
+    const subLocationName = urlParams.subLocationName.replaceAll("-", " ");
 
 		database
 			.collection("Companies")
@@ -60,7 +60,7 @@ const Organization = ({ organization }) => {
 			.doc(organization)
 			.get()
 			.then((doc) => {
-				setPageTitle(organization);
+				setPageTitle(doc.data().Info.Name);
 				return doc.data().Locations;
 			})
 			.then((temp) => {
