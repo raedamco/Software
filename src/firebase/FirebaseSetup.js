@@ -8,7 +8,10 @@
 //
 // DESCRIPTION OF FILE
 
-import * as Firebase from 'firebase';
+import app from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+import "firebase/analytics";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyCKghNDOPOufY-8SYVGW4xpOeZC3fDVZko",
@@ -21,16 +24,18 @@ const firebaseConfig = {
 	measurementId: "G-D9YWC0BFVD",
 };
 
-const devConfig = {
+const devConfig = {};
 
-};
-
-if (!Firebase.apps.length) {
-	Firebase.initializeApp(firebaseConfig);
+class Firebase {
+	constructor() {
+		app.initializeApp(firebaseConfig);
+		app.analytics();
+		this.auth = app.auth();
+		this.database = app.firestore();
+	}
 }
-Firebase.analytics();
 
-export const auth = Firebase.auth();
-export const database = Firebase.firestore();
-export const storage = Firebase.storage();
+// export const auth = Firebase.auth();
+// export const database = Firebase.firestore();
+// export const storage = Firebase.storage();
 export default Firebase;

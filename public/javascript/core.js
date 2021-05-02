@@ -8,33 +8,6 @@
 //
 // DESCRIPTION OF FILE
 
-/**
- * function that redirects a user to the correct sub domain
- * @param {object} user firebase user object representing current user
- */
-function subdomain_login(user) {
-	var email = user.email;
-	var pos = email.search("@pdx.edu");
-	if (pos >= 0) {
-		if (window.location.hostname != "pdx.raedam.co") {
-			window.location.hostname = "pdx.raedam.co";
-		} else {
-			window.location = "dashboard.html";
-		}
-	} else {
-		pos = email.search("@raedam.co");
-		if (pos >= 0) {
-			window.location = "dashboard.html";
-		} else {
-			window.location = "dashboard.html";
-		}
-	}
-}
-
-function loginRedirect() {
-	window.location.href = "/";
-}
-
 async function signIn() {
 	const email = document.getElementById("emailInput").value;
 	const password = document.getElementById("passwordInput").value;
@@ -46,7 +19,6 @@ async function signIn() {
 	return await auth
 		.signInWithEmailAndPassword(email, password)
 		.then((user) => {
-			// loginRedirect();
 			return user;
 		})
 		.catch(function (error) {

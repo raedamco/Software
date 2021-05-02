@@ -49,14 +49,12 @@ const Location = ({ organization, title = "", name, locationType }) => {
 			.onSnapshot((snapshot) => {
 				if (locationType == "location") {
 					let temp = snapshot.data().Active;
-					console.log("Location Enabled:", temp);
 					setEnabled(temp);
 					setLocationEnabled(temp);
 				} else if (locationType == "sublocation") {
 					let temp =
 						snapshot.data().Active &&
 						snapshot.data()["Floor Data"][name].Active;
-					console.log("Sublocation Enabled:", temp);
 					setEnabled(temp);
 					setLocationEnabled(snapshot.data().Active);
 				}

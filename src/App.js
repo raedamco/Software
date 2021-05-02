@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Header from "./common/Header";
+import { FirebaseContext } from "./firebase";
 import Login from "./login";
 import OrganizationRouter from "./organization";
 
@@ -29,25 +30,35 @@ function App() {
 	// }, [authUser]);
 
 	return (
-		<>
+		<Router>
 			<Switch>
 				<Route path="/">
 					{/* TODO Move header to OrganizationRouter */}
 					{!authUser ? (
 						<Login setAuthUser={setAuthUser} />
 					) : (
-						<>
-							<Header organization={organization} setAuthUser={setAuthUser} />
-							<OrganizationRouter
-								organization={organization}
-								setOrganization={setOrganization}
-								authUser={authUser}
-							/>
-						</>
+						<FirebaseContext.Consumer>
+							{(firebase) => {
+								return (
+									<>
+										<Header
+											organization={organization}
+											setAuthUser={setAuthUser}
+										/>
+										<OrganizationRouter
+											firebase={firebase}
+											organization={organization}
+											setOrganization={setOrganization}
+											authUser={authUser}
+										/>
+									</>
+								);
+							}}
+						</FirebaseContext.Consumer>
 					)}
 				</Route>
 			</Switch>
-		</>
+		</Router>
 	);
 }
 
