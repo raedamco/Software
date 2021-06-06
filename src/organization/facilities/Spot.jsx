@@ -1,3 +1,4 @@
+//TODO clean up code later
 import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router";
 import Swal from "sweetalert2";
@@ -20,6 +21,8 @@ const Spot = ({ organization, data }) => {
 
 	const locationName = params.locationName.replaceAll("-", " ");
 	const subLocationName = params.subLocationName.replaceAll("-", " ");
+	const [submitReady, setSubmitReady] = useState(false);
+	const [count, setCount] = useState(0);
 
 	function updateSpot() {
 		database
@@ -31,8 +34,10 @@ const Spot = ({ organization, data }) => {
 			.doc(`${data.Info["Spot ID"]}`)
 			.onSnapshot((doc) => {
 				const types = doc.data()["Spot Type"];
+				console.log("onSnapshot - formData - before:", formData);
 				setSpotTypes(types);
 				setFormData(types);
+				console.log("onSnapshot - formData - after:", formData);
 				setXPos(doc.data().Layout.x);
 				setYPos(doc.data().Layout.y);
 				if (doc.data().Occupancy.Occupied) {
@@ -46,11 +51,25 @@ const Spot = ({ organization, data }) => {
 	const handleChange = ({ target }) => {
 		console.log("Name:", target.name);
 		console.log("Checked:", target.checked);
-		setFormData({
-			...formData,
-			[target.name]: target.checked,
-		});
+		const changeObj = { ...formData };
+		changeObj[target.name] = target.checked;
+		setFormData(changeObj);
+		//console.log("handleChange - changeObj:", changeObj);
 	};
+
+	useEffect(() => {
+		console.log("formData useEffect - FormData:", formData);
+	}, [formData]);
+
+	useEffect(() => {
+		if (count != 0) {
+			console.log("submitReady useEffect - FormData:", formData);
+			const abortController = new AbortController();
+			updateDatabase();
+			return () => abortController.abort();
+		}
+		setCount(count + 1);
+	}, [submitReady]);
 
 	function spotAlert() {
 		// Spot alert checklist
@@ -127,47 +146,50 @@ const Spot = ({ organization, data }) => {
 			focusConfirm: false,
 			preConfirm: () => {
 				const abortController = new AbortController();
-				updateDatabase();
+				console.log("submit - Formdata:", formData);
+				setSubmitReady(!submitReady);
+				//updateDatabase();
 				return () => abortController.abort();
 			},
 		});
+	}
 
-		// Update database with new selections
-		function updateDatabase() {
-			database
-				.collection("Companies")
-				.doc(organization)
-				.collection("Data")
-				.doc(locationName)
-				.collection(subLocationName)
-				.doc(`${data.Info["Spot ID"]}`)
-				.update({
-					"Spot Type.Hourly": formData.Hourly,
-					"Spot Type.Permit": formData.Permit,
-					"Spot Type.ADA": formData.ADA,
-					"Spot Type.EV": formData.EV,
-					"Spot Type.Leased": formData.Leased,
-				})
-				.then(() => {
-					setSpotTypes(formData);
+	// Update database with new selections
+	async function updateDatabase() {
+		console.log("updateDatabase called");
+		database
+			.collection("Companies")
+			.doc(organization)
+			.collection("Data")
+			.doc(locationName)
+			.collection(subLocationName)
+			.doc(`${data.Info["Spot ID"]}`)
+			.update({
+				"Spot Type.Hourly": formData.Hourly,
+				"Spot Type.Permit": formData.Permit,
+				"Spot Type.ADA": formData.ADA,
+				"Spot Type.EV": formData.EV,
+				"Spot Type.Leased": formData.Leased,
+			})
+			.then(() => {
+				setSpotTypes(formData);
 
-					SwalReact.fire({
-						title: "Success",
-						text: `Spot ${data.Info["Spot ID"]} type has been updated`,
-						icon: "success",
-						confirmButtonText: "Close",
-					});
-				})
-				.catch(() => {
-					//TODO log to firebase logger
-					SwalReact.fire({
-						title: "Error",
-						text: "Something went wrong while updating the database",
-						icon: "error",
-						confirmButtonText: "Close",
-					});
+				SwalReact.fire({
+					title: "Success",
+					text: `Spot ${data.Info["Spot ID"]} type has been updated`,
+					icon: "success",
+					confirmButtonText: "Close",
 				});
-		}
+			})
+			.catch(() => {
+				//TODO log to firebase logger
+				SwalReact.fire({
+					title: "Error",
+					text: "Something went wrong while updating the database",
+					icon: "error",
+					confirmButtonText: "Close",
+				});
+			});
 	}
 
 	useEffect(() => {
