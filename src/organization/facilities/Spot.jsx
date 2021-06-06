@@ -34,10 +34,8 @@ const Spot = ({ organization, data }) => {
 			.doc(`${data.Info["Spot ID"]}`)
 			.onSnapshot((doc) => {
 				const types = doc.data()["Spot Type"];
-				console.log("onSnapshot - formData - before:", formData);
 				setSpotTypes(types);
 				setFormData(types);
-				console.log("onSnapshot - formData - after:", formData);
 				setXPos(doc.data().Layout.x);
 				setYPos(doc.data().Layout.y);
 				if (doc.data().Occupancy.Occupied) {
@@ -49,12 +47,10 @@ const Spot = ({ organization, data }) => {
 	}
 
 	const handleChange = ({ target }) => {
-		console.log("Name:", target.name);
-		console.log("Checked:", target.checked);
+		console.log("handleChange - formData:", formData);
 		const changeObj = { ...formData };
 		changeObj[target.name] = target.checked;
 		setFormData(changeObj);
-		//console.log("handleChange - changeObj:", changeObj);
 	};
 
 	useEffect(() => {
@@ -63,7 +59,6 @@ const Spot = ({ organization, data }) => {
 
 	useEffect(() => {
 		if (count != 0) {
-			console.log("submitReady useEffect - FormData:", formData);
 			const abortController = new AbortController();
 			updateDatabase();
 			return () => abortController.abort();
@@ -81,7 +76,7 @@ const Spot = ({ organization, data }) => {
 					id="Hourly"
 					name="Hourly"
 					defaultChecked={spotTypes.Hourly}
-					onChange={handleChange}
+					onChange={(target) => handleChange(target)}
 				/>
 				<label htmlFor="Hourly">Hourly</label>
 				<br />
@@ -91,7 +86,7 @@ const Spot = ({ organization, data }) => {
 					id="Permit"
 					name="Permit"
 					defaultChecked={spotTypes.Permit}
-					onChange={handleChange}
+					onChange={(target) => handleChange(target)}
 				/>
 				<label htmlFor="Permit">Permit</label>
 				<br />
@@ -101,7 +96,7 @@ const Spot = ({ organization, data }) => {
 					id="ADA"
 					name="ADA"
 					defaultChecked={spotTypes.ADA}
-					onChange={handleChange}
+					onChange={(target) => handleChange(target)}
 				/>
 				<label htmlFor="ADA">ADA</label>
 				<br />
@@ -111,7 +106,7 @@ const Spot = ({ organization, data }) => {
 					id="EV"
 					name="EV"
 					defaultChecked={spotTypes.EV}
-					onChange={handleChange}
+					onChange={(target) => handleChange(target)}
 				/>
 				<label htmlFor="EV">EV</label>
 				<br />
@@ -121,7 +116,7 @@ const Spot = ({ organization, data }) => {
 					id="Leased"
 					name="Leased"
 					defaultChecked={spotTypes.Leased}
-					onChange={handleChange}
+					onChange={(target) => handleChange(target)}
 				/>
 				<label htmlFor="Leased">Leased</label>
 				<br />
@@ -145,18 +140,13 @@ const Spot = ({ organization, data }) => {
 			showCancelButton: true,
 			focusConfirm: false,
 			preConfirm: () => {
-				const abortController = new AbortController();
-				console.log("submit - Formdata:", formData);
 				setSubmitReady(!submitReady);
-				//updateDatabase();
-				return () => abortController.abort();
 			},
 		});
 	}
 
 	// Update database with new selections
 	async function updateDatabase() {
-		console.log("updateDatabase called");
 		database
 			.collection("Companies")
 			.doc(organization)
@@ -197,15 +187,6 @@ const Spot = ({ organization, data }) => {
 		updateSpot();
 		return () => abortController.abort();
 	}, []);
-
-	//TODO Delete temp logs
-	// useEffect(() => {
-	// 	console.log("Form data:", formData);
-	// }, [formData]);
-
-	// useEffect(() => {
-	// 	console.log("Spot Types:", spotTypes);
-	// }, [spotTypes]);
 
 	return (
 		<div
