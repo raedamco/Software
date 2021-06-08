@@ -22,7 +22,6 @@ const Spot = ({ organization, data }) => {
 
 	const locationName = params.locationName.replaceAll("-", " ");
 	const subLocationName = params.subLocationName.replaceAll("-", " ");
-	const [submitReady, setSubmitReady] = useState(false);
 
 	function updateSpot() {
 		database
@@ -51,15 +50,7 @@ const Spot = ({ organization, data }) => {
 		changeObj[target.name] = target.checked;
 
 		setFormData(changeObj);
-		console.log("handleChange - formData:", formDataRef.current);
 	};
-
-	// useEffect(() => {
-	// 	console.log("formData useEffect - FormData:", formData);
-	// 	console.log(updateCount);
-	// 	if (updateCount > 0) setUpdateCount(updateCount - 1);
-	// 	console.log(updateCount);
-	// }, [formData]);
 
 	function spotAlert() {
 		// Spot alert checklist
