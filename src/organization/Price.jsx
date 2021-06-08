@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-
-const database = window.firebase.firestore();
+import { database } from "../FirebaseSetup";
 
 //TODO add click to edit price
 const Price = ({ organization, locationName }) => {

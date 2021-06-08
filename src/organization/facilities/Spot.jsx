@@ -1,10 +1,11 @@
+//TODO clean up code later
 import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { database } from "../../FirebaseSetup";
 
 const SwalReact = withReactContent(Swal);
-const database = window.firebase.firestore();
 
 const Spot = ({ organization, data }) => {
 	const { path, url, params } = useRouteMatch();
@@ -20,6 +21,8 @@ const Spot = ({ organization, data }) => {
 
 	const locationName = params.locationName.replaceAll("-", " ");
 	const subLocationName = params.subLocationName.replaceAll("-", " ");
+	const [submitReady, setSubmitReady] = useState(false);
+	const [count, setCount] = useState(0);
 
 	function updateSpot() {
 		database
@@ -44,15 +47,26 @@ const Spot = ({ organization, data }) => {
 	}
 
 	const handleChange = ({ target }) => {
-		console.log("Name:", target.name);
-		console.log("Checked:", target.checked);
-		setFormData({
-			...formData,
-			[target.name]: target.checked,
-		});
+		console.log("handleChange - formData:", formData);
+		const changeObj = { ...formData };
+		changeObj[target.name] = target.checked;
+		setFormData(changeObj);
 	};
 
-	async function spotAlert() {
+	useEffect(() => {
+		console.log("formData useEffect - FormData:", formData);
+	}, [formData]);
+
+	useEffect(() => {
+		if (count != 0) {
+			const abortController = new AbortController();
+			updateDatabase();
+			return () => abortController.abort();
+		}
+		setCount(count + 1);
+	}, [submitReady]);
+
+	function spotAlert() {
 		// Spot alert checklist
 		let popupHTML = (
 			<>
@@ -62,7 +76,7 @@ const Spot = ({ organization, data }) => {
 					id="Hourly"
 					name="Hourly"
 					defaultChecked={spotTypes.Hourly}
-					onChange={handleChange}
+					onChange={(target) => handleChange(target)}
 				/>
 				<label htmlFor="Hourly">Hourly</label>
 				<br />
@@ -72,7 +86,7 @@ const Spot = ({ organization, data }) => {
 					id="Permit"
 					name="Permit"
 					defaultChecked={spotTypes.Permit}
-					onChange={handleChange}
+					onChange={(target) => handleChange(target)}
 				/>
 				<label htmlFor="Permit">Permit</label>
 				<br />
@@ -82,7 +96,7 @@ const Spot = ({ organization, data }) => {
 					id="ADA"
 					name="ADA"
 					defaultChecked={spotTypes.ADA}
-					onChange={handleChange}
+					onChange={(target) => handleChange(target)}
 				/>
 				<label htmlFor="ADA">ADA</label>
 				<br />
@@ -92,7 +106,7 @@ const Spot = ({ organization, data }) => {
 					id="EV"
 					name="EV"
 					defaultChecked={spotTypes.EV}
-					onChange={handleChange}
+					onChange={(target) => handleChange(target)}
 				/>
 				<label htmlFor="EV">EV</label>
 				<br />
@@ -102,7 +116,7 @@ const Spot = ({ organization, data }) => {
 					id="Leased"
 					name="Leased"
 					defaultChecked={spotTypes.Leased}
-					onChange={handleChange}
+					onChange={(target) => handleChange(target)}
 				/>
 				<label htmlFor="Leased">Leased</label>
 				<br />
@@ -126,58 +140,53 @@ const Spot = ({ organization, data }) => {
 			showCancelButton: true,
 			focusConfirm: false,
 			preConfirm: () => {
-				updateDatabase();
+				setSubmitReady(!submitReady);
 			},
 		});
+	}
 
-		// Update database with new selections
-		function updateDatabase() {
-			database
-				.collection("Companies")
-				.doc(organization)
-				.collection("Data")
-				.doc(locationName)
-				.collection(subLocationName)
-				.doc(`${data.Info["Spot ID"]}`)
-				.update({
-					"Spot Type.Hourly": formData.Hourly,
-					"Spot Type.Permit": formData.Permit,
-					"Spot Type.ADA": formData.ADA,
-					"Spot Type.EV": formData.EV,
-					"Spot Type.Leased": formData.Leased,
-				})
-				.then(() => {
-					setSpotTypes(formData);
+	// Update database with new selections
+	async function updateDatabase() {
+		database
+			.collection("Companies")
+			.doc(organization)
+			.collection("Data")
+			.doc(locationName)
+			.collection(subLocationName)
+			.doc(`${data.Info["Spot ID"]}`)
+			.update({
+				"Spot Type.Hourly": formData.Hourly,
+				"Spot Type.Permit": formData.Permit,
+				"Spot Type.ADA": formData.ADA,
+				"Spot Type.EV": formData.EV,
+				"Spot Type.Leased": formData.Leased,
+			})
+			.then(() => {
+				setSpotTypes(formData);
 
-					SwalReact.fire({
-						title: "Success",
-						text: `Spot ${data.Info["Spot ID"]} type has been updated`,
-						icon: "success",
-						confirmButtonText: "Close",
-					});
-				})
-				.catch(() => {
-					SwalReact.fire({
-						title: "Error",
-						text: "Something went wrong while updating the database",
-						icon: "error",
-						confirmButtonText: "Close",
-					});
+				SwalReact.fire({
+					title: "Success",
+					text: `Spot ${data.Info["Spot ID"]} type has been updated`,
+					icon: "success",
+					confirmButtonText: "Close",
 				});
-		}
+			})
+			.catch(() => {
+				//TODO log to firebase logger
+				SwalReact.fire({
+					title: "Error",
+					text: "Something went wrong while updating the database",
+					icon: "error",
+					confirmButtonText: "Close",
+				});
+			});
 	}
 
 	useEffect(() => {
+		const abortController = new AbortController();
 		updateSpot();
+		return () => abortController.abort();
 	}, []);
-
-	useEffect(() => {
-		console.log("Form data:", formData);
-	}, [formData]);
-
-	useEffect(() => {
-		console.log("Spot Types:", spotTypes);
-	}, [spotTypes]);
 
 	return (
 		<div
@@ -187,7 +196,11 @@ const Spot = ({ organization, data }) => {
 				top: `${yPos}%`,
 				left: `${xPos}%`,
 			}}
-			onClick={spotAlert}
+			onClick={() => {
+				const abortController = new AbortController();
+				spotAlert();
+				return () => abortController.abort();
+			}}
 		>
 			{data.Info["Spot ID"]}
 		</div>

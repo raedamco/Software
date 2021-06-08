@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Header from "./common/Header";
 import Login from "./login";
@@ -24,12 +24,8 @@ function App() {
 		}
 	}, []);
 
-	// useEffect(() => {
-	// 	console.log("authUser:", authUser);
-	// }, [authUser]);
-
 	return (
-		<>
+		<Router>
 			<Switch>
 				<Route path="/">
 					{/* TODO Move header to OrganizationRouter */}
@@ -47,7 +43,7 @@ function App() {
 					)}
 				</Route>
 			</Switch>
-		</>
+		</Router>
 	);
 }
 

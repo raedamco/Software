@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router";
 import Spot from "./Spot";
-const database = window.firebase.firestore();
+import { database } from "../../FirebaseSetup";
 
 const SpotMap = ({ organization }) => {
 	const { path, url, params } = useRouteMatch();
