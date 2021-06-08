@@ -1,4 +1,23 @@
+import { useEffect } from "react";
+
 const Footer = () => {
+	// jQuery way
+	// $(window).scroll(function(){
+	// 	var $win = $(window);
+	// 	if ($win.scrollTop() > 200) {
+	// 		$('.js-top').addClass('active');
+	// 	} else {
+	// 		$('.js-top').removeClass('active');
+	// 	}
+	// });
+
+	useEffect(() => {
+		window.addEventListener("scroll", () => {
+			//console.log("Scroll:", document.documentElement.scrollTop);
+			//if ()
+		});
+	}, []);
+
 	return (
 		<>
 			<footer id="tp-footer">
