@@ -1,5 +1,6 @@
 //TODO clean up code later
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import useState from "react-usestateref";
 import { useHistory, useRouteMatch } from "react-router";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -17,12 +18,11 @@ const Spot = ({ organization, data }) => {
 	const [xPos, setXPos] = useState(0);
 	const [yPos, setYPos] = useState(0);
 	const [spotTypes, setSpotTypes] = useState({}); // On submit
-	const [formData, setFormData] = useState({}); // On change
+	const [formData, setFormData, formDataRef] = useState({}); // On change
 
 	const locationName = params.locationName.replaceAll("-", " ");
 	const subLocationName = params.subLocationName.replaceAll("-", " ");
 	const [submitReady, setSubmitReady] = useState(false);
-	const [count, setCount] = useState(0);
 
 	function updateSpot() {
 		database
@@ -47,24 +47,19 @@ const Spot = ({ organization, data }) => {
 	}
 
 	const handleChange = ({ target }) => {
-		console.log("handleChange - formData:", formData);
-		const changeObj = { ...formData };
+		const changeObj = { ...formDataRef.current };
 		changeObj[target.name] = target.checked;
+
 		setFormData(changeObj);
+		console.log("handleChange - formData:", formDataRef.current);
 	};
 
-	useEffect(() => {
-		console.log("formData useEffect - FormData:", formData);
-	}, [formData]);
-
-	useEffect(() => {
-		if (count != 0) {
-			const abortController = new AbortController();
-			updateDatabase();
-			return () => abortController.abort();
-		}
-		setCount(count + 1);
-	}, [submitReady]);
+	// useEffect(() => {
+	// 	console.log("formData useEffect - FormData:", formData);
+	// 	console.log(updateCount);
+	// 	if (updateCount > 0) setUpdateCount(updateCount - 1);
+	// 	console.log(updateCount);
+	// }, [formData]);
 
 	function spotAlert() {
 		// Spot alert checklist
@@ -140,7 +135,7 @@ const Spot = ({ organization, data }) => {
 			showCancelButton: true,
 			focusConfirm: false,
 			preConfirm: () => {
-				setSubmitReady(!submitReady);
+				updateDatabase();
 			},
 		});
 	}
@@ -155,14 +150,14 @@ const Spot = ({ organization, data }) => {
 			.collection(subLocationName)
 			.doc(`${data.Info["Spot ID"]}`)
 			.update({
-				"Spot Type.Hourly": formData.Hourly,
-				"Spot Type.Permit": formData.Permit,
-				"Spot Type.ADA": formData.ADA,
-				"Spot Type.EV": formData.EV,
-				"Spot Type.Leased": formData.Leased,
+				"Spot Type.Hourly": formDataRef.current.Hourly,
+				"Spot Type.Permit": formDataRef.current.Permit,
+				"Spot Type.ADA": formDataRef.current.ADA,
+				"Spot Type.EV": formDataRef.current.EV,
+				"Spot Type.Leased": formDataRef.current.Leased,
 			})
 			.then(() => {
-				setSpotTypes(formData);
+				setSpotTypes(formDataRef.current);
 
 				SwalReact.fire({
 					title: "Success",
