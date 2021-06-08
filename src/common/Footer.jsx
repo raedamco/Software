@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 const Footer = () => {
+	//TODO update top button to use react
 	// jQuery way
 	// $(window).scroll(function(){
 	// 	var $win = $(window);
