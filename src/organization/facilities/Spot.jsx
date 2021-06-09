@@ -62,7 +62,7 @@ const Spot = ({ organization, data }) => {
 					id="Hourly"
 					name="Hourly"
 					defaultChecked={spotTypes.Hourly}
-					onChange={(target) => handleChange(target)}
+					onChange={handleChange}
 				/>
 				<label htmlFor="Hourly">Hourly</label>
 				<br />
@@ -72,7 +72,7 @@ const Spot = ({ organization, data }) => {
 					id="Permit"
 					name="Permit"
 					defaultChecked={spotTypes.Permit}
-					onChange={(target) => handleChange(target)}
+					onChange={handleChange}
 				/>
 				<label htmlFor="Permit">Permit</label>
 				<br />
@@ -82,7 +82,7 @@ const Spot = ({ organization, data }) => {
 					id="ADA"
 					name="ADA"
 					defaultChecked={spotTypes.ADA}
-					onChange={(target) => handleChange(target)}
+					onChange={handleChange}
 				/>
 				<label htmlFor="ADA">ADA</label>
 				<br />
@@ -92,7 +92,7 @@ const Spot = ({ organization, data }) => {
 					id="EV"
 					name="EV"
 					defaultChecked={spotTypes.EV}
-					onChange={(target) => handleChange(target)}
+					onChange={handleChange}
 				/>
 				<label htmlFor="EV">EV</label>
 				<br />
@@ -102,7 +102,7 @@ const Spot = ({ organization, data }) => {
 					id="Leased"
 					name="Leased"
 					defaultChecked={spotTypes.Leased}
-					onChange={(target) => handleChange(target)}
+					onChange={handleChange}
 				/>
 				<label htmlFor="Leased">Leased</label>
 				<br />
