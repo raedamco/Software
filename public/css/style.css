@@ -2149,6 +2149,3 @@ select:not(:invalid) {
 	width: 100%;
 	display: block;
 }
-.price-label {
-	font-size: 18px;
-}

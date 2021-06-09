@@ -2,10 +2,9 @@
 import { useEffect } from "react";
 import useState from "react-usestateref";
 import { useHistory, useRouteMatch } from "react-router";
+import { database } from "../../FirebaseSetup";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { database } from "../../FirebaseSetup";
-
 const SwalReact = withReactContent(Swal);
 
 const Spot = ({ organization, data }) => {
