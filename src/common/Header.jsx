@@ -27,33 +27,35 @@ const Header = ({ organization, setAuthUser }) => {
 					<div className="row">
 						<div className="col-md-2">
 							<div id="tp-logo">
-								<Link to={`${organizationUrl}/facilities`}>Raedam</Link>
+								<Link to={`/${organizationUrl}/facilities`}>Raedam</Link>
 							</div>
 						</div>
 						<div className="col-md-10 text-right menu-1">
 							<ul>
 								<li className="active">
-									<Link to={`${organizationUrl}/facilities`}>Facilities</Link>
+									<Link to={`/${organizationUrl}/facilities`}>Facilities</Link>
 								</li>
 								<li>
-									<Link to={`${organizationUrl}/occupancy`}>Occupancy</Link>
+									<Link to={`/${organizationUrl}/occupancy`}>Occupancy</Link>
 								</li>
 								<li>
-									<Link to={`${organizationUrl}/enforcement`}>Enforcement</Link>
+									<Link to={`/${organizationUrl}/enforcement`}>
+										Enforcement
+									</Link>
 								</li>
 								<li className="has-dropdown-custom">
 									<a>Account</a>
 									<ul className="dropdown-custom">
 										<li>
-											<Link to={`${organizationUrl}/organization`}>
+											<Link to={`/${organizationUrl}/organization`}>
 												Organization
 											</Link>
 										</li>
 										<li>
-											<Link to={`${organizationUrl}/profile`}>Profile</Link>
+											<Link to={`/${organizationUrl}/profile`}>Profile</Link>
 										</li>
 										<li>
-											<Link to={`${organizationUrl}/messages`}>Messages</Link>
+											<Link to={`/${organizationUrl}/messages`}>Messages</Link>
 										</li>
 										<li
 											onClick={() => {
