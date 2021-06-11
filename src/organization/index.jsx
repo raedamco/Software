@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Route, Switch, useHistory, useRouteMatch } from "react-router";
+import { matchPath, Route, Switch, useHistory } from "react-router";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 import OrganizationList from "./OrganizationList";
@@ -12,7 +12,23 @@ const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
 	//const [user, setUser] = useState(1);
 
 	async function getOrganizations() {
-		if (await authUser) {
+		// Get Organization from url first
+		const match = matchPath(history.location.pathname, {
+			path: "/:organization",
+		});
+		if (match && match.params.organization != "organizations") {
+			let name = match.params.organization.replaceAll("-", " ");
+			await database
+				.collection("Companies")
+				.where("Info.Name", "==", name)
+				.get()
+				.then((querySnapshot) => {
+					querySnapshot.forEach((doc) => {
+						setOrganization(doc.id);
+					});
+				});
+			// If there's no organization in the url. then try to get the organization from the users company list
+		} else if (await authUser) {
 			organizations = await database
 				.collection("Users")
 				.doc("Companies")
@@ -31,7 +47,7 @@ const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
 					.get()
 					.then((doc) => {
 						setOrganization(organizations[0]);
-						localStorage.setItem("organization", organizations[0]);
+						//localStorage.setItem("organization", organizations[0]);
 						history.push(
 							"/" + doc.data().Info.Name.replaceAll(" ", "-") + "/facilities"
 						);
@@ -41,11 +57,11 @@ const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
 	}
 
 	useEffect(() => {
-		const abortController = new AbortController();
 		if (authUser) {
+			const abortController = new AbortController();
 			getOrganizations();
+			return () => abortController.abort();
 		}
-		return () => abortController.abort();
 	}, [authUser]);
 
 	//TODO Switch to firebase react components
@@ -66,7 +82,11 @@ const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
 							<OrganizationList organizations={organizations} />
 						</Route>
 						<Route path="/:organization">
-							<Organization organization={organization} />
+							{organization ? (
+								<Organization organization={organization} />
+							) : (
+								<></>
+							)}
 						</Route>
 					</Switch>
 				</main>

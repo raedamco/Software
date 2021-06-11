@@ -11,17 +11,17 @@ function App() {
 
 	useEffect(() => {
 		let auth = JSON.parse(localStorage.getItem("authUser"));
-		let org = localStorage.getItem("organization");
+		//let org = localStorage.getItem("organization");
 		if (auth) {
 			setAuthUser(auth);
 		} else {
 			setAuthUser(null);
 		}
-		if (org) {
-			setOrganization(org);
-		} else {
-			setOrganization(null);
-		}
+		// if (org) {
+		// 	setOrganization(org);
+		// } else {
+		// 	setOrganization(null);
+		// }
 	}, []);
 
 	return (
