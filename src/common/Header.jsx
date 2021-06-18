@@ -14,7 +14,7 @@ const Header = ({ organization, setAuthUser }) => {
 				.doc(organization)
 				.get()
 				.then((doc) => {
-					setOrganizationUrl("/" + doc.data().Info.Name.replaceAll(" ", "-"));
+					setOrganizationUrl(doc.data().Info.Name.replaceAll(" ", "-"));
 				});
 		}
 		return () => abortController.abort();
