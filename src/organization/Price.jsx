@@ -68,6 +68,7 @@ const Price = ({ organization, locationName }) => {
 		);
 		SwalReact.fire({
 			html: alertHtml,
+			showCancelButton: true,
 			focusConfirm: false,
 			preConfirm: () => {
 				const minutePrice = SwalReact.getPopup().querySelector("#minute").value;
