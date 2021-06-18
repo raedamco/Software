@@ -9,6 +9,7 @@
 // Setup firebase and common firebase related functions
 
 import firebase from "firebase";
+import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -67,10 +68,11 @@ async function signIn() {
 		});
 }
 
-function signOut() {
+function signOut(history) {
 	auth.signOut().then(
 		() => {
 			localStorage.removeItem("authUser");
+			history.push("/");
 		},
 		(error) => {
 			// TODO log error to firebase logger

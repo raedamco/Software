@@ -59,7 +59,7 @@ const Header = ({ organization, setAuthUser }) => {
 										</li>
 										<li
 											onClick={() => {
-												signOut();
+												signOut(history);
 												setAuthUser(null);
 											}}
 										>
