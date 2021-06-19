@@ -7,9 +7,10 @@ import SensorLog from "./facilities/SensorLog";
 import SpotMap from "./facilities/SpotMap";
 import Price from "./Price";
 import Occupancy from "./occupancy";
+import Profile from "../profile";
 import { database } from "../FirebaseSetup";
 
-const Organization = ({ organization }) => {
+const Organization = ({ organization, authUser }) => {
 	const { path, url, params } = useRouteMatch();
 
 	function getLogs(setList, setPageTitle, urlParams) {
@@ -163,7 +164,7 @@ const Organization = ({ organization }) => {
 					<CardList getJsx={getLocationPrices} />
 				</Route>
 				<Route path={`${path}/profile`}>
-					<ComingSoon />
+					<Profile organization={organization} authUser={authUser} />
 				</Route>
 				<Route path={`${path}/messages`}>
 					<ComingSoon />

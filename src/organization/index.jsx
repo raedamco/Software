@@ -83,7 +83,7 @@ const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
 						</Route>
 						<Route path="/:organization">
 							{organization ? (
-								<Organization organization={organization} />
+								<Organization organization={organization} authUser={authUser} />
 							) : (
 								<></>
 							)}
