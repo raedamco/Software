@@ -3,9 +3,9 @@ import { useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { database } from "../../FirebaseSetup";
 
 const SwalReact = withReactContent(Swal);
-const database = window.firebase.firestore();
 
 const Location = ({ organization, title = "", name, locationType }) => {
 	const [free, setFree] = useState(0);
@@ -49,14 +49,12 @@ const Location = ({ organization, title = "", name, locationType }) => {
 			.onSnapshot((snapshot) => {
 				if (locationType == "location") {
 					let temp = snapshot.data().Active;
-					console.log("Location Enabled:", temp);
 					setEnabled(temp);
 					setLocationEnabled(temp);
 				} else if (locationType == "sublocation") {
 					let temp =
 						snapshot.data().Active &&
 						snapshot.data()["Floor Data"][name].Active;
-					console.log("Sublocation Enabled:", temp);
 					setEnabled(temp);
 					setLocationEnabled(snapshot.data().Active);
 				}

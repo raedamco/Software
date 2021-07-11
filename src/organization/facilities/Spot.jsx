@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+//TODO clean up code later
+import { useEffect } from "react";
+import useState from "react-usestateref";
 import { useHistory, useRouteMatch } from "react-router";
+import { database } from "../../FirebaseSetup";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-
 const SwalReact = withReactContent(Swal);
-const database = window.firebase.firestore();
 
 const Spot = ({ organization, data }) => {
 	const { path, url, params } = useRouteMatch();
@@ -16,7 +17,7 @@ const Spot = ({ organization, data }) => {
 	const [xPos, setXPos] = useState(0);
 	const [yPos, setYPos] = useState(0);
 	const [spotTypes, setSpotTypes] = useState({}); // On submit
-	const [formData, setFormData] = useState({}); // On change
+	const [formData, setFormData, formDataRef] = useState({}); // On change
 
 	const locationName = params.locationName.replaceAll("-", " ");
 	const subLocationName = params.subLocationName.replaceAll("-", " ");
@@ -44,15 +45,13 @@ const Spot = ({ organization, data }) => {
 	}
 
 	const handleChange = ({ target }) => {
-		console.log("Name:", target.name);
-		console.log("Checked:", target.checked);
-		setFormData({
-			...formData,
-			[target.name]: target.checked,
-		});
+		const changeObj = { ...formDataRef.current };
+		changeObj[target.name] = target.checked;
+
+		setFormData(changeObj);
 	};
 
-	async function spotAlert() {
+	function spotAlert() {
 		// Spot alert checklist
 		let popupHTML = (
 			<>
@@ -129,56 +128,50 @@ const Spot = ({ organization, data }) => {
 				updateDatabase();
 			},
 		});
+	}
 
-		// Update database with new selections
-		function updateDatabase() {
-			database
-				.collection("Companies")
-				.doc(organization)
-				.collection("Data")
-				.doc(locationName)
-				.collection(subLocationName)
-				.doc(`${data.Info["Spot ID"]}`)
-				.update({
-					"Spot Type.Hourly": formData.Hourly,
-					"Spot Type.Permit": formData.Permit,
-					"Spot Type.ADA": formData.ADA,
-					"Spot Type.EV": formData.EV,
-					"Spot Type.Leased": formData.Leased,
-				})
-				.then(() => {
-					setSpotTypes(formData);
+	// Update database with new selections
+	async function updateDatabase() {
+		database
+			.collection("Companies")
+			.doc(organization)
+			.collection("Data")
+			.doc(locationName)
+			.collection(subLocationName)
+			.doc(`${data.Info["Spot ID"]}`)
+			.update({
+				"Spot Type.Hourly": formDataRef.current.Hourly,
+				"Spot Type.Permit": formDataRef.current.Permit,
+				"Spot Type.ADA": formDataRef.current.ADA,
+				"Spot Type.EV": formDataRef.current.EV,
+				"Spot Type.Leased": formDataRef.current.Leased,
+			})
+			.then(() => {
+				setSpotTypes(formDataRef.current);
 
-					SwalReact.fire({
-						title: "Success",
-						text: `Spot ${data.Info["Spot ID"]} type has been updated`,
-						icon: "success",
-						confirmButtonText: "Close",
-					});
-				})
-				.catch(() => {
-					//TODO log to firebase logger
-					SwalReact.fire({
-						title: "Error",
-						text: "Something went wrong while updating the database",
-						icon: "error",
-						confirmButtonText: "Close",
-					});
+				SwalReact.fire({
+					title: "Success",
+					text: `Spot ${data.Info["Spot ID"]} type has been updated`,
+					icon: "success",
+					confirmButtonText: "Close",
 				});
-		}
+			})
+			.catch(() => {
+				//TODO log to firebase logger
+				SwalReact.fire({
+					title: "Error",
+					text: "Something went wrong while updating the database",
+					icon: "error",
+					confirmButtonText: "Close",
+				});
+			});
 	}
 
 	useEffect(() => {
+		const abortController = new AbortController();
 		updateSpot();
+		return () => abortController.abort();
 	}, []);
-
-	useEffect(() => {
-		console.log("Form data:", formData);
-	}, [formData]);
-
-	useEffect(() => {
-		console.log("Spot Types:", spotTypes);
-	}, [spotTypes]);
 
 	return (
 		<div
@@ -188,7 +181,11 @@ const Spot = ({ organization, data }) => {
 				top: `${yPos}%`,
 				left: `${xPos}%`,
 			}}
-			onClick={spotAlert}
+			onClick={() => {
+				const abortController = new AbortController();
+				spotAlert();
+				return () => abortController.abort();
+			}}
 		>
 			{data.Info["Spot ID"]}
 		</div>

@@ -1,4 +1,9 @@
 import { useHistory } from "react-router";
+import { signIn, forgotPassword } from "./FirebaseSetup";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const SwalReact = withReactContent(Swal);
 
 const Login = ({ setAuthUser }) => {
 	const history = useHistory();
@@ -64,10 +69,9 @@ const Login = ({ setAuthUser }) => {
 									id="loginButton"
 									value="Login"
 									className="btn btn-primary"
-									onClick={async () => {
-										window.signIn().then((user) => {
+									onClick={() => {
+										signIn().then((user) => {
 											setAuthUser(user);
-											localStorage.setItem("authUser", JSON.stringify(user));
 										});
 									}}
 								/>
@@ -77,7 +81,7 @@ const Login = ({ setAuthUser }) => {
 									type="submit"
 									value="Forgot Password?"
 									className="btn btn-secondary"
-									onClick={window.forgotPassword}
+									onClick={forgotPassword}
 								/>
 							</div>
 						</div>
