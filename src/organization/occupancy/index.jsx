@@ -12,7 +12,6 @@ const Occupancy = ({ organization }) => {
 
 	//TODO fix second location disappearing
 	function getSubLocations() {
-		let start = Date.now();
 		let compList = [];
 		database
 			.collection("Companies")
@@ -42,7 +41,7 @@ const Occupancy = ({ organization }) => {
 									)}`
 								);
 								compList.push(
-									<div key={`${location}-${subLocation}`}>
+									<article key={`${location}-${subLocation}`}>
 										<LineGraph
 											organization={organization}
 											location={location}
@@ -53,12 +52,9 @@ const Occupancy = ({ organization }) => {
 											location={location}
 											subLocation={subLocation}
 										/>
-									</div>
+									</article>
 								);
 							});
-							let delta = Date.now() - start;
-							let seconds = Math.floor(delta / 1000);
-							console.log("GetSublocations seconds:", seconds);
 							setJsx(compList);
 						});
 				});

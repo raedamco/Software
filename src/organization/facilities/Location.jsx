@@ -3,6 +3,7 @@ import { useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Card from "../../common/Card";
 import { database } from "../../FirebaseSetup";
 
 const SwalReact = withReactContent(Swal);
@@ -96,58 +97,58 @@ const Location = ({ organization, title = "", name, locationType }) => {
 			focusConfirm: false,
 			scrollbarPadding: false,
 		});
+	}
 
-		// Update database with new selections
-		function updateDatabase(enable) {
-			let newData;
-			let successMsg;
-			if (locationType == "location") {
-				newData = {
-					Active: enable,
-				};
-				successMsg = `${title} ${enable ? "enabled" : "disabled"} successfully`;
-			} else if (locationType == "sublocation") {
-				newData = {
-					[`Floor Data.${name}.Active`]: enable,
-				};
-				successMsg = `${name} in ${title} ${
-					enable ? "enabled" : "disabled"
-				} successfully`;
-			}
+	// Update database with new selections
+	function updateDatabase(enable) {
+		let newData;
+		let successMsg;
+		if (locationType == "location") {
+			newData = {
+				Active: enable,
+			};
+			successMsg = `${title} ${enable ? "enabled" : "disabled"} successfully`;
+		} else if (locationType == "sublocation") {
+			newData = {
+				[`Floor Data.${name}.Active`]: enable,
+			};
+			successMsg = `${name} in ${title} ${
+				enable ? "enabled" : "disabled"
+			} successfully`;
+		}
 
-			database
-				.collection("Companies")
-				.doc(organization)
-				.collection("Data")
-				.doc(title ? title : name)
-				.update(newData)
-				.then(() => {
-					SwalReact.fire({
-						title: "Success",
-						text: successMsg,
-						icon: "success",
-						confirmButtonText: "Close",
-					});
-					if (!locationEnabled && locationType == "sublocation") {
-						SwalReact.fire({
-							title: "Error",
-							text: `Can't update ${name} while ${title} is disabled`,
-							icon: "error",
-							confirmButtonText: "Close",
-						});
-					}
-				})
-				.catch((error) => {
-					console.log("Error:", error);
-					//TODO log to firebase logger
+		database
+			.collection("Companies")
+			.doc(organization)
+			.collection("Data")
+			.doc(title ? title : name)
+			.update(newData)
+			.then(() => {
+				SwalReact.fire({
+					title: "Success",
+					text: successMsg,
+					icon: "success",
+					confirmButtonText: "Close",
+				});
+				if (!locationEnabled && locationType == "sublocation") {
 					SwalReact.fire({
 						title: "Error",
-						text: "Something went wrong while updating the database",
+						text: `Can't update ${name} while ${title} is disabled`,
 						icon: "error",
 						confirmButtonText: "Close",
 					});
+				}
+			})
+			.catch((error) => {
+				console.log("Error:", error);
+				//TODO log to firebase logger
+				SwalReact.fire({
+					title: "Error",
+					text: "Something went wrong while updating the database",
+					icon: "error",
+					confirmButtonText: "Close",
 				});
-		}
+			});
 	}
 
 	useEffect(() => {
@@ -161,49 +162,18 @@ const Location = ({ organization, title = "", name, locationType }) => {
 		return () => abortController.abort();
 	}, [locationType]);
 
-	useEffect(() => {
-		const abortController = new AbortController();
-
-		return () => abortController.abort();
-	}, [locationType]);
-
 	return (
-		<Link to={`${url}/${name.replaceAll(" ", "-")}`}>
-			<div className="card-btn panel panel-default mb-2">
-				<div
-					className={`panel-body container ${
-						enabled ? "bg-success" : "bg-danger"
-					}`}
-					onContextMenu={rightClickHandler}
-				>
-					<div className="d-flex justify-content-between row">
-						<table className="table" style={{ margin: "0" }}>
-							<tbody>
-								<tr>
-									<td>
-										<h3
-											className="text-success text-left"
-											style={{ margin: "0 0 0 15px" }}
-										>
-											{name}
-										</h3>
-									</td>
-									<td>
-										{/* TODO Spots free is spilling over the side. Fixed by adding extra margin */}
-										<h3
-											className="text-success text-right"
-											style={{ margin: "0 45px 0 0" }}
-										>
-											Spots Free: {free}/{total}
-										</h3>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</Link>
+		<Card
+			link={`${url}/${name.replaceAll(" ", "-")}`}
+			toggleDatabase={updateDatabase}
+			enabled={enabled}
+			rightClickHandler={rightClickHandler}
+		>
+			<h3 className="text-success">{name}</h3>
+			<h3 className="text-success">
+				Spots Free: {free}/{total}
+			</h3>
+		</Card>
 	);
 };
 

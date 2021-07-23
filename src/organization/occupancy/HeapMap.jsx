@@ -98,9 +98,9 @@ const HeatMap = ({ organization, location, subLocation }) => {
 	}, []);
 
 	return (
-		<>
-			<Apex type="heatmap" options={options} series={series} width="900" />
-		</>
+		<div className="chart aligncenter">
+			<Apex type="heatmap" options={options} series={series} />
+		</div>
 	);
 };
 

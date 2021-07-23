@@ -13,7 +13,7 @@ html {
 html,
 body,
 #root {
-	height: 100vh;
+	min-height: 100vh;
 }
 #root {
 	/* push footer to bottom on low content pages */
@@ -22,10 +22,38 @@ body,
 }
 
 main {
-	margin: 0 auto;
 	flex: 1;
 }
 
 footer {
 	flex-shrink: 0;
+}
+
+/* Alignment */
+.alignleft {
+	float: left;
+	margin: 0 2% 0 0;
+}
+.aligncenter {
+	text-align: center;
+	margin: 0 auto;
+}
+.alignmiddle {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.alignright {
+	float: right;
+	margin: 0 0 0 2%;
+}
+.clear {
+	clear: both;
+}
+.clearright {
+	clear: right;
+}
+.clearleft {
+	clear: left;
 }
