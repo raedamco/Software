@@ -185,7 +185,7 @@ const LineGraph = ({ organization, location, subLocation }) => {
 	}, []);
 
 	return (
-		<div className="chart">
+		<div className="chart aligncenter">
 			<div className="toolbar">
 				<button
 					onClick={() => updateData("one_month")}
@@ -224,7 +224,7 @@ const LineGraph = ({ organization, location, subLocation }) => {
 					ALL
 				</button>
 			</div>
-			<Apex type="area" options={options} series={series} width="900" />
+			<Apex type="area" options={options} series={series} />
 		</div>
 	);
 };
