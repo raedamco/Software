@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router";
-import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+import { useHistory } from "react-router-dom";
 import Card from "../../common/Card";
+import SwalForm, { SwalFail, SwalSuccess } from "../../common/SweetAlert";
 import { database } from "../../FirebaseSetup";
-
-const SwalReact = withReactContent(Swal);
 
 const Location = ({ organization, title = "", name, locationType }) => {
 	const [free, setFree] = useState(0);
@@ -14,6 +11,7 @@ const Location = ({ organization, title = "", name, locationType }) => {
 	const [enabled, setEnabled] = useState(true);
 	const [locationEnabled, setLocationEnabled] = useState(true);
 	const { path, url, params } = useRouteMatch();
+	const history = useHistory();
 
 	function getLocationCapacity() {
 		database
@@ -63,44 +61,66 @@ const Location = ({ organization, title = "", name, locationType }) => {
 	}
 
 	function rightClickHandler(event) {
-		event.preventDefault();
+		if (locationType == "location") {
+			event.preventDefault();
 
-		const popupHTML = (
-			<>
-				<h4>Enable/Disable: </h4>
-				<button
-					type="button"
-					className="btn btn-success"
-					onClick={() => {
-						updateDatabase(true);
-					}}
-				>
-					Enable
-				</button>
-				<button
-					type="button"
-					className="btn btn-danger"
-					onClick={() => {
-						updateDatabase(false);
-					}}
-				>
-					Disable
-				</button>
-				<br />
-			</>
-		);
+			const popupHTML = (
+				<>
+					<label class="free-label" htmlFor="free">
+						Spots Free
+					</label>
+					<input
+						type="number"
+						id="free"
+						min="0"
+						max={total}
+						defaultValue={free}
+					/>
+					<br />
+					<label class="total-label" htmlFor="total">
+						Capacity
+					</label>
+					<input type="number" id="total" min="0" defaultValue={total} />
+					<br />
+				</>
+			);
 
-		SwalReact.fire({
-			title: title,
-			html: popupHTML,
-			showCancelButton: true,
-			focusConfirm: false,
-			scrollbarPadding: false,
-		});
+			SwalForm(popupHTML, updateDatabase);
+		}
+
+		function updateDatabase({ free, total }) {
+			let newData;
+			let successMsg;
+			if (locationType == "location") {
+				newData = {
+					[`Capacity.Available`]: free.value,
+					[`Capacity.Capacity`]: total.value,
+				};
+				successMsg = `${title} updated successfully`;
+
+				const abortController = new AbortController();
+				database
+					.collection("Companies")
+					.doc(organization)
+					.collection("Data")
+					.doc(title ? title : name)
+					.update(newData)
+					.then(() => {
+						SwalSuccess(successMsg);
+						if (!locationEnabled && locationType == "sublocation") {
+							SwalFail(`Can't update ${name} while ${title} is disabled`);
+						}
+					})
+					.catch((error) => {
+						SwalFail("Something went wrong while updating the database", error);
+					});
+				return () => abortController.abort();
+			}
+		}
 	}
 
 	// Update database with new selections
-	function updateDatabase(enable) {
+	function toggleHandler(enable) {
 		let newData;
 		let successMsg;
 		if (locationType == "location") {
@@ -117,6 +137,7 @@ const Location = ({ organization, title = "", name, locationType }) => {
 			} successfully`;
 		}
 
+		const abortController = new AbortController();
 		database
 			.collection("Companies")
 			.doc(organization)
@@ -124,31 +145,15 @@ const Location = ({ organization, title = "", name, locationType }) => {
 			.doc(title ? title : name)
 			.update(newData)
 			.then(() => {
-				SwalReact.fire({
-					title: "Success",
-					text: successMsg,
-					icon: "success",
-					confirmButtonText: "Close",
-				});
+				// SwalSuccess(successMsg);
 				if (!locationEnabled && locationType == "sublocation") {
-					SwalReact.fire({
-						title: "Error",
-						text: `Can't update ${name} while ${title} is disabled`,
-						icon: "error",
-						confirmButtonText: "Close",
-					});
+					SwalFail(`Can't update ${name} while ${title} is disabled`);
 				}
 			})
 			.catch((error) => {
-				console.log("Error:", error);
-				//TODO log to firebase logger
-				SwalReact.fire({
-					title: "Error",
-					text: "Something went wrong while updating the database",
-					icon: "error",
-					confirmButtonText: "Close",
-				});
+				SwalFail("Something went wrong while updating the database", error);
 			});
+		return () => abortController.abort();
 	}
 
 	useEffect(() => {
@@ -164,8 +169,10 @@ const Location = ({ organization, title = "", name, locationType }) => {
 
 	return (
 		<Card
-			link={`${url}/${name.replaceAll(" ", "-")}`}
-			toggleDatabase={updateDatabase}
+			leftClickHandler={() => {
+				history.push(`${url}/${name.replaceAll(" ", "-")}`);
+			}}
+			toggleHandler={toggleHandler}
 			enabled={enabled}
 			rightClickHandler={rightClickHandler}
 		>

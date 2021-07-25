@@ -1,14 +1,10 @@
 //TODO fix async memory leak in spot/spotmap
-//TODO dev config
 //TODO Capacity dynamically changing
 //TODO Account
-//TODO Top button
 //TODO Summary
 //TODO Update Chart
-//TODO Global database variable
 //TODO Delete extra bootstrap files
 //TODO Update some database data dynamically
-//TODO Fix csv download for charts
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";

@@ -60,7 +60,7 @@ a:hover,
 a:active,
 a:focus {
 	color: black;
-	outline: none;
+	/* outline: none; */
 	text-decoration: none;
 }
 

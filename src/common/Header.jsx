@@ -43,7 +43,7 @@ const Header = ({ organization, setAuthUser }) => {
 										Enforcement
 									</Link>
 								</li>
-								<li className="has-dropdown-custom">
+								<li className="has-dropdown-custom" tabIndex="0">
 									<a>Account</a>
 									<ul className="dropdown-custom">
 										<li>
