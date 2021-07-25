@@ -16,7 +16,7 @@ jobs:
 
       - run: npm run build
         env:
-          CIj: ""
+          CI: ""
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
