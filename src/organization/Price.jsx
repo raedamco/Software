@@ -68,9 +68,9 @@ const Price = ({ organization, locationName }) => {
 			.collection("Data")
 			.doc(locationName)
 			.update({
-				"Pricing.Minute": minute.value,
-				"Pricing.Hour": hour.value,
-				"Pricing.Day": day.value,
+				"Pricing.Minute": parseFloat(minute.value),
+				"Pricing.Hour": parseFloat(hour.value),
+				"Pricing.Day": parseFloat(day.value),
 			})
 			.then(() => {
 				SwalSuccess("Rates have been updated");

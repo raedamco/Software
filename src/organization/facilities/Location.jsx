@@ -93,8 +93,8 @@ const Location = ({ organization, title = "", name, locationType }) => {
 			let successMsg;
 			if (locationType == "location") {
 				newData = {
-					[`Capacity.Available`]: free.value,
-					[`Capacity.Capacity`]: total.value,
+					[`Capacity.Available`]: parseInt(free.value),
+					[`Capacity.Capacity`]: parseInt(total.value),
 				};
 				successMsg = `${title} updated successfully`;
 
