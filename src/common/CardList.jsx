@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState  } from "react";
 import { useRouteMatch } from "react-router";
-
+import { Link } from "react-router-dom";
 const CardList = ({ getJsx }) => {
 	const { path, url, params } = useRouteMatch();
 	const [jsx, setJsx] = useState([]);
@@ -23,6 +23,7 @@ const CardList = ({ getJsx }) => {
 				>
 					{title}
 				</h1>
+		<Link className="btn btn-primary oi oi-plus" to={`${url}/new-location`}>Add Location</Link>
 				<div>{jsx}</div>
 			</div>
 		</div>

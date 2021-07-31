@@ -9,6 +9,7 @@ import Price from "./Price";
 import Occupancy from "./occupancy";
 import Profile from "../profile";
 import { database } from "../FirebaseSetup";
+import NewLocation from "./NewLocation";
 
 const Organization = ({ organization, authUser }) => {
 	const { path, url, params } = useRouteMatch();
@@ -148,9 +149,13 @@ const Organization = ({ organization, authUser }) => {
 				<Route path={`${path}/facilities/:locationName/:subLocationName`}>
 					<SpotMap organization={organization} />
 				</Route>
+				<Route path={`${path}/facilities/new-location`}>
+					<NewLocation />
+				</Route>
 				<Route path={`${path}/facilities/:locationName`}>
 					<CardList getJsx={getSubLocations} />
 				</Route>
+
 				<Route path={`${path}/facilities`}>
 					<CardList getJsx={getLocations} />
 				</Route>
