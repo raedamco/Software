@@ -1,4 +1,4 @@
-import { Route, Switch, useRouteMatch } from "react-router";
+import { Routes, Route, useParams } from "react-router";
 import CardList from "../common/CardList";
 import ComingSoon from "../common/ComingSoon";
 import NoData from "../common/NoData";
@@ -9,63 +9,62 @@ import Price from "./Price";
 import Occupancy from "./occupancy";
 import Profile from "../profile";
 import { database } from "../FirebaseSetup";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 const Organization = ({ organization, authUser }) => {
-	const { path, url, params } = useRouteMatch();
+	const params = useParams();
+	const path = `/${params.organization}`;
 
-	function getLogs(setList, setPageTitle, urlParams) {
+	async function getLogs(setList, setPageTitle, urlParams) {
 		const locationName = urlParams.locationName.replaceAll("-", " ");
 		const subLocationName = urlParams.subLocationName.replaceAll("-", " ");
 
-		database
-			.collection("Companies")
-			.doc(organization)
-			.collection("Data")
-			.doc(locationName)
-			.collection(subLocationName)
-			.doc(`${urlParams.spotId}`)
-			.collection("Data")
-			.get()
-			.then((collection) => {
-				setPageTitle(`Data log for spot ${urlParams.spotId}`);
-				let temp = [];
-				if (!collection.size) {
-					temp.push(<NoData />);
-					setList(temp);
-					return;
-				}
-				let index = 0;
-				collection.forEach((doc) => {
-					temp.push(
-						<SensorLog
-							key={index}
-							occupant={doc.data().Occupant}
-							occupied={doc.data().Occupied}
-							begin={doc.data().Time.Begin}
-							end={doc.data().Time.End}
-						/>
-					);
-					index += 1;
-				});
+		try {
+			const logsCollection = collection(
+				database,
+				"Companies",
+				organization,
+				"Data",
+				locationName,
+				subLocationName,
+				`${urlParams.spotId}`,
+				"Data"
+			);
+			const querySnapshot = await getDocs(logsCollection);
+			
+			setPageTitle(`Data log for spot ${urlParams.spotId}`);
+			let temp = [];
+			if (!querySnapshot.size) {
+				temp.push(<NoData />);
 				setList(temp);
-			})
-			.catch((error) => {
-				//TODO log to firebase logger
-				console.log(error);
+				return;
+			}
+			let index = 0;
+			querySnapshot.forEach((doc) => {
+				temp.push(
+					<SensorLog
+						key={index}
+						occupant={doc.data().Occupant}
+						occupied={doc.data().Occupied}
+						begin={doc.data().Time.Begin}
+						end={doc.data().Time.End}
+					/>
+				);
+				index += 1;
 			});
+			setList(temp);
+		} catch (error) {
+			console.error("Error fetching logs:", error);
+		}
 	}
 
-	function getLocations(setList, setPageTitle, urlParams) {
-		database
-			.collection("Companies")
-			.doc(organization)
-			.get()
-			.then((doc) => {
-				setPageTitle(doc.data().Info.Name);
-				return doc.data().Locations;
-			})
-			.then((temp) => {
-				const loComp = temp.map((locationName, index) => (
+	async function getLocations(setList, setPageTitle, urlParams) {
+		try {
+			const companyDoc = await getDoc(doc(database, "Companies", organization));
+			if (companyDoc.exists()) {
+				setPageTitle(companyDoc.data().Info.Name);
+				const locations = companyDoc.data().Locations;
+				const loComp = locations.map((locationName, index) => (
 					<Location
 						key={index}
 						organization={organization}
@@ -74,28 +73,23 @@ const Organization = ({ organization, authUser }) => {
 					/>
 				));
 				setList([...loComp]);
-			})
-			.catch((error) => {
-				//TODO log to firebase logger
-				console.log(error);
-			});
+			}
+		} catch (error) {
+			console.error("Error fetching locations:", error);
+		}
 	}
 
-	function getSubLocations(setList, setPageTitle, urlParams) {
+	async function getSubLocations(setList, setPageTitle, urlParams) {
 		let locationName = urlParams.locationName.replaceAll("-", " ");
-		database
-			.collection("Companies")
-			.doc(organization)
-			.collection("Data")
-			.doc(locationName)
-			.get()
-			.then((doc) => {
+		try {
+			const locationDoc = await getDoc(
+				doc(database, "Companies", organization, "Data", locationName)
+			);
+			if (locationDoc.exists()) {
 				setPageTitle(locationName);
 				//TODO Fix floor data name in database
-				return Object.keys(doc.data()["Floor Data"]);
-			})
-			.then((temp) => {
-				const loComp = temp.map((subLocationName, index) => (
+				const subLocations = Object.keys(locationDoc.data()["Floor Data"]);
+				const loComp = subLocations.map((subLocationName, index) => (
 					<Location
 						key={index}
 						organization={organization}
@@ -105,24 +99,19 @@ const Organization = ({ organization, authUser }) => {
 					/>
 				));
 				setList([...loComp]);
-			})
-			.catch((error) => {
-				//TODO log to firebase logger
-				console.log(error);
-			});
+			}
+		} catch (error) {
+			console.error("Error fetching sub-locations:", error);
+		}
 	}
 
-	function getLocationPrices(setList, setPageTitle, urlParams) {
-		database
-			.collection("Companies")
-			.doc(organization)
-			.get()
-			.then((doc) => {
+	async function getLocationPrices(setList, setPageTitle, urlParams) {
+		try {
+			const companyDoc = await getDoc(doc(database, "Companies", organization));
+			if (companyDoc.exists()) {
 				setPageTitle("Organization Settings");
-				return doc.data().Locations;
-			})
-			.then((temp) => {
-				const loComp = temp.map((locationName, index) => (
+				const locations = companyDoc.data().Locations;
+				const loComp = locations.map((locationName, index) => (
 					<Price
 						key={index}
 						organization={organization}
@@ -130,46 +119,52 @@ const Organization = ({ organization, authUser }) => {
 					/>
 				));
 				setList([...loComp]);
-			})
-			.catch((error) => {
-				//TODO log to firebase logger
-				console.log(error);
-			});
+			}
+		} catch (error) {
+			console.error("Error fetching location prices:", error);
+		}
 	}
 
 	return (
 		<>
-			<Switch>
+			<Routes>
 				<Route
 					path={`${path}/facilities/:locationName/:subLocationName/:spotId`}
-				>
-					<CardList getJsx={getLogs} />
-				</Route>
-				<Route path={`${path}/facilities/:locationName/:subLocationName`}>
-					<SpotMap organization={organization} />
-				</Route>
-				<Route path={`${path}/facilities/:locationName`}>
-					<CardList getJsx={getSubLocations} />
-				</Route>
-				<Route path={`${path}/facilities`}>
-					<CardList getJsx={getLocations} />
-				</Route>
-				<Route path={`${path}/occupancy`}>
-					<Occupancy organization={organization} />
-				</Route>
-				<Route path={`${path}/enforcement`}>
-					<ComingSoon />
-				</Route>
-				<Route path={`${path}/organization`}>
-					<CardList getJsx={getLocationPrices} />
-				</Route>
-				<Route path={`${path}/profile`}>
-					<Profile organization={organization} authUser={authUser} />
-				</Route>
-				<Route path={`${path}/messages`}>
-					<ComingSoon />
-				</Route>
-			</Switch>
+					element={<CardList getJsx={getLogs} />}
+				/>
+				<Route 
+					path={`${path}/facilities/:locationName/:subLocationName`}
+					element={<SpotMap organization={organization} />}
+				/>
+				<Route 
+					path={`${path}/facilities/:locationName`}
+					element={<CardList getJsx={getSubLocations} />}
+				/>
+				<Route 
+					path={`${path}/facilities`}
+					element={<CardList getJsx={getLocations} />}
+				/>
+				<Route 
+					path={`${path}/occupancy`}
+					element={<Occupancy organization={organization} />}
+				/>
+				<Route 
+					path={`${path}/enforcement`}
+					element={<ComingSoon />}
+				/>
+				<Route 
+					path={`${path}/organization`}
+					element={<CardList getJsx={getLocationPrices} />}
+				/>
+				<Route 
+					path={`${path}/profile`}
+					element={<Profile organization={organization} authUser={authUser} />}
+				/>
+				<Route 
+					path={`${path}/messages`}
+					element={<ComingSoon />}
+				/>
+			</Routes>
 		</>
 	);
 };

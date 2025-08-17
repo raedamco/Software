@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./common/Header";
 import Login from "./login";
@@ -11,25 +11,18 @@ function App() {
 
 	useEffect(() => {
 		let auth = JSON.parse(localStorage.getItem("authUser"));
-		//let org = localStorage.getItem("organization");
 		if (auth) {
 			setAuthUser(auth);
 		} else {
 			setAuthUser(null);
 		}
-		// if (org) {
-		// 	setOrganization(org);
-		// } else {
-		// 	setOrganization(null);
-		// }
 	}, []);
 
 	return (
 		<Router>
-			<Switch>
-				<Route path="/">
-					{/* TODO Move header to OrganizationRouter */}
-					{!authUser ? (
+			<Routes>
+				<Route path="/*" element={
+					!authUser ? (
 						<Login setAuthUser={setAuthUser} />
 					) : (
 						<>
@@ -40,9 +33,9 @@ function App() {
 								authUser={authUser}
 							/>
 						</>
-					)}
-				</Route>
-			</Switch>
+					)
+				} />
+			</Routes>
 		</Router>
 	);
 }

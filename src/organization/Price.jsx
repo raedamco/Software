@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { database } from "../FirebaseSetup";
 import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-const SwalReact = withReactContent(Swal);
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 
 const Price = ({ organization, locationName }) => {
 	const [day, setDay] = useState(0);
@@ -10,136 +9,119 @@ const Price = ({ organization, locationName }) => {
 	const [minute, setMinute] = useState(0);
 
 	function getPrice() {
-		database
-			.collection("Companies")
-			.doc(organization)
-			.collection("Data")
-			.doc(locationName)
-			.onSnapshot((doc) => {
+		const unsubscribe = onSnapshot(doc(database, "Companies", organization, "Data", locationName), (doc) => {
+			if (doc.exists()) {
 				setDay(doc.data().Pricing.Day);
 				setHour(doc.data().Pricing.Hour);
 				setMinute(doc.data().Pricing.Minute);
-			});
+			}
+		});
+		return unsubscribe;
 	}
 
 	useEffect(() => {
-		const abortController = new AbortController();
-		getPrice();
-		return () => abortController.abort();
-	}, []);
+		const unsubscribe = getPrice();
+		return () => {
+			if (unsubscribe) unsubscribe();
+		};
+	}, [organization, locationName]);
 
 	function priceChanger() {
-		const alertHtml = (
-			<>
-				<label class="price-label" htmlFor="minute">
-					Minute
-				</label>
-				<input
-					type="number"
-					id="minute"
-					min="0.01"
-					step="0.01"
-					defaultValue={minute}
-				/>
-				<br />
-				<label class="price-label" htmlFor="hour">
-					Hour
-				</label>
-				<input
-					type="number"
-					id="hour"
-					min="0.01"
-					step="0.05"
-					defaultValue={hour}
-				/>
-				<br />
-				<label class="price-label" htmlFor="day">
-					Day
-				</label>
-				<input
-					type="number"
-					id="day"
-					min="0.01"
-					step="0.25"
-					defaultValue={day}
-				/>
-				<br />
-			</>
-		);
-		SwalReact.fire({
-			html: alertHtml,
+		Swal.fire({
+			title: "Update Pricing",
+			html: `
+				<div class="price-form">
+					<div class="form-group">
+						<label class="form-label" for="minute">Minute</label>
+						<input
+							type="number"
+							id="minute"
+							min="0.01"
+							step="0.01"
+							value="${minute}"
+							class="form-input"
+						/>
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="hour">Hour</label>
+						<input
+							type="number"
+							id="hour"
+							min="0.01"
+							step="0.05"
+							value="${hour}"
+							class="form-input"
+						/>
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="day">Day</label>
+						<input
+							type="number"
+							id="day"
+							min="0.01"
+							step="0.25"
+							value="${day}"
+							class="form-input"
+						/>
+					</div>
+				</div>
+			`,
 			showCancelButton: true,
 			focusConfirm: false,
 			preConfirm: () => {
-				const minutePrice = SwalReact.getPopup().querySelector("#minute").value;
-				const hourPrice = SwalReact.getPopup().querySelector("#hour").value;
-				const dayPrice = SwalReact.getPopup().querySelector("#day").value;
-				updateDatabase(minutePrice, hourPrice, dayPrice);
+				const minutePrice = document.getElementById("minute").value;
+				const hourPrice = document.getElementById("hour").value;
+				const dayPrice = document.getElementById("day").value;
+				return updateDatabase(minutePrice, hourPrice, dayPrice);
 			},
 		});
 	}
 
-	function updateDatabase(minutePrice, hourPrice, dayPrice) {
-		database
-			.collection("Companies")
-			.doc(organization)
-			.collection("Data")
-			.doc(locationName)
-			.update({
-				"Pricing.Minute": minutePrice,
-				"Pricing.Hour": hourPrice,
-				"Pricing.Day": dayPrice,
-			})
-			.then(() => {
-				SwalReact.fire({
-					title: "Success",
-					text: `Rates have been updated`,
-					icon: "success",
-					confirmButtonText: "Close",
-				});
-			})
-			.catch(() => {
-				//TODO log to firebase logger
-				SwalReact.fire({
-					title: "Error",
-					text: "Something went wrong while updating the database",
-					icon: "error",
-					confirmButtonText: "Close",
-				});
+	async function updateDatabase(minutePrice, hourPrice, dayPrice) {
+		try {
+			await updateDoc(doc(database, "Companies", organization, "Data", locationName), {
+				"Pricing.Minute": parseFloat(minutePrice),
+				"Pricing.Hour": parseFloat(hourPrice),
+				"Pricing.Day": parseFloat(dayPrice),
 			});
+			
+			Swal.fire({
+				title: "Success",
+				text: `Rates have been updated`,
+				icon: "success",
+				confirmButtonText: "Close",
+			});
+		} catch (error) {
+			console.error("Error updating pricing:", error);
+			Swal.fire({
+				title: "Error",
+				text: "Failed to update pricing",
+				icon: "error",
+				confirmButtonText: "Close",
+			});
+		}
 	}
 
 	return (
-		<div className="card-btn panel panel-default mb-2">
-			<div className="panel-body container" onClick={priceChanger}>
-				<div className="d-flex justify-content-between row">
-					<table className="table" style={{ margin: "0" }}>
-						<tbody>
-							<tr>
-								<td>
-									<h3
-										className="text-success text-left"
-										style={{ margin: "0 0 0 15px" }}
-									>
-										{locationName}
-									</h3>
-								</td>
-								<td>
-									{/* TODO Spots free is spilling over the side. Fixed by adding extra margin */}
-									<h3
-										className="text-success text-right"
-										style={{ margin: "0 45px 0 0" }}
-									>
-										Day: ${day}
-										<br />
-										Hour: ${hour}
-										<br />
-										Minute: ${minute}
-									</h3>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+		<div className="price-card">
+			<div className="price-header">
+				<h3>{locationName}</h3>
+				<button className="btn btn-primary" onClick={priceChanger}>
+					Update Pricing
+				</button>
+			</div>
+			<div className="price-details">
+				<div className="price-item">
+					<span className="price-label">Minute:</span>
+					<span className="price-value">${minute}</span>
+				</div>
+				<div className="price-item">
+					<span className="price-label">Hour:</span>
+					<span className="price-value">${hour}</span>
+				</div>
+				<div className="price-item">
+					<span className="price-label">Day:</span>
+					<span className="price-value">${day}</span>
 				</div>
 			</div>
 		</div>

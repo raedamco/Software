@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useRouteMatch } from "react-router";
+import { useParams } from "react-router";
 
 const CardList = ({ getJsx }) => {
-	const { path, url, params } = useRouteMatch();
+	const params = useParams();
 	const [jsx, setJsx] = useState([]);
 	const [title, setTitle] = useState("");
 
@@ -11,19 +11,15 @@ const CardList = ({ getJsx }) => {
 		getJsx(setJsx, setTitle, params);
 
 		return () => abortController.abort();
-	}, [getJsx]);
+	}, [getJsx, params]);
 
 	return (
-		//TODO animate-box was causing issues with below div
-		<div className="col-md-12 text-center">
+		<div className="card-list-container">
 			<div className="main" id="main">
-				<h1
-					id="structureTitle"
-					style={{ paddingTop: "50px", paddingBottom: "50px" }}
-				>
+				<h1 className="page-title" id="structureTitle">
 					{title}
 				</h1>
-				<div>{jsx}</div>
+				<div className="card-list-content">{jsx}</div>
 			</div>
 		</div>
 	);

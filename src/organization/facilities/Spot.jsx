@@ -1,177 +1,188 @@
 //TODO clean up code later
-import { useEffect } from "react";
-import useState from "react-usestateref";
-import { useHistory, useRouteMatch } from "react-router";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import { database } from "../../FirebaseSetup";
 import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-const SwalReact = withReactContent(Swal);
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 
 const Spot = ({ organization, data }) => {
-	const { path, url, params } = useRouteMatch();
-	const history = useHistory();
-
-	//const initialFormState = {}
+	const params = useParams();
+	const navigate = useNavigate();
 
 	const [statusColor, setStatusColor] = useState("");
 	const [xPos, setXPos] = useState(0);
 	const [yPos, setYPos] = useState(0);
 	const [spotTypes, setSpotTypes] = useState({}); // On submit
-	const [formData, setFormData, formDataRef] = useState({}); // On change
+	const [formData, setFormData] = useState({}); // On change
 
 	const locationName = params.locationName.replaceAll("-", " ");
 	const subLocationName = params.subLocationName.replaceAll("-", " ");
 
 	function updateSpot() {
-		database
-			.collection("Companies")
-			.doc(organization)
-			.collection("Data")
-			.doc(locationName)
-			.collection(subLocationName)
-			.doc(`${data.Info["Spot ID"]}`)
-			.onSnapshot((doc) => {
-				const types = doc.data()["Spot Type"];
-				setSpotTypes(types);
-				setFormData(types);
-				setXPos(doc.data().Layout.x);
-				setYPos(doc.data().Layout.y);
-				if (doc.data().Occupancy.Occupied) {
-					setStatusColor("red");
-				} else {
-					setStatusColor("green");
+		const unsubscribe = onSnapshot(
+			doc(database, "Companies", organization, "Data", locationName, subLocationName, `${data.Info["Spot ID"]}`),
+			(doc) => {
+				if (doc.exists()) {
+					const types = doc.data()["Spot Type"];
+					setSpotTypes(types);
+					setFormData(types);
+					setXPos(doc.data().Layout.x);
+					setYPos(doc.data().Layout.y);
+					if (doc.data().Occupancy.Occupied) {
+						setStatusColor("var(--error)");
+					} else {
+						setStatusColor("var(--success)");
+					}
 				}
-			});
+			}
+		);
+		return unsubscribe;
 	}
 
 	const handleChange = ({ target }) => {
-		const changeObj = { ...formDataRef.current };
-		changeObj[target.name] = target.checked;
-
-		setFormData(changeObj);
+		setFormData(prev => ({
+			...prev,
+			[target.name]: target.checked
+		}));
 	};
 
 	function spotAlert() {
-		// Spot alert checklist
-		let popupHTML = (
-			<>
-				<h4>Spot Type(s): </h4>
-				<input
-					type="checkbox"
-					id="Hourly"
-					name="Hourly"
-					defaultChecked={spotTypes.Hourly}
-					onChange={handleChange}
-				/>
-				<label htmlFor="Hourly">Hourly</label>
-				<br />
-
-				<input
-					type="checkbox"
-					id="Permit"
-					name="Permit"
-					defaultChecked={spotTypes.Permit}
-					onChange={handleChange}
-				/>
-				<label htmlFor="Permit">Permit</label>
-				<br />
-
-				<input
-					type="checkbox"
-					id="ADA"
-					name="ADA"
-					defaultChecked={spotTypes.ADA}
-					onChange={handleChange}
-				/>
-				<label htmlFor="ADA">ADA</label>
-				<br />
-
-				<input
-					type="checkbox"
-					id="EV"
-					name="EV"
-					defaultChecked={spotTypes.EV}
-					onChange={handleChange}
-				/>
-				<label htmlFor="EV">EV</label>
-				<br />
-
-				<input
-					type="checkbox"
-					id="Leased"
-					name="Leased"
-					defaultChecked={spotTypes.Leased}
-					onChange={handleChange}
-				/>
-				<label htmlFor="Leased">Leased</label>
-				<br />
-			</>
-		);
-
 		// Display spot alert
-		SwalReact.fire({
+		Swal.fire({
 			title: "Settings for spot " + data.Info["Spot ID"],
-			html: popupHTML,
-			footer: (
-				<button
-					onClick={() => {
-						SwalReact.close();
-						history.push(`${url}/${data.Info["Spot ID"]}`);
-					}}
-				>
+			html: `
+				<div class="spot-settings-form">
+					<div class="form-group">
+						<label class="checkbox-label">
+							<input
+								type="checkbox"
+								id="Hourly"
+								name="Hourly"
+								${spotTypes.Hourly ? 'checked' : ''}
+								onChange="this.dispatchEvent(new Event('change', { bubbles: true }))"
+							/>
+							<span class="checkmark"></span>
+							Hourly
+						</label>
+					</div>
+					<div class="form-group">
+						<label class="checkbox-label">
+							<input
+								type="checkbox"
+								id="Permit"
+								name="Permit"
+								${spotTypes.Permit ? 'checked' : ''}
+								onChange="this.dispatchEvent(new Event('change', { bubbles: true }))"
+							/>
+							<span class="checkmark"></span>
+							Permit
+						</label>
+					</div>
+					<div class="form-group">
+						<label class="checkbox-label">
+							<input
+								type="checkbox"
+								id="ADA"
+								name="ADA"
+								${spotTypes.ADA ? 'checked' : ''}
+								onChange="this.dispatchEvent(new Event('change', { bubbles: true }))"
+							/>
+							<span class="checkmark"></span>
+							ADA
+						</label>
+					</div>
+					<div class="form-group">
+						<label class="checkbox-label">
+							<input
+								type="checkbox"
+								id="EV"
+								name="EV"
+								${spotTypes.EV ? 'checked' : ''}
+								onChange="this.dispatchEvent(new Event('change', { bubbles: true }))"
+							/>
+							<span class="checkmark"></span>
+							EV
+						</label>
+					</div>
+					<div class="form-group">
+						<label class="checkbox-label">
+							<input
+								type="checkbox"
+								id="Leased"
+								name="Leased"
+								${spotTypes.Leased ? 'checked' : ''}
+								onChange="this.dispatchEvent(new Event('change', { bubbles: true }))"
+							/>
+							<span class="checkmark"></span>
+							Leased
+						</label>
+					</div>
+				</div>
+			`,
+			footer: `
+				<button class="btn btn-secondary" onclick="window.spotSensorLog()">
 					Sensor Log
 				</button>
-			),
+			`,
 			showCancelButton: true,
 			focusConfirm: false,
 			preConfirm: () => {
-				updateDatabase();
+				return updateDatabase();
 			},
+			didOpen: () => {
+				// Add event listeners for checkboxes
+				document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+					checkbox.addEventListener('change', handleChange);
+				});
+				
+				// Add global function for sensor log button
+				window.spotSensorLog = () => {
+					Swal.close();
+					navigate(`${params.organization}/facilities/${params.locationName}/${params.subLocationName}/${data.Info["Spot ID"]}`);
+				};
+			}
 		});
 	}
 
 	// Update database with new selections
 	async function updateDatabase() {
-		database
-			.collection("Companies")
-			.doc(organization)
-			.collection("Data")
-			.doc(locationName)
-			.collection(subLocationName)
-			.doc(`${data.Info["Spot ID"]}`)
-			.update({
-				"Spot Type.Hourly": formDataRef.current.Hourly,
-				"Spot Type.Permit": formDataRef.current.Permit,
-				"Spot Type.ADA": formDataRef.current.ADA,
-				"Spot Type.EV": formDataRef.current.EV,
-				"Spot Type.Leased": formDataRef.current.Leased,
-			})
-			.then(() => {
-				setSpotTypes(formDataRef.current);
+		try {
+			await updateDoc(
+				doc(database, "Companies", organization, "Data", locationName, subLocationName, `${data.Info["Spot ID"]}`),
+				{
+					"Spot Type.Hourly": formData.Hourly,
+					"Spot Type.Permit": formData.Permit,
+					"Spot Type.ADA": formData.ADA,
+					"Spot Type.EV": formData.EV,
+					"Spot Type.Leased": formData.Leased,
+				}
+			);
+			
+			setSpotTypes(formData);
 
-				SwalReact.fire({
-					title: "Success",
-					text: `Spot ${data.Info["Spot ID"]} type has been updated`,
-					icon: "success",
-					confirmButtonText: "Close",
-				});
-			})
-			.catch(() => {
-				//TODO log to firebase logger
-				SwalReact.fire({
-					title: "Error",
-					text: "Something went wrong while updating the database",
-					icon: "error",
-					confirmButtonText: "Close",
-				});
+			Swal.fire({
+				title: "Success",
+				text: `Spot ${data.Info["Spot ID"]} type has been updated`,
+				icon: "success",
+				confirmButtonText: "Close",
 			});
+		} catch (error) {
+			console.error("Error updating spot:", error);
+			Swal.fire({
+				title: "Error",
+				text: "Something went wrong while updating the database",
+				icon: "error",
+				confirmButtonText: "Close",
+			});
+		}
 	}
 
 	useEffect(() => {
-		const abortController = new AbortController();
-		updateSpot();
-		return () => abortController.abort();
-	}, []);
+		const unsubscribe = updateSpot();
+		return () => {
+			if (unsubscribe) unsubscribe();
+		};
+	}, [organization, locationName, subLocationName, data.Info["Spot ID"]]);
 
 	return (
 		<div
@@ -181,11 +192,7 @@ const Spot = ({ organization, data }) => {
 				top: `${yPos}%`,
 				left: `${xPos}%`,
 			}}
-			onClick={() => {
-				const abortController = new AbortController();
-				spotAlert();
-				return () => abortController.abort();
-			}}
+			onClick={spotAlert}
 		>
 			{data.Info["Spot ID"]}
 		</div>

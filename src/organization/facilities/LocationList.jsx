@@ -1,23 +1,20 @@
 import { useEffect, useState } from "react";
-import { useRouteMatch } from "react-router";
+import { useParams } from "react-router";
 import Location from "./Location";
 import { database } from "../FirebaseSetup";
+import { doc, getDoc } from "firebase/firestore";
 
 const LocationList = ({ organization, locationType }) => {
-	const { path, url, params } = useRouteMatch();
+	const params = useParams();
 	const [locations, setLocations] = useState([]);
 	const [title, setTitle] = useState(organization);
 
-	function getLocation() {
-		database
-			.collection("Companies")
-			.doc(organization)
-			.get()
-			.then((doc) => {
-				return doc.data().Locations;
-			})
-			.then((temp) => {
-				const loComp = temp.map((locationName, index) => (
+	async function getLocation() {
+		try {
+			const companyDoc = await getDoc(doc(database, "Companies", organization));
+			if (companyDoc.exists()) {
+				const locationNames = companyDoc.data().Locations;
+				const loComp = locationNames.map((locationName, index) => (
 					<Location
 						key={index}
 						organization={organization}
@@ -25,27 +22,23 @@ const LocationList = ({ organization, locationType }) => {
 					/>
 				));
 				setLocations([...loComp]);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+			}
+		} catch (error) {
+			console.error("Error fetching locations:", error);
+		}
 	}
 
-	function getSubLocation() {
-		let subLocationName = params.locationName.replaceAll("-", " ");
-		database
-			.collection("Companies")
-			.doc(organization)
-			.collection("Data")
-			.doc(subLocationName)
-			.get()
-			.then((doc) => {
+	async function getSubLocation() {
+		try {
+			let subLocationName = params.locationName.replaceAll("-", " ");
+			const locationDoc = await getDoc(
+				doc(database, "Companies", organization, "Data", subLocationName)
+			);
+			if (locationDoc.exists()) {
 				setTitle(subLocationName);
 				//TODO Fix floor data name in database
-				return Object.keys(doc.data()["Floor Data"]);
-			})
-			.then((temp) => {
-				const loComp = temp.map((locationName, index) => (
+				const subLocationNames = Object.keys(locationDoc.data()["Floor Data"]);
+				const loComp = subLocationNames.map((locationName, index) => (
 					<Location
 						key={index}
 						organization={organization}
@@ -53,39 +46,28 @@ const LocationList = ({ organization, locationType }) => {
 					/>
 				));
 				setLocations([...loComp]);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+			}
+		} catch (error) {
+			console.error("Error fetching sub-locations:", error);
+		}
 	}
 
 	useEffect(() => {
-		const abortController = new AbortController();
 		if (locationType === "location") {
 			getLocation();
 		} else if (locationType === "sublocation") {
 			getSubLocation();
 		}
-
-		return () => abortController.abort();
-	}, [locationType]);
+	}, [locationType, organization, params.locationName]);
 
 	return (
-		<div className="tp-services" id="container">
+		<div className="location-list-container">
 			<div className="container">
-				<div className="row">
-					{/* TODO animate-box was causing issues with below div */}
-					<div className="col-md-12 text-center">
-						<div className="main" id="main">
-							<h1
-								id="structureTitle"
-								style={{ paddingTop: "50px", paddingBottom: "50px" }}
-							>
-								{title}
-							</h1>
-							<div>{locations}</div>
-						</div>
-					</div>
+				<div className="main" id="main">
+					<h1 className="page-title" id="structureTitle">
+						{title}
+					</h1>
+					<div className="location-grid">{locations}</div>
 				</div>
 			</div>
 		</div>

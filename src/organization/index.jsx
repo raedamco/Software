@@ -1,57 +1,53 @@
 import { useEffect, useState } from "react";
-import { matchPath, Route, Switch, useHistory } from "react-router";
+import { matchPath, Route, Routes, useNavigate, useLocation } from "react-router";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 import OrganizationList from "./OrganizationList";
 import Organization from "./Organization";
 import { database } from "../FirebaseSetup";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 
 const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
-	const history = useHistory();
+	const navigate = useNavigate();
+	const location = useLocation();
 	let organizations;
-	//const [user, setUser] = useState(1);
 
 	async function getOrganizations() {
 		// Get Organization from url first
-		const match = matchPath(history.location.pathname, {
+		const match = matchPath(location.pathname, {
 			path: "/:organization",
 		});
 		if (match && match.params.organization != "organizations") {
 			let name = match.params.organization.replaceAll("-", " ");
-			await database
-				.collection("Companies")
-				.where("Info.Name", "==", name)
-				.get()
-				.then((querySnapshot) => {
-					querySnapshot.forEach((doc) => {
-						setOrganization(doc.id);
-					});
+			try {
+				const q = query(collection(database, "Companies"), where("Info.Name", "==", name));
+				const querySnapshot = await getDocs(q);
+				querySnapshot.forEach((doc) => {
+					setOrganization(doc.id);
 				});
+			} catch (error) {
+				console.error("Error fetching organization:", error);
+			}
 			// If there's no organization in the url. then try to get the organization from the users company list
 		} else if (await authUser) {
-			organizations = await database
-				.collection("Users")
-				.doc("Companies")
-				.collection("Users")
-				.doc(authUser.user.uid)
-				.get()
-				.then((doc) => {
-					return doc.data().Companies;
-				});
-			if (organizations.length > 1) {
-				history.push("/organizations");
-			} else if (organizations.length == 1) {
-				await database
-					.collection("Companies")
-					.doc(organizations[0])
-					.get()
-					.then((doc) => {
-						setOrganization(organizations[0]);
-						//localStorage.setItem("organization", organizations[0]);
-						history.push(
-							"/" + doc.data().Info.Name.replaceAll(" ", "-") + "/facilities"
-						);
-					});
+			try {
+				const userDoc = await getDoc(doc(database, "Users", "Companies", "Users", authUser.user.uid));
+				if (userDoc.exists()) {
+					organizations = userDoc.data().Companies;
+					if (organizations.length > 1) {
+						navigate("/organizations");
+					} else if (organizations.length == 1) {
+						const companyDoc = await getDoc(doc(database, "Companies", organizations[0]));
+						if (companyDoc.exists()) {
+							setOrganization(organizations[0]);
+							navigate(
+								"/" + companyDoc.data().Info.Name.replaceAll(" ", "-") + "/facilities"
+							);
+						}
+					}
+				}
+			} catch (error) {
+				console.error("Error fetching user organizations:", error);
 			}
 		}
 	}
@@ -64,31 +60,20 @@ const OrganizationRouter = ({ organization, setOrganization, authUser }) => {
 		}
 	}, [authUser]);
 
-	//TODO Switch to firebase react components
-	// useEffect(() => {
-	// 	window.firebase.auth().onAuthStateChanged(function (userAuth) {
-	// 		if (userAuth) {
-	// 			setUser(userAuth);
-	// 		}
-	// 	});
-	// }, []);
-
 	if (authUser && authUser.user != 1) {
 		return (
 			<>
 				<main>
-					<Switch>
-						<Route path="/organizations">
-							<OrganizationList organizations={organizations} />
-						</Route>
-						<Route path="/:organization">
-							{organization ? (
+					<Routes>
+						<Route path="/organizations" element={<OrganizationList organizations={organizations} />} />
+						<Route path="/:organization" element={
+							organization ? (
 								<Organization organization={organization} authUser={authUser} />
 							) : (
 								<></>
-							)}
-						</Route>
-					</Switch>
+							)
+						} />
+					</Routes>
 				</main>
 				<Footer />
 			</>

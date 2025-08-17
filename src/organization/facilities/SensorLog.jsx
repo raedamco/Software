@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-
-const SwalReact = withReactContent(Swal);
 
 const SensorLog = ({ occupant, occupied, begin, end }) => {
 	const [color, setColor] = useState("inherit");
@@ -10,27 +7,35 @@ const SensorLog = ({ occupant, occupied, begin, end }) => {
 
 	function getStatus() {
 		if (occupied) {
-			setColor("red");
+			setColor("var(--error)");
 			setStatus("Occupied");
 		} else {
-			setColor("green");
+			setColor("var(--success)");
 			setStatus("Unoccupied");
 		}
 	}
 
 	function logAlert() {
+		let displayOccupant = occupant;
 		if (occupied) {
 			if (occupant == "") {
-				occupant = "Coming Soon!";
+				displayOccupant = "Coming Soon!";
 			}
 		} else {
-			if (occupied == "") {
-				occupant = "None";
+			if (occupant == "") {
+				displayOccupant = "None";
 			}
 		}
-		SwalReact.fire({
-			title: "Info",
-			html: `Occupant: ${occupant}`,
+		Swal.fire({
+			title: "Sensor Information",
+			html: `
+				<div class="sensor-info">
+					<p><strong>Status:</strong> ${status}</p>
+					<p><strong>Occupant:</strong> ${displayOccupant}</p>
+					<p><strong>Start Time:</strong> ${begin.toDate().toLocaleString()}</p>
+					<p><strong>End Time:</strong> ${end.toDate().toLocaleString()}</p>
+				</div>
+			`,
 			icon: "info",
 			confirmButtonText: "Close",
 		});
@@ -41,34 +46,22 @@ const SensorLog = ({ occupant, occupied, begin, end }) => {
 	}, [occupied]);
 
 	return (
-		<div className="card-btn panel panel-default mb-2" onClick={logAlert}>
-			<div className="panel-body container">
-				<div className="d-flex justify-content-between row">
-					<table className="table" style={{ margin: "0" }}>
-						<tbody>
-							<tr>
-								<td>
-									<h3
-										className="text-success text-left"
-										style={{ margin: "0 0 0 15px", color: color }}
-									>
-										{status}
-									</h3>
-								</td>
-								<td>
-									{/* TODO Spots free is spilling over the side. Fixed by adding extra margin */}
-									<h3
-										className="text-success text-right"
-										style={{ margin: "0 45px 0 0", color: color }}
-									>
-										End: {end.toDate().toLocaleString()}
-										<br />
-										Start: {begin.toDate().toLocaleString()}
-									</h3>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+		<div className="sensor-log-card" onClick={logAlert}>
+			<div className="sensor-log-content">
+				<div className="sensor-status">
+					<span className="status-indicator" style={{ color: color }}>
+						{status}
+					</span>
+				</div>
+				<div className="sensor-times">
+					<div className="time-item">
+						<span className="time-label">Start:</span>
+						<span className="time-value">{begin.toDate().toLocaleString()}</span>
+					</div>
+					<div className="time-item">
+						<span className="time-label">End:</span>
+						<span className="time-value">{end.toDate().toLocaleString()}</span>
+					</div>
 				</div>
 			</div>
 		</div>

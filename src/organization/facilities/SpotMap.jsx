@@ -1,53 +1,53 @@
 import { useEffect, useState } from "react";
-import { useRouteMatch } from "react-router";
+import { useParams } from "react-router";
 import Spot from "./Spot";
 import { database } from "../../FirebaseSetup";
+import { collection, getDocs } from "firebase/firestore";
 
 const SpotMap = ({ organization }) => {
-	const { path, url, params } = useRouteMatch();
-	const [spotList, setSpotList] = useState();
+	const params = useParams();
+	const [spotList, setSpotList] = useState([]);
 	const locationName = params.locationName.replaceAll("-", " ");
 	const subLocationName = params.subLocationName.replaceAll("-", " ");
 
 	useEffect(() => {
-		const abortController = new AbortController();
-		database
-			.collection("Companies")
-			.doc(organization)
-			.collection("Data")
-			.doc(locationName)
-			.collection(subLocationName)
-			.get()
-			.then((collection) => {
+		const fetchSpots = async () => {
+			try {
+				const spotsCollection = collection(
+					database,
+					"Companies",
+					organization,
+					"Data",
+					locationName,
+					subLocationName
+				);
+				const querySnapshot = await getDocs(spotsCollection);
+				
 				let tempList = [];
 				let index = 0;
-				collection.forEach((doc) => {
+				querySnapshot.forEach((doc) => {
 					tempList.push(
 						<Spot key={index} organization={organization} data={doc.data()} />
 					);
 					index += 1;
 				});
 				setSpotList(tempList);
-			});
-		return () => abortController.abort();
-	}, []);
+			} catch (error) {
+				console.error("Error fetching spots:", error);
+			}
+		};
+
+		fetchSpots();
+	}, [organization, locationName, subLocationName]);
 
 	return (
-		<div className="tp-services" id="container">
+		<div className="spot-map-container">
 			<div className="container">
-				<div className="row">
-					{/* TODO animate-box was causing issues with below div */}
-					<div className="col-md-12 text-center">
-						<div className="main" id="main">
-							<h1
-								id="structureTitle"
-								style={{ paddingTop: "50px", paddingBottom: "50px" }}
-							>
-								{locationName} - {subLocationName}
-							</h1>
-							<div className="panel panel-default map">{spotList}</div>
-						</div>
-					</div>
+				<div className="main" id="main">
+					<h1 className="page-title" id="structureTitle">
+						{locationName} - {subLocationName}
+					</h1>
+					<div className="spot-map">{spotList}</div>
 				</div>
 			</div>
 		</div>

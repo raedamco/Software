@@ -1,24 +1,35 @@
 import { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { database, signOut } from "../FirebaseSetup";
+import { doc, getDoc } from "firebase/firestore";
 
 const Header = ({ organization, setAuthUser }) => {
-	const history = useHistory();
+	const navigate = useNavigate();
 	const [organizationUrl, setOrganizationUrl] = useState(null);
 
 	useEffect(() => {
 		const abortController = new AbortController();
 		if (organization) {
-			database
-				.collection("Companies")
-				.doc(organization)
-				.get()
-				.then((doc) => {
-					setOrganizationUrl(doc.data().Info.Name.replaceAll(" ", "-"));
-				});
+			const fetchOrganization = async () => {
+				try {
+					const docRef = doc(database, "Companies", organization);
+					const docSnap = await getDoc(docRef);
+					if (docSnap.exists()) {
+						setOrganizationUrl(docSnap.data().Info.Name.replaceAll(" ", "-"));
+					}
+				} catch (error) {
+					console.error("Error fetching organization:", error);
+				}
+			};
+			fetchOrganization();
 		}
 		return () => abortController.abort();
 	}, [organization]);
+
+	const handleLogout = () => {
+		signOut(navigate);
+		setAuthUser(null);
+	};
 
 	return (
 		<nav className="tp-nav" role="navigation">
@@ -57,13 +68,10 @@ const Header = ({ organization, setAuthUser }) => {
 										<li>
 											<Link to={`/${organizationUrl}/messages`}>Messages</Link>
 										</li>
-										<li
-											onClick={() => {
-												signOut(history);
-												setAuthUser(null);
-											}}
-										>
-											<a>Logout</a>
+										<li>
+											<button onClick={handleLogout} className="dropdown-logout-btn">
+												Logout
+											</button>
 										</li>
 									</ul>
 								</li>
