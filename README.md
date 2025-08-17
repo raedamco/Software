@@ -223,13 +223,3 @@ For technical support or questions:
 - Ensure all dependencies are properly installed
 - Verify Firebase configuration
 
-## 📄 License
-
-This project is proprietary software. All rights reserved.
-
----
-
-**Last Updated**: $(date)
-**Version**: 1.0.0
-**React Version**: 18.2.0
-**Firebase Version**: 10.7.1
